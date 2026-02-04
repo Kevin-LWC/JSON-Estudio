@@ -1,35 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Estudio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bye Focus on Force</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  </head>
 <body>
-    <div class="container">
-        <h1>JSON Estudio</h1>
-        
-        <div id="setup-area">
-            <p>Pega aquí tu JSON de preguntas:</p>
-            <textarea id="json-input" placeholder='[{"question": "...", "options": [...], "answer": ["A"], "explanation": "..."}]'></textarea>
-            <button onclick="loadQuiz()">Cargar Quiz</button>
+
+<div class="main-wrapper">
+  
+  <header class="main-header">
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/kevincorreasuarez/" target="_blank" class="social-btn linkedin">
+        <span>LinkedIn</span> ↗
+      </a>
+      <a href="https://www.salesforce.com/trailblazer/xkokev" target="_blank" class="social-btn trailhead">
+        <span>Trailhead</span> ⛰️
+      </a>
+    </div>
+    <h1>Bye Focus on <span class="highlight">Force</span></h1>
+  </header>
+  
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('quiz-tab')">Quiz Simulator</button>
+    <button class="tab-btn" onclick="switchTab('prompt-tab')">Prompts Generator</button>
+  </div>
+
+  <div class="container">
+    
+    <div id="quiz-tab" class="tab-content active-content">
+      
+      <div id="setup-area">
+        <p class="instruction">Pega tu JSON de preguntas aquí:</p>
+        <textarea id="json-input" placeholder='[
+  {
+    "id": 1,
+    "question": "...",
+    "options": ["A...", "B..."],
+    "answer": ["A"],
+    "explanation": "...",
+    "frequency": 10
+  }
+]'></textarea>
+        <button class="action-btn primary-btn" onclick="loadQuiz()">🚀 Cargar Simulador</button>
+      </div>
+
+      <div id="quiz-area" style="display:none;">
+        <div class="quiz-header">
+          <div id="progress" class="badge">Pregunta 1 de X</div>
+          <div id="frequency-badge" class="badge freq-badge" style="display:none;">Freq: <span id="freq-val"></span>/10</div>
         </div>
 
-        <div id="quiz-area" style="display:none;">
-            <div id="progress">Pregunta 1 de X</div>
-            <div id="question-text" class="question"></div>
-            <div id="options-container"></div>
-            <button id="submit-btn" onclick="checkAnswer()">Verificar Respuesta</button>
-            
-            <div id="feedback" class="feedback" style="display:none;">
-                <h3 id="result-text"></h3>
-                <p id="explanation-text"></p>
-                <button onclick="nextQuestion()">Siguiente Pregunta</button>
-            </div>
+        <div id="question-text" class="question"></div>
+        <p id="selection-instruction" class="sub-text"></p>
+        
+        <div id="options-container"></div>
+        
+        <div id="validation-msg" class="validation-msg"></div>
+
+        <div class="controls">
+          <button id="prev-btn" class="action-btn secondary-btn" onclick="prevQuestion()" disabled>❮ Anterior</button>
+          <button id="submit-btn" class="action-btn primary-btn" onclick="checkAnswer()">Verificar</button>
+          <button id="next-btn" class="action-btn secondary-btn" onclick="nextQuestion()">Siguiente ❯</button>
         </div>
+        
+        <div id="feedback" class="feedback" style="display:none;">
+          <h3 id="result-text"></h3>
+          <div id="explanation-text"></div>
+        </div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="prompt-tab" class="tab-content">
+      <div class="prompt-header">
+        <h2>Generador de Preguntas</h2>
+        <p>Convierte tus PDFs en JSON para el simulador</p>
+      </div>
+
+      <div class="prompt-box">
+        <textarea id="prompt-text" readonly>
+Actúa como un experto en Salesforce Data Cloud con enfoque en desarrollo de simuladores. Convierte las preguntas del PDF adjunto al formato JSON especificado abajo, procesando el lote desde la pregunta [Número Inicio] hasta la [Número Fin].
+REGLAS CRÍTICAS DE INTEGRIDAD:
+
+PROHIBIDO INVENTAR: Copia el texto de la pregunta (question) y las opciones (options) palabra por palabra como aparecen en el PDF. No resumas ni modifiques ni una letra.
+RESPUESTAS: Si el PDF indica 'Choose 2 answers', el array answer debe contener ambas letras correctas.
+EXPLICACIÓN (En Español): Debe incluir:
+Por qué la respuesta marcada es correcta.
+Descarte: Por qué las otras opciones son incorrectas según la lógica de Data Cloud.
+Senior Tip: Un consejo avanzado o 'truco' de examen que amplíe el contexto del tema.
+FORMATO JSON REQUERIDO:
+JSON
+
+[
+  {
+    "id": [Número],
+    "question": "[Texto exacto del PDF]",
+    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
+    "answer": ["Letra"],
+    "explanation": "[Explicación en español + Descarte de opciones + Senior Tip]",
+    "frequency": [1-10]
+  }
+]
+No añadas charla introductoria, solo entrega el bloque de código JSON listo para usar.
+        </textarea>
+        <button class="action-btn glow-btn" onclick="copyPrompt()">
+          <span id="copy-label">Copiar Prompt</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
