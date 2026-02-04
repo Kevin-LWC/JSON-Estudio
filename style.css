@@ -1,40 +1,258 @@
+:root {
+  /* Paleta ajustada: Verde dominante */
+  --bg-dark: #0f1110;       /* Fondo casi negro pero con tinte verdoso muy sutil */
+  --bg-card: #161b18;       /* Tarjeta oscura */
+  --bg-input: #202622;      /* Inputs */
+  
+  --primary-green: #00ff9d; /* EL COLOR PRINCIPAL AHORA */
+  --primary-purple: #9d4edd; /* Morado reducido a acento secundario */
+  
+  --text-main: #e0e6e3;
+  --text-dim: #9aa39e;
+  
+  --error: #ff4b4b;
+  --success: #00ff9d;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  background-color: #121212;
-  color: #e0e0e0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
+  min-height: 100vh;
   padding: 20px;
+  background-image: radial-gradient(circle at 50% 0%, #002e1c 0%, var(--bg-dark) 60%);
 }
-.container {
-  max-width: 800px;
+
+.main-wrapper {
   width: 100%;
-  background: #1e1e1e;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  max-width: 900px;
 }
-h1 { color: #00a1e0; text-align: center; }
+
+/* --- Header & Social --- */
+.main-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.social-btn {
+  text-decoration: none;
+  color: var(--text-dim);
+  border: 1px solid #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.03);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.social-btn:hover {
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+  background: rgba(0, 255, 157, 0.05);
+  transform: translateY(-2px); /* Efecto hover sutil */
+}
+
+h1 { 
+  font-size: 2.5rem; 
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+
+.highlight { 
+  /* Gradiente invertido para priorizar el verde */
+  background: -webkit-linear-gradient(0deg, var(--primary-purple), var(--primary-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+/* --- Tabs --- */
+.nav-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: var(--text-dim);
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.tab-btn:hover {
+  background: rgba(255,255,255,0.02);
+  color: #fff;
+}
+
+.tab-btn.active {
+  /* Borde verde brillante, fondo sutil */
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+  background: linear-gradient(180deg, rgba(0, 255, 157, 0.05), transparent);
+  box-shadow: 0 -2px 10px rgba(0, 255, 157, 0.1) inset;
+}
+
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active-content { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Container --- */
+.container {
+  background: var(--bg-card);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid #2a332e;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Línea superior verde neón */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--primary-green), var(--primary-purple));
+  box-shadow: 0 0 15px var(--primary-green);
+}
+
+/* --- Inputs --- */
 textarea {
-  width: 100%; height: 150px;
-  background: #2d2d2d; color: #fff;
-  border: 1px solid #444; border-radius: 8px; padding: 10px;
+  width: 100%; height: 180px;
+  background: var(--bg-input); color: #fff;
+  border: 1px solid #333; border-radius: 8px; padding: 15px;
+  font-family: monospace; font-size: 14px; resize: vertical;
+  transition: border-color 0.3s;
 }
-button {
-  background: #00a1e0; color: white; border: none;
-  padding: 12px 24px; border-radius: 6px; cursor: pointer;
-  margin-top: 10px; font-weight: bold;
+textarea:focus { outline: none; border-color: var(--primary-green); }
+
+/* --- Buttons --- */
+.action-btn {
+  padding: 14px 24px; border-radius: 8px; cursor: pointer;
+  font-weight: bold; border: none; font-size: 1rem;
+  margin-top: 15px; width: 100%; 
+  transition: all 0.2s ease;
 }
-button:hover { background: #0081b3; }
+
+.primary-btn {
+  /* Verde solido pero moderno */
+  background: var(--primary-green);
+  color: #000;
+}
+.primary-btn:hover {
+  background: #00e08a;
+  box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  background: #2a2a30; color: white; border: 1px solid #444;
+}
+.secondary-btn:hover:not(:disabled) { 
+  background: #333; 
+  border-color: #666;
+}
+.secondary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.glow-btn {
+  background: transparent;
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+}
+.glow-btn:hover {
+  background: var(--primary-green);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+}
+
+/* --- Quiz UI --- */
+.quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.badge {
+  background: rgba(0, 255, 157, 0.1); 
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 0.85rem; color: var(--primary-green); 
+  border: 1px solid rgba(0, 255, 157, 0.2);
+}
+/* La frecuencia se mantiene en morado para destacar sobre el verde */
+.freq-badge { 
+  background: rgba(157, 78, 221, 0.1);
+  color: var(--primary-purple); 
+  border-color: rgba(157, 78, 221, 0.3); 
+}
+
+.question { font-size: 1.25rem; margin-bottom: 10px; line-height: 1.6; font-weight: 500; }
+.sub-text { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; font-style: italic; }
+
 .option-btn {
   display: block; width: 100%; text-align: left;
-  background: #2d2d2d; border: 1px solid #444;
-  padding: 15px; margin: 10px 0; border-radius: 8px; color: #fff;
+  background: var(--bg-input); border: 1px solid #333;
+  padding: 18px; margin: 12px 0; border-radius: 10px; color: var(--text-main);
+  cursor: pointer; transition: all 0.2s; position: relative;
+  font-size: 1rem;
 }
-.option-btn.selected { border: 2px solid #00a1e0; background: #3d3d3d; }
+.option-btn:hover { 
+  background: #28302b; 
+  border-color: #555; 
+  transform: translateX(5px); /* Pequeño desplazamiento a la derecha */
+}
+
+.option-btn.selected {
+  border: 2px solid var(--primary-green);
+  background: rgba(0, 255, 157, 0.08);
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.05);
+  transform: translateX(5px);
+}
+
+/* --- Feedback --- */
 .feedback {
-  margin-top: 20px; padding: 20px; border-radius: 8px;
-  background: #262626; border-left: 5px solid #00a1e0;
+  margin-top: 30px; padding: 25px; border-radius: 12px;
+  background: #1a201d; border: 1px solid #333;
+  border-top: 4px solid var(--primary-green);
+  animation: slideDown 0.4s;
 }
-.correct { color: #4caf50; }
-.incorrect { color: #f44336; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.correct-text { color: var(--primary-green); font-size: 1.5rem; margin-bottom: 10px; }
+.incorrect-text { color: var(--error); font-size: 1.5rem; margin-bottom: 10px; }
+
+.validation-msg {
+  color: #ffcc00; font-weight: bold; text-align: center;
+  min-height: 24px; margin-top: 15px;
+}
+
+.controls {
+  display: flex; gap: 15px; margin-top: 30px;
+}
+
+/* --- Prompt Area --- */
+.prompt-header h2 { color: var(--primary-green); margin-bottom: 5px; }
+.prompt-header p { color: var(--text-dim); margin-bottom: 20px; }
+.prompt-box textarea { height: 400px; font-size: 13px; color: #ccc; background: #111; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .controls { flex-direction: column; }
+  .social-links { justify-content: center; }
+  h1 { font-size: 1.8rem; }
+}
