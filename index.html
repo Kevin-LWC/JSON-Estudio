@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>Estudiando ando</h1>
+  
+  <div id="setup-area">
+    <p>Pega aquí tu JSON de preguntas:</p>
+    <textarea id="json-input" placeholder='[{"question": "...", "options": [...], "answer": ["A"], "explanation": "..."}]'></textarea>
+    <button onclick="loadQuiz()">Cargar Quiz</button>
+  </div>
+
+  <div id="quiz-area" style="display:none;">
+    <div id="progress">Pregunta 1 de X</div>
+    <div id="question-text" class="question"></div>
+    <div id="options-container"></div>
+    <button id="submit-btn" onclick="checkAnswer()">Verificar Respuesta</button>
+    
+    <div id="feedback" class="feedback" style="display:none;">
+      <h3 id="result-text"></h3>
+      <p id="explanation-text"></p>
+      <button onclick="nextQuestion()">Siguiente Pregunta</button>
+    </div>
+  </div>
+</div>
