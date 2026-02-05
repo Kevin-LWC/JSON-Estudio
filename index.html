@@ -36,19 +36,21 @@
     <div id="quiz-tab" class="tab-content active-content">
       
       <div id="setup-area">
-        <p class="instruction">Selecciona un Quiz cargado o pega tu JSON:</p>
+        <p class="instruction">Selecciona un Quiz de la carpeta <code>/quizzes</code>:</p>
         
         <div class="file-selector">
-          <label for="quiz-select">📂 Cargar desde archivo:</label>
+          <label for="quiz-select">📂 Archivos disponibles:</label>
           <select id="quiz-select">
-            <option value="" disabled selected>-- Elige un Quiz --</option>
-            </select>
+            <option value="" disabled selected>Cargando lista...</option>
+          </select>
           <button class="action-btn primary-btn" onclick="loadSelectedQuiz()">⚡ Cargar Quiz</button>
         </div>
+        
+        <div id="status-msg" class="sub-text" style="color: var(--primary-purple); font-size: 0.9rem;"></div>
 
         <div class="separator">- O -</div>
 
-        <textarea id="json-input" placeholder='O pega tu JSON aquí manualmente...'></textarea>
+        <textarea id="json-input" placeholder='Pega tu JSON aquí manualmente si no estás usando GitHub...'></textarea>
         <button class="action-btn secondary-btn" onclick="loadManualQuiz()">📝 Cargar Texto Manual</button>
       </div>
 
@@ -108,7 +110,8 @@ JSON
     "frequency": [1-10]
   }
 ]
-No añadas charla introductoria, solo entrega el bloque de código JSON listo para usar.
+No añadas charla introductoria, solo entrega el bloque de código JSON listo para usar. Solo quiero el archivo json para copiarlo
+        
         
         </textarea>
         <button class="action-btn glow-btn" onclick="copyPrompt()">
