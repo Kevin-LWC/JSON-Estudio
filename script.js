@@ -1,7 +1,26 @@
+// --- CONFIGURACIÓN DE ARCHIVOS ---
+// Agrega aquí los nombres de tus archivos JSON que guardaste en la carpeta "quizzes/"
+const QUIZ_FILES = [
+  { name: "Data Cloud Certification", file: "data-cloud.json" },
+  { name: "Admin Salesforce", file: "admin-cert.json" },
+  { name: "App Builder", file: "app-builder.json" }
+];
+
 let quizData = [];
 let currentIdx = 0;
 let selectedOptions = [];
 let hasCheckedAnswer = false;
+
+// --- Inicialización ---
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('quiz-select');
+  QUIZ_FILES.forEach(q => {
+    const option = document.createElement('option');
+    option.value = q.file;
+    option.innerText = q.name;
+    select.appendChild(option);
+  });
+});
 
 // --- Tab Logic ---
 function switchTab(tabId) {
@@ -19,7 +38,6 @@ function switchTab(tabId) {
 function copyPrompt() {
   const textArea = document.getElementById('prompt-text');
   textArea.select();
-  textArea.setSelectionRange(0, 99999);
   navigator.clipboard.writeText(textArea.value).then(() => {
     const label = document.getElementById('copy-label');
     const originalText = label.innerText;
@@ -28,30 +46,61 @@ function copyPrompt() {
   });
 }
 
-// --- Quiz Logic ---
-function loadQuiz() {
+// --- LOAD LOGIC (NEW) ---
+
+// 1. Cargar desde archivo JSON en carpeta 'quizzes/'
+async function loadSelectedQuiz() {
+  const filename = document.getElementById('quiz-select').value;
+  if (!filename) {
+    alert("Por favor selecciona un quiz del menú.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`quizzes/${filename}`);
+    if (!response.ok) throw new Error("No se pudo cargar el archivo");
+    
+    const data = await response.json();
+    startQuiz(data);
+  } catch (e) {
+    alert(`Error cargando el archivo: ${e.message}\n Asegúrate de estar corriendo esto en un servidor local (Live Server) o GitHub Pages.`);
+    console.error(e);
+  }
+}
+
+// 2. Cargar desde Texto Pegado (Legacy)
+function loadManualQuiz() {
   const input = document.getElementById('json-input').value;
   if (!input.trim()) { alert("Por favor pega un JSON válido."); return; }
   
   try {
-    quizData = JSON.parse(input);
-    document.getElementById('setup-area').style.display = 'none';
-    document.getElementById('quiz-area').style.display = 'block';
-    currentIdx = 0;
-    showQuestion();
+    const data = JSON.parse(input);
+    startQuiz(data);
   } catch (e) { 
     alert("Error de sintaxis JSON. Verifica comillas y comas."); 
     console.error(e);
   }
 }
 
+// Función común para iniciar
+function startQuiz(data) {
+  quizData = data;
+  document.getElementById('setup-area').style.display = 'none';
+  document.getElementById('quiz-area').style.display = 'block';
+  currentIdx = 0;
+  showQuestion();
+}
+
+// --- Quiz Logic (Core) ---
 function showQuestion() {
   const q = quizData[currentIdx];
   hasCheckedAnswer = false;
   
-  document.getElementById('progress').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+  // Progress
+  document.getElementById('progress').innerText = `Q: ${currentIdx + 1} / ${quizData.length}`;
   document.getElementById('question-text').innerText = q.question;
   
+  // Frequency
   const freqBadge = document.getElementById('frequency-badge');
   if (q.frequency) {
     freqBadge.style.display = 'inline-block';
@@ -60,12 +109,14 @@ function showQuestion() {
     freqBadge.style.display = 'none';
   }
 
+  // Instructions
   const correctCount = q.answer.length;
   const instruction = document.getElementById('selection-instruction');
   instruction.innerText = correctCount > 1 
-    ? `(Selecciona ${correctCount} opciones)` 
-    : "(Selecciona 1 opción)";
+    ? `(Select ${correctCount} options)` 
+    : "(Select 1 option)";
 
+  // Options Render
   const container = document.getElementById('options-container');
   container.innerHTML = '';
   document.getElementById('feedback').style.display = 'none';
@@ -86,7 +137,7 @@ function showQuestion() {
 function handleOptionClick(btn, optText, maxSelect) {
   if (hasCheckedAnswer) return; 
 
-  const val = optText.charAt(0); 
+  const val = optText.charAt(0); // Asume formato "A. Texto"
 
   if (selectedOptions.includes(val)) {
     selectedOptions = selectedOptions.filter(i => i !== val);
@@ -128,28 +179,25 @@ function checkAnswer() {
   const isCorrect = sortedSelected === sortedCorrect;
 
   const resultHeader = document.getElementById('result-text');
-  resultHeader.innerText = isCorrect ? "¡Correcto! 🎉" : "Incorrecto ❌";
+  resultHeader.innerText = isCorrect ? "Correct! 🎉" : "Incorrect ❌";
   resultHeader.className = isCorrect ? "correct-text" : "incorrect-text";
 
   const expDiv = document.getElementById('explanation-text');
+  // Renderizado de explicación
   expDiv.innerHTML = `
-    <p><strong>Respuesta Correcta:</strong> ${q.answer.join(', ')}</p>
-    <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+    <p><strong>Correct Answer:</strong> ${q.answer.join(', ')}</p>
+    <hr style="border: 0; border-top: 1px dashed #555; margin: 15px 0;">
     <p style="line-height:1.6">${q.explanation}</p>
   `;
 
   document.getElementById('feedback').style.display = 'block';
-  document.getElementById('feedback').scrollIntoView({ behavior: 'smooth' });
+  // Scroll suave al feedback
+  document.getElementById('feedback').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function showMessage(msg) {
   const el = document.getElementById('validation-msg');
   el.innerText = msg;
-  if(msg) {
-    el.style.animation = 'none';
-    el.offsetHeight; 
-    el.style.animation = 'fadeIn 0.3s';
-  }
 }
 
 function nextQuestion() {
@@ -158,7 +206,7 @@ function nextQuestion() {
     showQuestion();
     document.getElementById('quiz-area').scrollIntoView({ behavior: 'smooth' });
   } else {
-    alert("¡Has terminado el quiz!");
+    alert("¡Quiz finalizado!");
     location.reload();
   }
 }
