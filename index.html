@@ -86,7 +86,30 @@
 
       <div class="prompt-box">
         <textarea id="prompt-text" readonly>
-Actúa como un experto en Salesforce Data Cloud... (Mismo prompt que tenías)...
+Actúa como un experto en Salesforce Data Cloud con enfoque en desarrollo de simuladores. Convierte las preguntas del PDF adjunto al formato JSON especificado abajo, procesando el lote desde la pregunta [Número Inicio] hasta la [Número Fin].
+REGLAS CRÍTICAS DE INTEGRIDAD:
+
+PROHIBIDO INVENTAR: Copia el texto de la pregunta (question) y las opciones (options) palabra por palabra como aparecen en el PDF. No resumas ni modifiques ni una letra.
+RESPUESTAS: Si el PDF indica 'Choose 2 answers', el array answer debe contener ambas letras correctas.
+EXPLICACIÓN (En Español): Debe incluir:
+Por qué la respuesta marcada es correcta.
+Descarte: Por qué las otras opciones son incorrectas según la lógica de Data Cloud.
+Senior Tip: Un consejo avanzado o 'truco' de examen que amplíe el contexto del tema.
+FORMATO JSON REQUERIDO:
+JSON
+
+[
+  {
+    "id": [Número],
+    "question": "[Texto exacto del PDF]",
+    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
+    "answer": ["Letra"],
+    "explanation": "[Explicación en español + Descarte de opciones + Senior Tip]",
+    "frequency": [1-10]
+  }
+]
+No añadas charla introductoria, solo entrega el bloque de código JSON listo para usar.
+        
         </textarea>
         <button class="action-btn glow-btn" onclick="copyPrompt()">
           <span id="copy-label">Copiar Prompt</span>
