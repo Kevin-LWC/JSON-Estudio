@@ -1,17 +1,12 @@
 :root {
-  /* Paleta ajustada: Verde dominante */
-  --bg-dark: #0f1110;       /* Fondo casi negro pero con tinte verdoso muy sutil */
-  --bg-card: #161b18;       /* Tarjeta oscura */
-  --bg-input: #202622;      /* Inputs */
-  
-  --primary-green: #00ff9d; /* EL COLOR PRINCIPAL AHORA */
-  --primary-purple: #9d4edd; /* Morado reducido a acento secundario */
-  
-  --text-main: #e0e6e3;
-  --text-dim: #9aa39e;
-  
-  --error: #ff4b4b;
-  --success: #00ff9d;
+  --bg-dark: #1a1a1a;
+  --bg-card: #222;
+  --primary-green: #2ecc71;  /* Verde Sketch */
+  --primary-purple: #9b59b6; /* Morado Sketch */
+  --text-main: #f0f0f0;
+  --text-dim: #aaa;
+  --error: #e74c3c;
+  --font-doodle: 'Patrick Hand', 'Comic Sans MS', cursive; /* Fuente estilo mano */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,314 +14,234 @@
 body {
   background-color: var(--bg-dark);
   color: var(--text-main);
-  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+  font-family: var(--font-doodle);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  min-height: 100vh;
   padding: 20px;
-  background-image: radial-gradient(circle at 50% 0%, #002e1c 0%, var(--bg-dark) 60%);
+  overflow-x: hidden;
+}
+
+/* --- GRAIN OVERLAY (Fondo Ruidoso) --- */
+.grain-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: -1; /* Detrás de todo */
+  opacity: 0.08; /* Sutil */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .main-wrapper {
   width: 100%;
-  max-width: 900px;
+  max-width: 850px;
+  position: relative;
+  z-index: 1;
 }
 
-/* --- Header & Social --- */
-.main-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+/* --- Header & Social (Estilo Doodle) --- */
+.main-header { text-align: center; margin-bottom: 30px; }
 
 .social-links {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .social-btn {
   text-decoration: none;
-  color: var(--text-dim);
-  border: 1px solid #333;
+  color: var(--text-main);
+  border: 2px solid var(--text-dim);
   padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  background: rgba(255,255,255,0.03);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: transparent;
+  transition: all 0.2s ease;
+  /* Bordes irregulares */
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
 }
 
 .social-btn:hover {
   border-color: var(--primary-green);
   color: var(--primary-green);
-  background: rgba(0, 255, 157, 0.05);
-  transform: translateY(-2px); /* Efecto hover sutil */
+  transform: rotate(-2deg) scale(1.05);
+  box-shadow: 2px 2px 0px var(--primary-purple);
 }
 
-h1 { 
-  font-size: 2.5rem; 
-  letter-spacing: -1px;
-  margin-bottom: 10px;
+.hand-drawn-title {
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 10px 0;
 }
 
 .highlight { 
-  /* Gradiente invertido para priorizar el verde */
-  background: -webkit-linear-gradient(0deg, var(--primary-purple), var(--primary-green));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
+  color: var(--primary-green);
+  text-decoration: underline wavy var(--primary-purple);
+  text-underline-offset: 8px;
+}
+
+.sketch-line {
+  height: 4px;
+  background: var(--primary-purple);
+  width: 180px;
+  margin: 0 auto 30px;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  transform: rotate(1deg);
 }
 
 /* --- Tabs --- */
 .nav-tabs {
   display: flex;
-  margin-bottom: 20px;
-  gap: 10px;
+  margin-bottom: 25px;
+  gap: 15px;
 }
 
 .tab-btn {
-  background: transparent;
-  border: 1px solid #333;
-  color: var(--text-dim);
-  padding: 12px 20px;
-  cursor: pointer;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
   flex: 1;
+  background: transparent;
+  border: 2px solid #444;
+  color: var(--text-dim);
+  padding: 12px;
+  cursor: pointer;
+  font-family: var(--font-doodle);
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  /* Borde irregular */
+  border-radius: 15px 225px 15px 255px/255px 15px 225px 15px;
 }
 
-.tab-btn:hover {
-  background: rgba(255,255,255,0.02);
-  color: #fff;
-}
+.tab-btn:hover { border-color: #666; color: #fff; }
 
 .tab-btn.active {
-  /* Borde verde brillante, fondo sutil */
   border-color: var(--primary-green);
   color: var(--primary-green);
-  background: linear-gradient(180deg, rgba(0, 255, 157, 0.05), transparent);
-  box-shadow: 0 -2px 10px rgba(0, 255, 157, 0.1) inset;
-}
-
-.tab-content { display: none; animation: fadeIn 0.4s ease; }
-.tab-content.active-content { display: block; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-/* --- Container --- */
-.container {
-  background: var(--bg-card);
-  padding: 35px;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  border: 1px solid #2a332e;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Línea superior verde neón */
-.container::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--primary-green), var(--primary-purple));
-  box-shadow: 0 0 15px var(--primary-green);
-}
-
-/* --- Inputs --- */
-textarea {
-  width: 100%; height: 180px;
-  background: var(--bg-input); color: #fff;
-  border: 1px solid #333; border-radius: 8px; padding: 15px;
-  font-family: monospace; font-size: 14px; resize: vertical;
-  transition: border-color 0.3s;
-}
-textarea:focus { outline: none; border-color: var(--primary-green); }
-
-/* --- Buttons --- */
-.action-btn {
-  padding: 14px 24px; border-radius: 8px; cursor: pointer;
-  font-weight: bold; border: none; font-size: 1rem;
-  margin-top: 15px; width: 100%; 
-  transition: all 0.2s ease;
-}
-
-.primary-btn {
-  /* Verde solido pero moderno */
-  background: var(--primary-green);
-  color: #000;
-}
-.primary-btn:hover {
-  background: #00e08a;
-  box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+  background: rgba(46, 204, 113, 0.05);
+  box-shadow: 3px 3px 0px var(--primary-purple);
   transform: translateY(-2px);
 }
 
-.secondary-btn {
-  background: #2a2a30; color: white; border: 1px solid #444;
-}
-.secondary-btn:hover:not(:disabled) { 
-  background: #333; 
-  border-color: #666;
-}
-.secondary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.tab-content { display: none; animation: fadeIn 0.4s; }
+.tab-content.active-content { display: block; }
 
-.glow-btn {
-  background: transparent;
-  border: 1px solid var(--primary-green);
-  color: var(--primary-green);
+/* --- Container (Card) --- */
+.container {
+  background: var(--bg-card);
+  padding: 30px;
+  position: relative;
+  border: 3px solid var(--primary-green);
+  /* Forma asimétrica */
+  border-radius: 2% 98% 2% 98% / 98% 2% 98% 2%;
+  box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
 }
-.glow-btn:hover {
+
+/* --- Inputs & Selects --- */
+textarea, select {
+  width: 100%;
+  background: #111;
+  color: #fff;
+  border: 2px solid #444;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  border-radius: 8px 12px 9px 14px; /* Irregular */
+  margin-bottom: 15px;
+}
+textarea:focus, select:focus { outline: none; border-color: var(--primary-purple); }
+
+.file-selector {
+  background: rgba(255,255,255,0.03);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px dashed #555;
+}
+.separator { text-align: center; margin: 20px 0; color: #666; font-weight: bold; }
+
+/* --- Buttons --- */
+.action-btn {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--font-doodle);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: 2px solid #000;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  transition: transform 0.1s;
+  margin-top: 10px;
+}
+
+.primary-btn {
   background: var(--primary-green);
   color: #000;
-  box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+  box-shadow: 4px 4px 0px #000;
 }
+.primary-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+.primary-btn:active { transform: translate(0, 0); box-shadow: 2px 2px 0px #000; }
 
-/* --- Quiz UI --- */
-.quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.secondary-btn {
+  background: transparent;
+  border-color: var(--primary-purple);
+  color: var(--primary-purple);
+}
+.secondary-btn:hover:not(:disabled) {
+  background: var(--primary-purple);
+  color: #fff;
+}
+.secondary-btn:disabled { opacity: 0.5; cursor: not-allowed; border-color: #555; color: #555;}
+
+/* --- Quiz Elements --- */
 .badge {
-  background: rgba(0, 255, 157, 0.1); 
-  padding: 6px 14px; border-radius: 20px;
-  font-size: 0.85rem; color: var(--primary-green); 
-  border: 1px solid rgba(0, 255, 157, 0.2);
+  display: inline-block;
+  border: 2px solid var(--primary-green);
+  padding: 5px 15px;
+  border-radius: 30px 10px 30px 10px;
+  font-weight: bold;
+  color: var(--primary-green);
 }
-/* La frecuencia se mantiene en morado para destacar sobre el verde */
-.freq-badge { 
-  background: rgba(157, 78, 221, 0.1);
-  color: var(--primary-purple); 
-  border-color: rgba(157, 78, 221, 0.3); 
+.freq-badge {
+  border-color: var(--primary-purple);
+  color: var(--primary-purple);
+  margin-left: 10px;
 }
 
-.question { font-size: 1.25rem; margin-bottom: 10px; line-height: 1.6; font-weight: 500; }
-.sub-text { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; font-style: italic; }
+.question { font-size: 1.3rem; margin: 20px 0; line-height: 1.5; }
 
 .option-btn {
   display: block; width: 100%; text-align: left;
-  background: var(--bg-input); border: 1px solid #333;
-  padding: 18px; margin: 12px 0; border-radius: 10px; color: var(--text-main);
-  cursor: pointer; transition: all 0.2s; position: relative;
-  font-size: 1rem;
-}
-.option-btn:hover { 
-  background: #28302b; 
-  border-color: #555; 
-  transform: translateX(5px); /* Pequeño desplazamiento a la derecha */
+  background: #1a1a1a;
+  border: 2px solid #444;
+  padding: 15px;
+  margin: 10px 0;
+  color: var(--text-main);
+  cursor: pointer;
+  border-radius: 10px 25px 10px 20px; /* Irregular */
+  font-family: var(--font-doodle);
+  font-size: 1.05rem;
+  transition: all 0.2s;
 }
 
+.option-btn:hover {
+  border-color: var(--primary-green);
+  transform: scale(1.01) rotate(-0.5deg);
+}
 .option-btn.selected {
-  border: 2px solid var(--primary-green);
-  background: rgba(0, 255, 157, 0.08);
-  box-shadow: 0 0 15px rgba(0, 255, 157, 0.05);
-  transform: translateX(5px);
+  background: rgba(46, 204, 113, 0.1);
+  border-color: var(--primary-green);
+  box-shadow: 3px 3px 0px var(--primary-green);
 }
 
-/* --- Feedback --- */
 .feedback {
-  margin-top: 30px; padding: 25px; border-radius: 12px;
-  background: #1a201d; border: 1px solid #333;
-  border-top: 4px solid var(--primary-green);
-  animation: slideDown 0.4s;
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px dashed var(--primary-green);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
 }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.correct-text { color: var(--primary-green); }
+.incorrect-text { color: var(--error); }
 
-.correct-text { color: var(--primary-green); font-size: 1.5rem; margin-bottom: 10px; }
-.incorrect-text { color: var(--error); font-size: 1.5rem; margin-bottom: 10px; }
-
-.validation-msg {
-  color: #ffcc00; font-weight: bold; text-align: center;
-  min-height: 24px; margin-top: 15px;
-}
-
-.controls {
-  display: flex; gap: 15px; margin-top: 30px;
-}
-
-/* --- Prompt Area --- */
-.prompt-header h2 { color: var(--primary-green); margin-bottom: 5px; }
-.prompt-header p { color: var(--text-dim); margin-bottom: 20px; }
-.prompt-box textarea { height: 400px; font-size: 13px; color: #ccc; background: #111; }
-
-/* Responsive */
-@media (max-width: 600px) {
-  .controls { flex-direction: column; }
-  .social-links { justify-content: center; }
-  h1 { font-size: 1.8rem; }
-}
-:root {
-    --primary-green: #2ecc71;  /* Tu verde */
-    --primary-purple: #8e44ad; /* Tu morado */
-    --bg-dark: #1a1a1a;       /* Gris muy oscuro tipo camisa */
-    --text-color: #f0f0f0;
-}
-
-body {
-    background-color: var(--bg-dark);
-    color: var(--text-color);
-    font-family: 'Comic Sans MS', 'Courier New', cursive; /* Fuente más orgánica */
-    margin: 0;
-    position: relative;
-}
-
-/* EFECTO ACID WASH (GRANO) */
-.grain-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.52; /* Ajusta la intensidad del grano aquí */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* TÍTULO ESTILO TOM SACHS */
-.hand-drawn-title {
-    color: var(--primary-green);
-    font-size: 3rem;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-    margin-bottom: 0;
-}
-
-.sketch-line {
-    height: 4px;
-    background: var(--primary-purple);
-    width: 200px;
-    margin: 0 auto 30px;
-    /* Efecto de trazo manual */
-    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-}
-
-/* TARJETAS CON BORDES IRREGULARES */
-.card {
-    background: transparent;
-    border: 3px solid var(--primary-green);
-    padding: 20px;
-    margin: 15px;
-    /* Border-radius asimétrico para parecer dibujado */
-    border-radius: 2% 98% 3% 97% / 96% 3% 97% 4%;
-    transition: transform 0.2s ease;
-    box-shadow: 5px 5px 0px var(--primary-purple); /* Sombra sólida tipo cómic */
-}
-
-.card:hover {
-    transform: scale(1.02) rotate(-1deg);
-    border-color: var(--primary-purple);
-    box-shadow: 5px 5px 0px var(--primary-green);
-}
-
-/* BOTONES ESTILO DOODLE */
-button {
-    background: var(--primary-purple);
-    color: white;
-    border: 2px solid #000;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 12px 4px 14px 5px; /* Irregular */
-}
-
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
