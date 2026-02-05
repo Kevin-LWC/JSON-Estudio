@@ -1,32 +1,120 @@
-// --- CONFIGURACIÓN DE ARCHIVOS ---
-// Agrega aquí los nombres de tus archivos JSON que guardaste en la carpeta "quizzes/"
-const QUIZ_FILES = [
-  { name: "Data Cloud Certification", file: "data-cloud.json" },
-  { name: "Admin Salesforce", file: "admin-cert.json" },
-  { name: "App Builder", file: "app-builder.json" }
-];
+// ==========================================
+// ⚙️ CONFIGURACIÓN DE GITHUB (¡EDITA ESTO!)
+// ==========================================
+const GITHUB_CONFIG = {
+  // Tu nombre de usuario en GitHub
+  username: "Kevin-LWC", // <--- CAMBIA ESTO por tu usuario real
+  // El nombre EXACTO de tu repositorio
+  repo: "JSON-Estudio", // <--- CAMBIA ESTO por el nombre de tu repo
+  // La carpeta donde guardas los jsons
+  folder: "quizzes"
+};
 
 let quizData = [];
 let currentIdx = 0;
 let selectedOptions = [];
 let hasCheckedAnswer = false;
 
-// --- Inicialización ---
+// --- Inicialización: Carga automática de la lista ---
 document.addEventListener('DOMContentLoaded', () => {
-  const select = document.getElementById('quiz-select');
-  QUIZ_FILES.forEach(q => {
-    const option = document.createElement('option');
-    option.value = q.file;
-    option.innerText = q.name;
-    select.appendChild(option);
-  });
+  fetchQuizListFromGitHub();
 });
+
+// --- FUNCIÓN MÁGICA: Escanear carpeta de GitHub ---
+async function fetchQuizListFromGitHub() {
+  const select = document.getElementById('quiz-select');
+  const statusMsg = document.getElementById('status-msg');
+
+  // URL de la API de GitHub para leer contenido de carpeta
+  const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.folder}`;
+
+  try {
+    statusMsg.innerText = "🔍 Buscando archivos en GitHub...";
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      if(response.status === 404) throw new Error("Repositorio o carpeta no encontrada.");
+      if(response.status === 403) throw new Error("Límite de API excedido o repo privado.");
+      throw new Error("Error de conexión con GitHub.");
+    }
+
+    const files = await response.json();
+    
+    // Limpiar select
+    select.innerHTML = '<option value="" disabled selected>-- Selecciona un Quiz detectado --</option>';
+    
+    // Filtrar solo archivos .json
+    const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+
+    if (jsonFiles.length === 0) {
+      statusMsg.innerText = "⚠️ No encontré archivos .json en la carpeta 'quizzes'.";
+      return;
+    }
+
+    // Llenar el select dinámicamente
+    jsonFiles.forEach(file => {
+      const option = document.createElement('option');
+      option.value = file.download_url; // URL cruda del archivo
+      // Quitamos la extensión .json para que se vea bonito en el nombre
+      option.innerText = file.name.replace('.json', '');
+      select.appendChild(option);
+    });
+
+    statusMsg.innerText = `✅ ¡Listo! Se encontraron ${jsonFiles.length} quizzes.`;
+
+  } catch (error) {
+    console.error(error);
+    // Fallback: Si falla la API (ej. estás en local sin internet o repo privado)
+    statusMsg.innerHTML = `⚠️ No se pudo escanear GitHub automáticante.<br><small>${error.message}</small>`;
+    select.innerHTML = '<option value="" disabled>Error de carga (Ver consola)</option>';
+  }
+}
+
+// --- Cargar el Quiz seleccionado ---
+async function loadSelectedQuiz() {
+  const url = document.getElementById('quiz-select').value;
+  if (!url) {
+    alert("Por favor selecciona un quiz del menú.");
+    return;
+  }
+
+  try {
+    document.getElementById('status-msg').innerText = "⏳ Descargando preguntas...";
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("No se pudo descargar el archivo JSON");
+    
+    const data = await response.json();
+    startQuiz(data);
+    document.getElementById('status-msg').innerText = "";
+  } catch (e) {
+    alert(`Error cargando el quiz: ${e.message}`);
+  }
+}
+
+// --- Lógica Estándar (Igual que antes) ---
+function loadManualQuiz() {
+  const input = document.getElementById('json-input').value;
+  if (!input.trim()) { alert("Por favor pega un JSON válido."); return; }
+  try {
+    const data = JSON.parse(input);
+    startQuiz(data);
+  } catch (e) { 
+    alert("Error de sintaxis JSON."); 
+  }
+}
+
+function startQuiz(data) {
+  quizData = data;
+  document.getElementById('setup-area').style.display = 'none';
+  document.getElementById('quiz-area').style.display = 'block';
+  currentIdx = 0;
+  showQuestion();
+}
 
 // --- Tab Logic ---
 function switchTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-content'));
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  
   document.getElementById(tabId).classList.add('active-content');
   
   const btns = document.querySelectorAll('.tab-btn');
@@ -40,67 +128,20 @@ function copyPrompt() {
   textArea.select();
   navigator.clipboard.writeText(textArea.value).then(() => {
     const label = document.getElementById('copy-label');
-    const originalText = label.innerText;
+    const old = label.innerText;
     label.innerText = "¡Copiado!";
-    setTimeout(() => label.innerText = originalText, 2000);
+    setTimeout(() => label.innerText = old, 2000);
   });
 }
 
-// --- LOAD LOGIC (NEW) ---
-
-// 1. Cargar desde archivo JSON en carpeta 'quizzes/'
-async function loadSelectedQuiz() {
-  const filename = document.getElementById('quiz-select').value;
-  if (!filename) {
-    alert("Por favor selecciona un quiz del menú.");
-    return;
-  }
-
-  try {
-    const response = await fetch(`quizzes/${filename}`);
-    if (!response.ok) throw new Error("No se pudo cargar el archivo");
-    
-    const data = await response.json();
-    startQuiz(data);
-  } catch (e) {
-    alert(`Error cargando el archivo: ${e.message}\n Asegúrate de estar corriendo esto en un servidor local (Live Server) o GitHub Pages.`);
-    console.error(e);
-  }
-}
-
-// 2. Cargar desde Texto Pegado (Legacy)
-function loadManualQuiz() {
-  const input = document.getElementById('json-input').value;
-  if (!input.trim()) { alert("Por favor pega un JSON válido."); return; }
-  
-  try {
-    const data = JSON.parse(input);
-    startQuiz(data);
-  } catch (e) { 
-    alert("Error de sintaxis JSON. Verifica comillas y comas."); 
-    console.error(e);
-  }
-}
-
-// Función común para iniciar
-function startQuiz(data) {
-  quizData = data;
-  document.getElementById('setup-area').style.display = 'none';
-  document.getElementById('quiz-area').style.display = 'block';
-  currentIdx = 0;
-  showQuestion();
-}
-
-// --- Quiz Logic (Core) ---
+// --- Quiz Engine ---
 function showQuestion() {
   const q = quizData[currentIdx];
   hasCheckedAnswer = false;
   
-  // Progress
   document.getElementById('progress').innerText = `Q: ${currentIdx + 1} / ${quizData.length}`;
   document.getElementById('question-text').innerText = q.question;
   
-  // Frequency
   const freqBadge = document.getElementById('frequency-badge');
   if (q.frequency) {
     freqBadge.style.display = 'inline-block';
@@ -109,14 +150,11 @@ function showQuestion() {
     freqBadge.style.display = 'none';
   }
 
-  // Instructions
   const correctCount = q.answer.length;
-  const instruction = document.getElementById('selection-instruction');
-  instruction.innerText = correctCount > 1 
+  document.getElementById('selection-instruction').innerText = correctCount > 1 
     ? `(Select ${correctCount} options)` 
     : "(Select 1 option)";
 
-  // Options Render
   const container = document.getElementById('options-container');
   container.innerHTML = '';
   document.getElementById('feedback').style.display = 'none';
@@ -136,8 +174,7 @@ function showQuestion() {
 
 function handleOptionClick(btn, optText, maxSelect) {
   if (hasCheckedAnswer) return; 
-
-  const val = optText.charAt(0); // Asume formato "A. Texto"
+  const val = optText.charAt(0); 
 
   if (selectedOptions.includes(val)) {
     selectedOptions = selectedOptions.filter(i => i !== val);
@@ -162,7 +199,6 @@ function handleOptionClick(btn, optText, maxSelect) {
 
 function checkAnswer() {
   if (hasCheckedAnswer) return;
-
   const q = quizData[currentIdx];
   const correctCount = q.answer.length;
 
@@ -183,7 +219,6 @@ function checkAnswer() {
   resultHeader.className = isCorrect ? "correct-text" : "incorrect-text";
 
   const expDiv = document.getElementById('explanation-text');
-  // Renderizado de explicación
   expDiv.innerHTML = `
     <p><strong>Correct Answer:</strong> ${q.answer.join(', ')}</p>
     <hr style="border: 0; border-top: 1px dashed #555; margin: 15px 0;">
@@ -191,13 +226,11 @@ function checkAnswer() {
   `;
 
   document.getElementById('feedback').style.display = 'block';
-  // Scroll suave al feedback
   document.getElementById('feedback').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function showMessage(msg) {
-  const el = document.getElementById('validation-msg');
-  el.innerText = msg;
+  document.getElementById('validation-msg').innerText = msg;
 }
 
 function nextQuestion() {
@@ -206,7 +239,7 @@ function nextQuestion() {
     showQuestion();
     document.getElementById('quiz-area').scrollIntoView({ behavior: 'smooth' });
   } else {
-    alert("¡Quiz finalizado!");
+    alert("¡Has terminado el quiz!");
     location.reload();
   }
 }
