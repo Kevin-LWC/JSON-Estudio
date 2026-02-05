@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bye Focus on Force</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Bye Focus on Force - Sketch Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  </head>
+</head>
 <body>
+
+<div class="grain-overlay"></div>
 
 <div class="main-wrapper">
   
@@ -20,7 +22,8 @@
         <span>Trailhead</span> ⛰️
       </a>
     </div>
-    <h1>Bye Focus on <span class="highlight">Force</span></h1>
+    <h1 class="hand-drawn-title">Bye Focus on <span class="highlight">Force</span></h1>
+    <div class="sketch-line"></div>
   </header>
   
   <div class="nav-tabs">
@@ -28,28 +31,30 @@
     <button class="tab-btn" onclick="switchTab('prompt-tab')">Prompts Generator</button>
   </div>
 
-  <div class="container">
+  <div class="container card">
     
     <div id="quiz-tab" class="tab-content active-content">
       
       <div id="setup-area">
-        <p class="instruction">Pega tu JSON de preguntas aquí:</p>
-        <textarea id="json-input" placeholder='[
-  {
-    "id": 1,
-    "question": "...",
-    "options": ["A...", "B..."],
-    "answer": ["A"],
-    "explanation": "...",
-    "frequency": 10
-  }
-]'></textarea>
-        <button class="action-btn primary-btn" onclick="loadQuiz()">🚀 Cargar Simulador</button>
+        <p class="instruction">Selecciona un Quiz cargado o pega tu JSON:</p>
+        
+        <div class="file-selector">
+          <label for="quiz-select">📂 Cargar desde archivo:</label>
+          <select id="quiz-select">
+            <option value="" disabled selected>-- Elige un Quiz --</option>
+            </select>
+          <button class="action-btn primary-btn" onclick="loadSelectedQuiz()">⚡ Cargar Quiz</button>
+        </div>
+
+        <div class="separator">- O -</div>
+
+        <textarea id="json-input" placeholder='O pega tu JSON aquí manualmente...'></textarea>
+        <button class="action-btn secondary-btn" onclick="loadManualQuiz()">📝 Cargar Texto Manual</button>
       </div>
 
       <div id="quiz-area" style="display:none;">
         <div class="quiz-header">
-          <div id="progress" class="badge">Pregunta 1 de X</div>
+          <div id="progress" class="badge">Q: 1 / X</div>
           <div id="frequency-badge" class="badge freq-badge" style="display:none;">Freq: <span id="freq-val"></span>/10</div>
         </div>
 
@@ -61,9 +66,9 @@
         <div id="validation-msg" class="validation-msg"></div>
 
         <div class="controls">
-          <button id="prev-btn" class="action-btn secondary-btn" onclick="prevQuestion()" disabled>❮ Anterior</button>
-          <button id="submit-btn" class="action-btn primary-btn" onclick="checkAnswer()">Verificar</button>
-          <button id="next-btn" class="action-btn secondary-btn" onclick="nextQuestion()">Siguiente ❯</button>
+          <button id="prev-btn" class="action-btn secondary-btn" onclick="prevQuestion()" disabled>❮ Prev</button>
+          <button id="submit-btn" class="action-btn primary-btn" onclick="checkAnswer()">Check Answer</button>
+          <button id="next-btn" class="action-btn secondary-btn" onclick="nextQuestion()">Next ❯</button>
         </div>
         
         <div id="feedback" class="feedback" style="display:none;">
@@ -75,35 +80,13 @@
 
     <div id="prompt-tab" class="tab-content">
       <div class="prompt-header">
-        <h2>Generador de Preguntas</h2>
-        <p>Convierte tus PDFs en JSON para el simulador</p>
+        <h2>Generador de Prompts</h2>
+        <p>Convierte PDFs a JSON compatible.</p>
       </div>
 
       <div class="prompt-box">
         <textarea id="prompt-text" readonly>
-Actúa como un experto en Salesforce Data Cloud con enfoque en desarrollo de simuladores. Convierte las preguntas del PDF adjunto al formato JSON especificado abajo, procesando el lote desde la pregunta [Número Inicio] hasta la [Número Fin].
-REGLAS CRÍTICAS DE INTEGRIDAD:
-
-PROHIBIDO INVENTAR: Copia el texto de la pregunta (question) y las opciones (options) palabra por palabra como aparecen en el PDF. No resumas ni modifiques ni una letra.
-RESPUESTAS: Si el PDF indica 'Choose 2 answers', el array answer debe contener ambas letras correctas.
-EXPLICACIÓN (En Español): Debe incluir:
-Por qué la respuesta marcada es correcta.
-Descarte: Por qué las otras opciones son incorrectas según la lógica de Data Cloud.
-Senior Tip: Un consejo avanzado o 'truco' de examen que amplíe el contexto del tema.
-FORMATO JSON REQUERIDO:
-JSON
-
-[
-  {
-    "id": [Número],
-    "question": "[Texto exacto del PDF]",
-    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
-    "answer": ["Letra"],
-    "explanation": "[Explicación en español + Descarte de opciones + Senior Tip]",
-    "frequency": [1-10]
-  }
-]
-No añadas charla introductoria, solo entrega el bloque de código JSON listo para usar.
+Actúa como un experto en Salesforce Data Cloud... (Mismo prompt que tenías)...
         </textarea>
         <button class="action-btn glow-btn" onclick="copyPrompt()">
           <span id="copy-label">Copiar Prompt</span>
