@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "question": "Northern Trail Outfitters (NTD) creates a calculated insight to compute recency, frequency, monetary {RFM) scores on its unified individuals. NTO then creates a segment based on these scores that it activates to a Marketing Cloud activation target.Which two actions are required when configuring the activation? Choose 2 answers",
+    "options": [
+      "A. Add additional attributes.",
+      "B. Choose a segment.",
+      "C. Select contact points.",
+      "D. Add the calculated insight in the activation."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque para configurar una activación a un destino de Marketing Cloud, es obligatorio elegir un segmento que defina los individuos unificados a activar y seleccionar puntos de contacto para mapear los atributos del segmento a los campos de la extensión de datos en Marketing Cloud. Descarte: La opción A (Agregar atributos adicionales) es innecesaria ya que los atributos requeridos ya están incluidos en la definición del segmento. La opción D (Agregar la insight calculada en la activación) no se requiere porque la insight forma parte intrínseca del segmento y no se configura por separado durante la activación. Senior Tip: Siempre valida que los puntos de contacto seleccionados coincidan exactamente con los nombres de campo en la extensión de datos de Marketing Cloud para evitar errores de mapeo durante la activación.",
+    "frequency": 8
+  },
+  {
+    "id": 2,
+    "question": "A customer is concerned that the consolidation rate displayed in the identity resolution is quite low compared to their initial estimations.Which configuration change should a consultant consider in order to increase the consolidation rate?",
+    "options": [
+      "A. Change reconciliation rules to Most Occurring.",
+      "B. Increase the number of matching rules.",
+      "C. Include additional attributes in the existing matching rules.",
+      "D. Reduce the number of matching rules."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque incrementar el número de reglas de coincidencia aumenta las probabilidades de emparejar perfiles fuente, elevando así la tasa de consolidación (calculada como 1 - perfiles unificados / perfiles fuente). Descarte: La opción A (Cambiar reglas de reconciliación a Más Frecuente) no incrementa coincidencias, solo resuelve conflictos entre perfiles ya emparejados. La opción C (Incluir atributos adicionales) puede introducir ruido y reducir la precisión, disminuyendo la tasa. La opción D (Reducir reglas de coincidencia) limita las oportunidades de emparejamiento, reduciendo directamente la consolidación. Senior Tip: Prioriza reglas de coincidencia basadas en atributos únicos y de alta confiabilidad (como email verificado o ID de cliente) antes de agregar reglas adicionales; evita atributos con alto porcentaje de valores nulos para maximizar la efectividad.",
+    "frequency": 8
+  },
+  {
+    "id": 3,
+    "question": "A customer is trying to activate data from Data Cloud to an Amazon S3 Cloud File Storage Bucket.Which authentication type should the consultant recommend to connect to the S3 bucket from Data Cloud?",
+    "options": [
+      "A. Use an S3 Private Key Certificate.",
+      "B. Use an S3 Encrypted Username and Password.",
+      "C. Use a JWT Token generated on S3.",
+      "D. Use an S3 Access Key and Secret Key."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el conector de Amazon S3 en Data Cloud requiere explícitamente la clave de acceso (Access Key) y clave secreta (Secret Key) generadas en AWS IAM para autenticación segura. Descarte: La opción A (Certificado de clave privada S3) no es compatible con el conector de S3 en Data Cloud. La opción B (Usuario y contraseña cifrados) no es un método de autenticación válido para S3. La opción C (Token JWT) no es soportado por el conector nativo de S3 en Data Cloud. Senior Tip: Nunca almacenes claves de acceso en texto plano; usa AWS Secrets Manager o Salesforce External Credential para gestionar credenciales de forma segura y cumple con las políticas de rotación de claves de tu organización.",
+    "frequency": 8
+  },
+  {
+    "id": 4,
+    "question": "A consultant has an activation that is set to publish every 12 hours, but has discovered that updates to the data prior to activation are delayed by up to 24 hours.Which two areas should a consultant review to troubleshoot this issue? Choose 2 answers",
+    "options": [
+      "A. Review data transformations to ensure they're run after calculated insights.",
+      "B. Review calculated insights to make sure they're run before segments are refreshed.",
+      "C. Review segments to ensure they're refreshed after the data is ingested.",
+      "D. Review calculated insights to make sure they're run after the segments are refreshed."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque las insights calculadas deben ejecutarse después de la ingesta de datos pero antes del refresco de segmentos (B), y los segmentos deben refrescarse tras la ingesta para reflejar los datos más recientes (C); esto garantiza que las activaciones usen información actualizada. Descarte: La opción A (Revisar transformaciones de datos) es irrelevante ya que las transformaciones son opcionales y no impactan directamente el ciclo de actualización de segmentos. La opción D (Ejecutar insights después de refrescar segmentos) es incorrecta porque las insights alimentan a los segmentos; si se ejecutan después, los segmentos usarían datos obsoletos. Senior Tip: Configura un flujo secuencial: ingesta → transformaciones (opcional) → insights calculadas → refresco de segmentos → activación; usa Data Cloud Monitor para identificar retrasos en cada etapa y ajusta los intervalos de programación según prioridad de datos.",
+    "frequency": 8
+  },
+  {
+    "id": 5,
+    "question": "Northern Trail Outfitters wants to use some of its Marketing Cloud data in Data Cloud.Which engagement channel data will require custom integration?",
+    "options": [
+      "A. SMS",
+      "B. Email",
+      "C. CloudPage",
+      "D. Mobile push"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque CloudPage no es un canal de engagement estándar soportado nativamente por Data Cloud; requiere integración personalizada mediante APIs o eventos para ingestar datos de interacción. Descarte: Las opciones A (SMS), B (Email) y D (Mobile push) son canales estándar integrados directamente mediante el conector de Marketing Cloud sin necesidad de desarrollo adicional. Senior Tip: Para CloudPage, implementa una solución usando Marketing Cloud REST API para enviar eventos de interacción a Data Cloud como objetos personalizados; documenta el mapeo de atributos (ej: CloudPageID, timestamp) para facilitar el troubleshooting.",
+    "frequency": 8
+  },
+  {
+    "id": 6,
+    "question": "Which permission setting should a consultant check if the custom Salesforce CRM object is not available in New Data Stream configuration?",
+    "options": [
+      "A. Confirm the Create object permission is enabled in the Data Cloud org.",
+      "B. Confirm the View All object permission is enabled in the source Salesforce CRM org.",
+      "C. Confirm the Ingest Object permission is enabled in the Salesforce CRM org.",
+      "D. Confirm that the Modify Object permission is enabled in the Data Cloud org."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque el permiso 'Ver Todo' (View All) en el objeto personalizado de la org fuente de Salesforce CRM es obligatorio para que el objeto aparezca en la configuración de flujos de datos; sin él, los registros no son visibles debido a reglas de compartición. Descarte: La opción A (Permiso Crear objeto en Data Cloud) no afecta la visibilidad del objeto fuente. La opción C (Permiso Ingestar Objeto) no existe como permiso estándar en Salesforce. La opción D (Permiso Modificar Objeto en Data Cloud) es irrelevante para la disponibilidad inicial del objeto en la configuración del flujo. Senior Tip: Asigna un conjunto de permisos en la org fuente que incluya 'Ver Todo' para el objeto personalizado al perfil del usuario de conexión; verifica también que el objeto esté desplegado en la versión de API usada por Data Cloud.",
+    "frequency": 8
+  },
+  {
+    "id": 7,
+    "question": "Which two common use cases can be addressed with Data Cloud? Choose 2 answers",
+    "options": [
+      "A. Understand and act upon customer data to drive more relevant experiences.",
+      "B. Govern enterprise data lifecycle through a centralized set of policies and processes.",
+      "C. Harmonize data from multiple sources with a standardized and extendable data model.",
+      "D. Safeguard critical business data by serving as a centralized system for backup and disaster recovery."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque Data Cloud está diseñado para unificar datos de múltiples fuentes y generar una vista 360 del cliente para experiencias personalizadas (A), y para armonizar datos mediante un modelo común (CDP) extensible que normaliza atributos (C). Descarte: La opción B (Gobernanza de ciclo de vida) no es función nativa de Data Cloud; se gestiona con herramientas como Salesforce Data Governance. La opción D (Backup y recuperación) no aplica; Data Cloud no es un sistema de respaldo sino una plataforma de activación en tiempo real. Senior Tip: Enfócate en casos de uso de Customer Data Platform (CDP) como segmentación predictiva o activación cross-canal; evita intentar usar Data Cloud para gobernanza técnica o respaldos, donde otras herramientas son más adecuadas.",
+    "frequency": 8
+  },
+  {
+    "id": 8,
+    "question": "Where is value suggestion for attributes in segmentation enabled when creating the DMO?",
+    "options": [
+      "A. Data Mapping",
+      "B. Data Transformation",
+      "C. Segment Setup",
+      "D. Data Stream Setup"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque la sugerencia de valores para atributos en segmentación se habilita exclusivamente en la configuración del objeto de modelo de datos (DMO) bajo la sección 'Segment Setup', donde se activa por campo individual. Descarte: La opción A (Data Mapping) gestiona el mapeo durante la ingesta, no las sugerencias en segmentación. La opción B (Data Transformation) aplica lógica de transformación a streams, sin relación con sugerencias de valores. La opción D (Data Stream Setup) configura la fuente de datos, no las propiedades del DMO para segmentación. Senior Tip: Habilita sugerencias solo para atributos con cardinalidad baja (<500 valores únicos) y evita campos con >255 caracteres; recuerda que los valores sugeridos pueden tardar hasta 24 horas en aparecer tras la habilitación.",
+    "frequency": 8
+  },
+  {
+    "id": 9,
+    "question": "A Data Cloud customer wants to adjust their identity resolution rules to increase their accuracy of matches. Rather than matching on email address, they want to review a rule that joins their CRM Contacts with their Marketing Contacts, where both use the CRM ID as their primary key.Which two steps should the consultant take to address this new use case? Choose 2 answers",
+    "options": [
+      "A. Map the primary key from the two systems to Party Identification, using CRM ID as the identification name for both.",
+      "B. Map the primary key from the two systems to party identification, using CRM ID as the identification name for individuals coming from the CRM, and Marketing ID as the identification name for individuals coming from the marketing platform.",
+      "C. Create a custom matching rule for an exact match on the Individual ID attribute.",
+      "D. Create a matching rule based on party identification that matches on CRM ID as the party identification name."
+    ],
+    "answer": ["A", "D"],
+    "explanation": "La respuesta correcta es A y D porque mapear la clave primaria a Party Identification con el mismo nombre (CRM ID) para ambos sistemas (A) y crear una regla de coincidencia basada en esa identificación (D) garantiza emparejamientos precisos usando el CRM ID como clave única compartida. Descarte: La opción B usa nombres diferentes (CRM ID vs Marketing ID), impidiendo el emparejamiento exacto. La opción C (regla en Individual ID) es subóptima porque Individual ID es un atributo derivado por Data Cloud, menos confiable que Party Identification para claves primarias explícitas. Senior Tip: Siempre usa Party Identification para claves primarias compartidas entre sistemas; evita mezclar nombres de identificación y valida que el mapeo se haga en la fase de modelado del DMO antes de configurar reglas de resolución.",
+    "frequency": 8
+  },
+  {
+    "id": 10,
+    "question": "Which consideration related to the way Data Cloud ingests CRM data is true?A. CRM data cannot be manually refreshed and must wait for the next scheduled synchronization,B. The CRM Connector's synchronization times can be customized to up to 15-minute intervals.C. Formula fields are refreshed at regular sync intervals and are updated at the next full refresh.D. The CRM Connector allows standard fields to stream into Data Cloud in real time.",
+    "options": [
+      "A. CRM data cannot be manually refreshed and must wait for the next scheduled synchronization",
+      "B. The CRM Connector's synchronization times can be customized to up to 15-minute intervals",
+      "C. Formula fields are refreshed at regular sync intervals and are updated at the next full refresh",
+      "D. The CRM Connector allows standard fields to stream into Data Cloud in real time"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el conector de CRM transmite cambios en campos estándar a Data Cloud en tiempo real mediante eventos de plataforma, sin depender de sincronizaciones programadas. Descarte: La opción A es falsa; los datos de CRM se pueden refrescar manualmente desde la página de detalles del flujo de datos. La opción B es incorrecta; los intervalos personalizables mínimos son de 60 minutos, no 15. La opción C es falsa; los campos de fórmula solo se actualizan durante refrescos completos (cada 24h o manual), no en sincronizaciones incrementales. Senior Tip: Para datos críticos que requieren latencia mínima, usa campos estándar en lugar de fórmulas; monitorea el estado del flujo de datos en Data Cloud para detectar retrasos en la transmisión en tiempo real y verifica que el usuario de conexión tenga permisos adecuados en la org fuente.",
+    "frequency": 8
+  }
+]
