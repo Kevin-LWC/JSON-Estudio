@@ -1,0 +1,223 @@
+[
+  {
+    "id": 99,
+    "question": "A financial services firm specializing in wealth management contacts a Data Cloud consultant with an identity resolution request. The company wants to enhance its strategy to better manage individual client profiles within family portfolios.Family members often share addresses and sometimes phone numbers but have distinct investment preferences and financial goals. The firm aims to avoid blending individual family profiles into a single entity to maintain personalized service and accurate financial advice.Which identity resolution strategy should the consultant put in place?",
+    "options": [
+      "A. Configure a single match rule with a single connected contact point based on address.",
+      "B. Use multiple contact points without individual attributes in the match rules.",
+      "C. Use a more restrictive design approach to ensure the match rules perform as desired.",
+      "D. Configure a single match rule based on a custom identifier."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque un enfoque restrictivo en las reglas de coincidencia evita el 'over-matching' al priorizar atributos únicos (email, SSN) sobre puntos de contacto compartidos (dirección, teléfono), preservando perfiles individuales de miembros familiares mientras se permite cierta compartición controlada de atributos. Descarte: La opción A causaría blending masivo al usar solo dirección como criterio. La opción B carece de precisión sin atributos individuales específicos. La opción D es riesgosa; una sola regla con identificador personalizado puede fallar en escenarios donde ese identificador no esté disponible en todas las fuentes o genere falsos positivos. Senior Tip: Implementa reglas jerárquicas con pesos de confianza: 1) Party Identification exacta (máxima confianza), 2) Email + teléfono (confianza media), 3) Dirección + nombre fuzzy (baja confianza, solo si otras fallan); monitorea el 'Identity Graph' en Profile Explorer para detectar fusiones incorrectas de perfiles familiares.",
+    "frequency": 8
+  },
+  {
+    "id": 100,
+    "question": "Which statement is true related to batch ingestions from Salesforce CRM?",
+    "options": [
+      "A. When a column is added or removed, the CRM connector performs a full refresh.",
+      "B. The CRM connector performs an incremental refresh when 600K or more deletion records are detected.",
+      "C. The CRM connector's synchronization times can be customized to up to 15-minute intervals.",
+      "D. CRM data cannot be manually refreshed and must wait for the next scheduled synchronization."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque cuando se añade o elimina una columna (campo) en un objeto de Salesforce CRM, el conector detecta automáticamente este cambio de esquema y desencadena un refresco completo (full refresh) para garantizar que el modelo de datos en Data Cloud se alinee con la estructura actualizada, evitando inconsistencias. Descarte: La opción B es falsa; el conector siempre usa incremental refresh para datos, independientemente del volumen de eliminaciones. La opción C es incorrecta; el intervalo mínimo personalizable es de 60 minutos, no 15. La opción D es falsa; los datos CRM pueden refrescarse manualmente desde la página de detalles del data stream en cualquier momento. Senior Tip: Tras modificar el esquema de objetos CRM (añadir/eliminar campos), espera el full refresh automático (puede tardar horas en datasets grandes); evita programar activaciones críticas inmediatamente después de cambios de esquema para prevenir inconsistencias temporales en segmentos.",
+    "frequency": 8
+  },
+  {
+    "id": 101,
+    "question": "Which data stream category should be assigned to use the data for time-based operations in segmentation and calculated insights?",
+    "options": [
+      "A. Individual",
+      "B. Transaction",
+      "C. Sales Order",
+      "D. Engagement"
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque la categoría Transaction está diseñada específicamente para datos con timestamp que requieren operaciones basadas en tiempo: filtrado por rangos de fecha, agregación por períodos (día/semana/mes), cálculo de métricas time-to-event (ej: días desde última compra) y análisis de tendencias temporales en segmentación e insights calculadas. Descarte: La opción A (Individual) representa entidades estáticas sin dimensión temporal inherente. La opción C (Sales Order) es un objeto específico del modelo de datos, no una categoría de data stream. La opción D (Engagement) modela interacciones pero no está optimizada para operaciones analíticas temporales complejas como las transacciones. Senior Tip: Siempre asigna categoría Transaction a flujos de datos con timestamp significativo (compras, sesiones web, llamadas); en el mapeo, asegúrate de mapear el campo de fecha/hora a 'EventDate' del DMO Transaction para habilitar funciones time-based en segmentación como 'en los últimos X días'.",
+    "frequency": 8
+  },
+  {
+    "id": 102,
+    "question": "Cumulus Financial created a segment called Multiple Investments that contains individuals who have invested in two or more mutual funds.The company plans to send an email to this segment regarding a new mutual fund offering, and wants to personalize the email content with information about each customer's current mutual fund investments.How should the Data Cloud consultant configure this activation?",
+    "options": [
+      "A. Include Fund Type equal to \"Mutual Fund\" as a related attribute. Configure an activation based on the new segment with no additional attributes.",
+      "B. Choose the Multiple Investments segment, choose the Email contact point, add related attribute Fund Name, and add related attribute filter for Fund Type equal to \"Mutual Fund\".",
+      "C. Choose the Multiple Investments segment, choose the Email contact point, and add related attribute Fund Type.",
+      "D. Include Fund Name and Fund Type by default for post processing in the target system."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque para personalización efectiva se requiere incluir el atributo relacionado 'Fund Name' (nombre específico del fondo) con un filtro en el atributo relacionado para 'Fund Type = Mutual Fund', garantizando que solo se envíen nombres de fondos mutuos relevantes al individuo, sin exponer otros tipos de inversiones. Descarte: La opción A omite Fund Name, imposibilitando personalización concreta con el nombre del producto. La opción C incluye solo Fund Type (categoría), no el nombre del fondo específico necesario para la personalización. La opción D delega procesamiento al sistema destino, violando principios de privacidad (minimización de datos) y perdiendo control sobre qué información sensible se transmite. Senior Tip: En Marketing Cloud, mapea Fund Name al campo 'Personalization String' y usa AMPscript para formatear múltiples valores (ej: 'Sus fondos: %%FundName1%%, %%FundName2%%'); prueba siempre con preview antes de activación masiva para validar que la lógica de atributos relacionados funcione correctamente con múltiples registros por individuo.",
+    "frequency": 8
+  },
+  {
+    "id": 103,
+    "question": "A consultant has an activation that is set to publish every 12 hours, but has discovered that updates to the data prior to activation are delayed by up to 24 hours.Which two areas should a consultant review to troubleshoot this issue?Choose 2 answers",
+    "options": [
+      "A. Review data transformations to ensure they're run after calculated insights.",
+      "B. Review calculated insights to make sure they're run before segments are refreshed.",
+      "C. Review segments to ensure they're refreshed after the data is ingested.",
+      "D. Review calculated insights to make sure they're run after the segments are refreshed."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque: B) Las insights calculadas deben ejecutarse después de la ingesta pero ANTES del refresco de segmentos para que los segmentos usen datos derivados actualizados; C) Los segmentos deben refrescarse tras la ingesta (y tras insights calculadas) para reflejar los datos más recientes antes de la activación. Este flujo garantiza que las activaciones usen información actualizada sin retrasos acumulativos. Descarte: La opción A es irrelevante; las transformaciones de datos son opcionales y operan durante la ingesta, no afectan el ciclo de actualización post-ingesta. La opción D es incorrecta porque las insights calculadas son independientes de los segmentos y deben ejecutarse antes, no después, para alimentar correctamente la segmentación. Senior Tip: Configura un flujo secuencial estricto: ingesta → transformaciones (opcional) → identity resolution → insights calculadas → refresco de segmentos → activación; usa Data Cloud Monitor para identificar cuellos de botella en cada etapa y ajusta los intervalos de programación considerando el tiempo total de procesamiento (ej: si el ciclo completo tarda 6h, programa activaciones con 8h de margen).",
+    "frequency": 8
+  },
+  {
+    "id": 104,
+    "question": "A consultant notices that the unified individual profile is not storing the latest email address.Which action should the consultant take to troubleshoot this issue?",
+    "options": [
+      "A. Remove any old email addresses from Salesforce CRM.",
+      "B. Check if the mapping of DLO objects is correct to Contact Point Email.",
+      "C. Confirm that the reconciliation rules are correctly used.",
+      "D. Verify and update the email address in the source systems if needed."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las reglas de reconciliación determinan qué valor de email se selecciona para el perfil unificado cuando existen múltiples emails provenientes de diferentes fuentes; si están mal configuradas (ej: usando 'First Occurring' en lugar de 'Last Updated'), el perfil puede retener un email antiguo en lugar del más reciente. Descarte: La opción A es una solución paliativa que no resuelve la causa raíz en Data Cloud. La opción B es importante para la ingesta inicial pero no afecta la selección del valor final en el perfil unificado. La opción D corrige la fuente pero no garantiza que Data Cloud seleccione ese valor actualizado si las reglas de reconciliación priorizan otra fuente. Senior Tip: Revisa las reglas de reconciliación para el atributo Email en el ruleset de Identity Resolution; usa 'Last Updated' para priorizar el email más reciente o 'Source Sequence' para priorizar fuentes autoritativas (ej: CRM > Web); valida el comportamiento en Profile Explorer revisando el 'Identity Graph' y los timestamps de cada email fuente.",
+    "frequency": 8
+  },
+  {
+    "id": 105,
+    "question": "A consultant is troubleshooting a segment error.Which error message is solved by using calculated insights Instead of nested segments?",
+    "options": [
+      "A. Segment is too complex.",
+      "B. Multiple population counts are in progress.",
+      "C. Segment population count failed.",
+      "D. Segment can't be published."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el error 'Segment is too complex' ocurre cuando una segmentación excede límites de complejidad (demasiados contenedores anidados, condiciones múltiples o joins complejos); reemplazar lógica compleja con insights calculadas pre-agregadas simplifica la query del segmento, reduciendo su complejidad y permitiendo su publicación exitosa. Descarte: La opción B indica concurrencia de procesos, no complejidad. La opción C suele relacionarse con errores de datos o permisos, no con anidamiento excesivo. La opción D tiene múltiples causas (dependencias, validaciones) pero no se resuelve específicamente con insights calculadas. Senior Tip: Cuando un segmento falle por complejidad, identifica las condiciones repetitivas o cálculos agregados (ej: 'compras últimos 30 días > 5') y extráelas a una calculated insight; luego referencia esa insight como atributo simple en el segmento. Documenta el límite práctico: evita más de 5 contenedores anidados o 15 condiciones en un solo segmento sin usar insights calculadas como intermediarias.",
+    "frequency": 8
+  },
+  {
+    "id": 106,
+    "question": "What is the result of a segmentation criteria filtering on City | Is Equal To | 'San Jose'?",
+    "options": [
+      "A. Cities containing 'San Jose', 'San Jose', 'san jose', or 'san jose'",
+      "B. Cities only containing 'San Jose' or 'san jose'",
+      "C. Cities only containing 'San Jose' or 'San Jose'",
+      "D. Cities only containing 'San Jose' or 'san jose'"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque los filtros de segmentación en Data Cloud son case-sensitive y accent-sensitive, coincidiendo únicamente con valores que matchean exactamente en mayúsculas/minúsculas; 'San Jose' y 'san jose' (misma ortografía, diferente case) coinciden, pero variantes con tildes diferentes u otras grafías no. Descarte: La opción A es incorrecta; incluye variantes con tildes que no coinciden exactamente. Las opciones B y C son incorrectas porque contienen errores tipográficos en las variantes mostradas ('San Jose' con tilde en 'e' no es lo mismo que 'San Jose' sin tilde). Senior Tip: Para coincidir con múltiples variantes ortográficas, usa el operador OR con múltiples valores ('San Jose' OR 'San Jose' OR 'san jose' OR 'san jose') o normaliza el atributo mediante transformación en streaming durante la ingesta para eliminar tildes/acento antes de la segmentación; para atributos críticos como ciudad, considera usar códigos postales en lugar de nombres para evitar ambigüedades.",
+    "frequency": 8
+  },
+  {
+    "id": 107,
+    "question": "Cumulus Financial is experiencing delays in publishing multiple segments simultaneously. The company wants to avoid reducing the frequency at which segments are published, while retaining the same segments in place today.Which action should a consultant take to alleviate this issue?",
+    "options": [
+      "A. Enable rapid segment publishing to all to segment to reduce generation time.",
+      "B. Reduce the number of segments being published.",
+      "C. Increase the Data Cloud segmentation concurrency limit.",
+      "D. Adjust the publish schedule start time of each segment to prevent overlapping processes."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el límite de concurrencia de segmentación determina cuántos segmentos pueden procesarse simultáneamente; incrementar este límite (mediante solicitud a Salesforce Support) permite que más segmentos se publiquen en paralelo sin esperas en cola, resolviendo los retrasos sin alterar la frecuencia ni eliminar segmentos existentes. Descarte: La opción A (Rapid Publish) acelera la generación individual pero no aumenta la capacidad concurrente; puede incluso degradar la calidad al saltar validaciones. La opción B contradice el requisito explícito de retener todos los segmentos. La opción D (ajustar horarios) es una solución temporal que no escala y complica la gestión operativa al fragmentar la ventana de publicación. Senior Tip: Antes de solicitar aumento de concurrencia, analiza Data Cloud Monitor para identificar segmentos con alto costo computacional (grandes volúmenes o joins complejos); optimiza esos segmentos primero (usando calculated insights) para maximizar el beneficio del aumento de límite; documenta el caso de negocio para justificar la solicitud a Salesforce (ej: 'segmentos críticos para campaña Black Friday requieren publicación simultánea').",
+    "frequency": 8
+  },
+  {
+    "id": 108,
+    "question": "A user is not seeing suggested values from newly-modeled data when building a segment.What is causing this issue?",
+    "options": [
+      "A. Value suggestion is still processing and to be available.",
+      "B. Value suggestion requires Data Aware Specialist permissions at a minimum.",
+      "C. Value suggestion can only work on direct attributes and not related attributes.",
+      "D. Value suggestion will only return result for the first 50 values of a specific attribute."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Value Suggestion requiere hasta 24 horas para procesar y poblar los valores únicos de un atributo recién mapeado/habilitado en el modelo de datos; durante este período de indexación los valores no aparecen en el canvas de segmentación aunque el atributo esté correctamente configurado. Descarte: La opción B es falsa; no se requieren permisos especiales más allá del acceso estándar al DMO. La opción C es incorrecta; Value Suggestion funciona tanto en atributos directos como relacionados (siempre que tengan cardinalidad manejable). La opción D es engañosa; aunque hay límites prácticos (~500 valores únicos recomendados), no está restringido a solo 50 valores y el sistema muestra los más frecuentes primero. Senior Tip: Tras habilitar Value Suggestion en un DMO, espera 24 horas antes de construir segmentos críticos que dependan de esa funcionalidad; para acelerar el proceso en entornos de desarrollo, ingiere un pequeño volumen de datos de prueba (100-200 registros) para 'sembrar' los valores iniciales; verifica el estado en Setup > Data Model Objects > [DMO Name] > Value Suggestion Status.",
+    "frequency": 8
+  },
+  {
+    "id": 109,
+    "question": "A Data Cloud consultant tries to save a new 1-to-1 relationship between the Account DMO and Contact Point Address DMO but gets an error.What should the consultant do to fix this error?",
+    "options": [
+      "A. Map additional fields to the Contact Point Address DMO.",
+      "B. Make sure that the total account records are high enough for Identity resolution.",
+      "C. Change the cardinality to many-to-one to accommodate multiple contacts per account.",
+      "D. Map Account to Contact Point Email and Contact Point Phone also."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque las relaciones 1-to-1 en Data Cloud requieren que ambos objetos tengan campos mapeados suficientes para establecer la relación; si Contact Point Address DMO tiene pocos o ningún campo mapeado, el sistema bloquea la creación de la relación 1-to-1 por falta de atributos de unión válidos. Descarte: La opción B es irrelevante; el volumen de registros no afecta la creación de relaciones en el modelo de datos. La opción C evita el error cambiando la cardinalidad, pero no resuelve el requisito del negocio de una relación 1-to-1. La opción D es innecesaria; mapear otros objetos de contacto no resuelve el problema específico de la relación Account-Contact Point Address. Senior Tip: Antes de crear relaciones 1-to-1, verifica que ambos DMOs tengan al menos 2-3 campos mapeados con datos poblados; usa Data Explorer para confirmar que existen valores en los campos candidatos a relación antes de configurar el modelo.",
+    "frequency": 8
+  },
+  {
+    "id": 110,
+    "question": "A company is seeking advice from a consultant on how to address the challenge of having multiple leads and contacts in Salesforce that share the same email address. The consultant wants to provide a detailed and comprehensive explanation on how Data Cloud can be leveraged to effectively solve this issue.What should the consultant highlight to address this company's business challenge?",
+    "options": [
+      "A. Data Bundles",
+      "B. Calculated Insights",
+      "C. Identity Resolution",
+      "D. Identity Resolution"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque Identity Resolution es la funcionalidad específica que empareja y unifica perfiles (leads/contacts) que comparten el mismo identificador (email), creando un perfil unificado que consolida todas las interacciones sin duplicados, resolviendo directamente el problema de múltiples registros por misma persona. Descarte: La opción A (Data Bundles) son paquetes preconfigurados de ingesta, no resuelven duplicados. La opción B (Calculated Insights) generan métricas derivadas pero no unifican identidades. La opción D es duplicada de C en el material fuente. Senior Tip: Configura una regla de matching basada en 'Normalized Email' con alta confianza para leads/contacts; usa el atributo 'IsConverted' de Lead como criterio de reconciliación para priorizar el Contact resultante de la conversión como fuente autoritativa del email.",
+    "frequency": 8
+  },
+  {
+    "id": 111,
+    "question": "The recruiting team at Cumulus Financial wants to identify which candidates have browsed the jobs page on its website at least twice within the last 24 hours. They want the information about these candidates to be available for segmentation in Data Cloud and the candidates added to their recruiting system.Which feature should a consultant recommend to achieve this goal?",
+    "options": [
+      "A. Streaming data transform",
+      "B. Streaming insight",
+      "C. Calculated insight",
+      "D. Batch data transform"
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque las Streaming Insights procesan eventos en tiempo real (page views), calculan métricas sobre ventanas temporales deslizantes (ej: '≥2 visits en últimas 24h') y pueden desencadenar Data Actions para crear registros automáticamente en sistemas externos (ATS de recruiting), todo con latencia mínima sin procesamiento batch. Descarte: La opción A (streaming transform) normaliza datos pero no calcula métricas ni dispara acciones. La opción C (calculated insight) opera en modo batch programado (mínimo 1h), inadecuado para detección inmediata. La opción D (batch transform) es para procesamiento offline nocturno, no para respuesta en tiempo real a comportamiento web. Senior Tip: Configura la Streaming Insight con ventana de 24 horas y umbral ≥2; enlaza una Data Action que invoque el API del ATS solo cuando la métrica cruce el umbral, evitando llamadas innecesarias por cada evento individual; usa 'distinct count' por candidate ID para evitar contar múltiples clicks en la misma sesión como visitas separadas.",
+    "frequency": 8
+  },
+  {
+    "id": 112,
+    "question": "During a privacy law discussion with a customer, the customer indicates they need to honor requests for the right to be forgotten. The consultant determines that Consent API will solve this business need.Which two considerations should the consultant inform the customer about?Choose 2 answers",
+    "options": [
+      "A. Data deletion requests are reprocessed at 30, 60, and 90 days.",
+      "B. Data deletion requests are processed within 1 hour.",
+      "C. Data deletion requests are submitted for Individual profiles.",
+      "D. Data deletion requests submitted to Data Cloud are passed to all connected Salesforce clouds."
+    ],
+    "answer": ["C", "D"],
+    "explanation": "La respuesta correcta es C y D porque: C) Las solicitudes de eliminación mediante Consent API deben dirigirse específicamente a perfiles Individual (no a perfiles fuente o Unified Individual), ya que este es el nivel de entidad reconocido por el mecanismo de cumplimiento; D) Las solicitudes se propagan automáticamente a todas las clouds de Salesforce conectadas (Sales/Service/Marketing Cloud) garantizando eliminación comprehensiva cross-plataforma para cumplir GDPR/CCPA. Descarte: La opción A describe el comportamiento del mecanismo 'Data Deletion Request' nativo de Data Cloud (no del Consent API); el Consent API no reprocesa automáticamente. La opción B es falsa; el proceso es asíncrono y puede tardar hasta 24 horas, no 1 hora. Senior Tip: Para GDPR, combina Consent API con el campo personalizado 'DeletionRequestDate' en el objeto Individual; configura un Flow que monitoree este campo y genere alertas si el estado 'Data Deletion Status' no cambia a 'Completed' tras 7 días; documenta siempre el ID de solicitud para auditoría regulatoria.",
+    "frequency": 8
+  },
+  {
+    "id": 113,
+    "question": "A company wants to test its marketing campaigns with different target populations.What should the consultant adjust in the Segment Canvas interface to get different populations?",
+    "options": [
+      "A. Direct attributes, related attributes, and population filters",
+      "B. Segmentation filters, direct attributions, and data sources",
+      "C. Direct attributes and related attributes",
+      "D. Population filters and direct attributes"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los tres elementos trabajan en conjunto para definir poblaciones objetivo: atributos directos (características del individuo como edad/género), atributos relacionados (comportamiento transaccional como compras recientes) y filtros de población (restricciones de volumen o segmentación base) permiten iterar rápidamente sobre diferentes audiencias sin reconstruir segmentos desde cero. Descarte: La opción B es incorrecta; 'data sources' no se ajustan en el canvas de segmentación (son configuración previa de ingesta). La opción C omite los population filters, críticos para pruebas A/B con tamaños controlados. La opción D omite atributos relacionados, limitando el enriquecimiento conductual necesario para segmentación avanzada. Senior Tip: Para pruebas de campaña, usa population filters con 'Sample Size' para extraer subconjuntos representativos del 10%/20%/30% de tu audiencia base; combina con atributos relacionados como 'Days Since Last Purchase' para crear variantes de tratamiento sin duplicar la lógica completa del segmento.",
+    "frequency": 8
+  },
+  {
+    "id": 114,
+    "question": "Which configuration supports separate Amazon S3 buckets for data ingestion and activation?",
+    "options": [
+      "A. Dedicated S3 data sources in Data Cloud setup",
+      "B. Multiple S3 connectors in Data Cloud setup",
+      "C. Dedicated S3 data sources in activation setup",
+      "D. Separate user credentials for data stream and activation target"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los data sources en Data Cloud Setup definen conexiones específicas a buckets S3; creando data sources dedicados (uno para ingesta 's3-ingest-prod', otro para activación 's3-activate-prod') se logra separación lógica, de seguridad y operativa entre buckets de origen y destino, cada uno con sus propias credenciales y permisos IAM. Descarte: La opción B es incorrecta; solo existe un conector S3 nativo en Data Cloud, no múltiples instancias del conector. La opción C no existe; la configuración de activación usa 'activation targets', no data sources. La opción D es insuficiente; aunque credenciales separadas ayudan a la seguridad, sin data sources dedicados no se puede especificar buckets diferentes en la configuración. Senior Tip: Implementa data sources S3 con nombres descriptivos que incluyan propósito y entorno (ej: 'nto-s3-ingest-prod-us-east-1'); asigna roles IAM mínimos por bucket (ej: 's3:GetObject' solo para el bucket de ingesta, 's3:PutObject' para el de activación); usa External Credentials con rotación automática para gestionar claves de acceso y cumplir con políticas de seguridad corporativas.",
+    "frequency": 8
+  },
+  {
+    "id": 115,
+    "question": "How does Data Cloud ensure high availability and fault tolerance for customer data?",
+    "options": [
+      "A. By distributing data across multiple regions and data centers",
+      "B. By using a data center with robust backups",
+      "C. By Implementing automatic data recovery procedures",
+      "D. By limiting data access to essential personnel"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Data Cloud replica datos automáticamente en múltiples regiones y centros de datos geográficamente distribuidos, garantizando que si un centro falla, el servicio continúa operando desde otra ubicación sin interrupción para el cliente; esta replicación geográfica es el mecanismo primario de alta disponibilidad en la arquitectura de Salesforce. Descarte: La opción B (backups robustos) es importante para recuperación ante desastres pero no garantiza alta disponibilidad en tiempo real (RTO/RPO altos). La opción C (recuperación automática) es un componente secundario que opera dentro de una región, no previene fallos regionales. La opción D (limitar acceso) es control de seguridad, no de disponibilidad del servicio. Senior Tip: Para arquitecturas globales críticas, selecciona la región de aprovisionamiento de Data Cloud más cercana a tus usuarios principales; aunque los datos se replican globalmente, la latencia de consulta es menor cuando la región primaria coincide con la ubicación de tus clouds operativas (Sales/Service Cloud); verifica el estado de replicación en Salesforce Trust site durante incidentes regionales.",
+    "frequency": 8
+  }
+]

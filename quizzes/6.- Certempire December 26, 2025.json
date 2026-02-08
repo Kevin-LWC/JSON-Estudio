@@ -1,0 +1,327 @@
+[
+  {
+    "id": 127,
+    "question": "A customer has multiple team members who create segment audiences that work in different time zones. One team member works at the home office in the Pacific time zone, that matches the org Time Zone setting. Another team member works remotely in the Eastern time zone.Which user will see their home time zone in the segment and activation schedule areas?",
+    "options": [
+      "A. The team member in the Pacific time zone.",
+      "B. The team member in the Eastern time zone.",
+      "C. Neither team member; Data Cloud shows all schedules in GMT.",
+      "D. Both team members; Data Cloud adjusts the segment and activation schedules to the time zone of the logged-in user"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque Data Cloud ajusta dinámicamente las visualizaciones de programación (segmentos y activaciones) según la zona horaria del dispositivo o navegador del usuario conectado, independientemente de la zona horaria configurada en el org; ambos usuarios verán los horarios en su tiempo local (Pacífico para uno, Este para el otro), evitando confusiones operativas en equipos distribuidos globalmente. Descarte: La opción A y B son parcialmente correctas pero incompletas; no es exclusivo de una zona horaria. La opción C es falsa; aunque los datos se almacenan en UTC/GMT en el backend, la UI siempre muestra la zona local del usuario. Senior Tip: Para coordinación cross-equipo, documenta siempre los horarios de activación críticas usando formato UTC en los nombres de segmentos/activaciones (ej: 'BlackFriday_Email_20241129T0500Z') para evitar malentendidos por diferencias horarias; recuerda que los timestamps en Data Explorer siempre se muestran en UTC.",
+    "frequency": 8
+  },
+  {
+    "id": 128,
+    "question": "Cumulus Financial wants its service agents to view a display of all cases associated with a Unified Individual on a contact record.Which two features should a consultant consider for this use case? Choose 2 answers",
+    "options": [
+      "A. Data Action",
+      "B. Profile API",
+      "C. Lightning Web Components",
+      "D. Query API"
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque: B) Profile API permite recuperar programáticamente los casos relacionados con un Unified Individual mediante su ID unificado o puntos de contacto, y C) Lightning Web Components permite construir una interfaz visual personalizada en la página de contacto que muestre esos casos en formato tabla o lista usando los datos obtenidos vía Profile API. Descarte: La opción A (Data Action) dispara acciones basadas en insights (ej: enviar email), no muestra datos en UI. La opción D (Query API) es para análisis exploratorio en Data Cloud, no para integración en tiempo real con páginas de Salesforce CRM. Senior Tip: Combina Profile API con LWC para crear un componente reusable 'UnifiedCasesViewer'; almacena el Unified Individual ID en un campo personalizado del Contacto durante la ingesta para facilitar la consulta; implementa caché en el LWC para reducir llamadas API repetidas durante la misma sesión del agente y mejorar performance.",
+    "frequency": 8
+  },
+  {
+    "id": 129,
+    "question": "A Data Cloud Consultant Is in the process of setting up data streams for a new service-based data source.When ingesting Case data, which field is recommended to be associated with the Event Time field?",
+    "options": [
+      "A. Last Modified Date",
+      "B. Resolution Date",
+      "C. Escalation Date",
+      "D. Creation Date"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Last Modified Date refleja la actualización más reciente del caso (cualquier cambio: estado, prioridad, comentarios), proporcionando un timestamp preciso para operaciones basadas en tiempo (ej: 'casos actualizados en últimas 24h'); es más completo que Creation Date (solo inicio) o Resolution Date (solo cierre, no siempre poblado). Descarte: La opción B (Resolution Date) solo aplica a casos cerrados, dejando casos abiertos sin timestamp útil para análisis de comportamiento reciente. La opción C (Escalation Date) es específico de casos escalados, no universal. La opción D (Creation Date) no captura actualizaciones posteriores al inicio del caso, limitando análisis de evolución del caso. Senior Tip: Para casos, mapea Last Modified Date como Event Time y Creation Date como campo adicional 'Case Created Date'; así puedes calcular 'Case Age' (diferencia entre ambos) y segmentar por casos recién actualizados vs. casos estancados; usa streaming transforms para normalizar formatos de fecha si las fuentes tienen inconsistencias.",
+    "frequency": 8
+  },
+  {
+    "id": 130,
+    "question": "Northern Trail Outfitters uses B2C Commerce and is exploring implementing Data Cloud to get a unified view of its customers and all their order transactions.What should the consultant keep in mind with regard to historical data ingesting order data using the B2C Commerce Order Bundle?",
+    "options": [
+      "A. The B2C Commerce Order Bundle ingests 12 months of historical data.",
+      "B. The B2C Commerce Order Bundle ingests 6 months of historical data.",
+      "C. The B2C Commerce Order Bundle does not ingest any historical data and only ingests new orders from that point on.",
+      "D. The B2C Commerce Order Bundle ingests 30 days of historical data."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el conector B2C Commerce para Data Cloud está diseñado exclusivamente para ingesta continua en tiempo cercano a real; una vez configurado, solo ingiere órdenes y datos de cliente creados a partir de ese momento, sin soporte nativo para backfill de datos históricos. Descarte: Las opciones A, B y D son incorrectas; ninguna cantidad de datos históricos se ingiere automáticamente con el bundle estándar. Senior Tip: Para datos históricos, implementa un proceso híbrido: 1) Exporta órdenes históricas de B2C Commerce a CSV/JSON, 2) Súbelas a S3, 3) Crea un data stream S3 para ingesta inicial (full refresh), 4) Activa el B2C Commerce Connector para streaming continuo de nuevos datos; así obtienes historial completo + actualizaciones en tiempo real.",
+    "frequency": 8
+  },
+  {
+    "id": 131,
+    "question": "How should a Data Cloud consultant successfully apply consent during segmentation?",
+    "options": [
+      "A. Include the Consent Status from the golden record during activation for any applicable channels of engagement.",
+      "B. Include Party Identification for any applicable channels of engagement in the filter criteria for each segment.",
+      "C. Include the Unified Profile during segmentation for any applicable channels of engagement.",
+      "D. Include the Consent Status for any applicable channels of engagement in the filter criteria for each segment."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque incluir el Consent Status directamente en los criterios de filtro del segmento garantiza que solo se incluyan individuos con permisos explícitos para el canal de engagement específico (email, SMS, etc.), cumpliendo GDPR/CCPA desde la construcción del segmento, no solo en activación. Descarte: La opción A aplica consentimiento demasiado tarde (en activación), permitiendo segmentar datos sin consentimiento. La opción B (Party Identification) resuelve identidad pero no gestiona consentimiento. La opción C (Unified Profile) es el resultado de la resolución, no un mecanismo de filtrado por consentimiento. Senior Tip: Crea un 'container block' reusable con filtros de consentimiento estándar (ej: 'Email Consent = Opted-In') y oblígalo en todos los segmentos de marketing; así centralizas el cumplimiento y evitas omisiones accidentales por equipos de campaña; usa el campo 'PrivacyConsentStatus' del objeto Contact Point Email/Phone para estos filtros.",
+    "frequency": 8
+  },
+  {
+    "id": 132,
+    "question": "What are the two minimum requirements needed when using the Visual Insights Builder to create a calculated insight?Choose 2 answers",
+    "options": [
+      "A. At least one measure",
+      "B. At least one dimension",
+      "C. At least two objects to Join",
+      "D. A WHERE clause"
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque una insight calculada es fundamentalmente una agregación de datos que requiere: A) al menos una medida (valor numérico a agregar, ej: SUM(Sales)), y B) al menos una dimensión (atributo categórico para agrupar, ej: Product Category); sin ambos componentes, la agregación no tiene sentido lógico ni técnico. Descarte: La opción C es incorrecta; las insights pueden operar sobre un solo DMO sin joins. La opción D es opcional; los filtros (WHERE) refinan el cálculo pero no son requisito mínimo para crear una insight válida. Senior Tip: Al diseñar insights para segmentación, siempre incluye 'UnifiedIndividualId' como dimensión para garantizar compatibilidad con el canvas; para métricas de negocio, usa dimensiones de tiempo (ej: 'OrderDate_Year') para análisis de tendencias sin sobrecargar la query con joins complejos.",
+    "frequency": 8
+  },
+  {
+    "id": 133,
+    "question": "How does Data Cloud ensure high availability and fault tolerance for customer data?",
+    "options": [
+      "A. By distributing data across multiple regions and data centers",
+      "B. By using a data center with robust backups",
+      "C. By Implementing automatic data recovery procedures",
+      "D. By limiting data access to essential personnel"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Data Cloud, construido sobre la infraestructura Hyperforce de Salesforce, replica datos automáticamente en múltiples Availability Zones (centros de datos físicamente aislados) dentro de una región y opcionalmente entre regiones, garantizando que si un centro falla, el servicio continúa operando desde otra ubicación sin interrupción para el cliente. Descarte: La opción B (backups robustos) es importante para recuperación ante desastres pero no garantiza alta disponibilidad en tiempo real (RTO/RPO altos). La opción C (recuperación automática) es un componente secundario que opera dentro de una región, no previene fallos regionales. La opción D (limitar acceso) es control de seguridad, no de disponibilidad del servicio. Senior Tip: Para arquitecturas globales críticas, selecciona la región de aprovisionamiento de Data Cloud más cercana a tus usuarios principales; aunque los datos se replican globalmente, la latencia de consulta es menor cuando la región primaria coincide con la ubicación de tus clouds operativas (Sales/Service Cloud); verifica el estado de replicación en Salesforce Trust site durante incidentes regionales.",
+    "frequency": 8
+  },
+  {
+    "id": 134,
+    "question": "If a data source does not have a field that can be designated as a primary key, what should the consultant do?",
+    "options": [
+      "A. Use the default primary key recommended by Data Cloud.",
+      "B. Create a composite key by combining two or more source fields through a formula field.",
+      "C. Select a field as a primary key and then add a key qualifier.",
+      "D. Remove duplicates from the data source and then select a primary key."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque cuando una fuente carece de clave primaria única, la práctica recomendada es crear una clave compuesta mediante un campo de fórmula que concatene múltiples campos (ej: FirstName + LastName + Email) para generar un identificador único, el cual luego se designa como Primary Key del DMO, garantizando unicidad de registros y correcta resolución de identidad. Descarte: La opción A no existe; Data Cloud no sugiere claves primarias por defecto. La opción C es incorrecta; los key qualifiers solo funcionan cuando ya existe un campo seleccionado como Primary Key (aunque no sea único por sí solo). La opción D es inviable; eliminar duplicados en la fuente no siempre es posible ni recomendable (puede ser legítimo tener registros similares). Senior Tip: Al crear claves compuestas, usa delimitadores únicos (ej: CONCAT(FirstName, '|', LastName, '|', Email)) para evitar colisiones; normaliza campos antes de concatenar (ej: LOWER(Email)) para evitar diferencias por mayúsculas/minúsculas; documenta la lógica de la clave compuesta en la descripción del DMO para troubleshooting futuro.",
+    "frequency": 8
+  },
+  {
+    "id": 135,
+    "question": "A Data Cloud consultant is working with data that is clean and organized. However, the various schemas refer to a person by multiple names - such as user; contact, and subscriber - and need a standard mapping.Which term describes the process of mapping these different schema points into a standard data model?",
+    "options": [
+      "A. Segment",
+      "B. Harmonize",
+      "C. Unify",
+      "D. Transform"
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque Harmonization (armonización) es el proceso específico de mapear campos de fuentes heterogéneas con diferentes nombres/estructuras (ej: 'user', 'contact', 'subscriber') al modelo de datos estándar Customer 360 de Data Cloud, creando una estructura común y consistente para todos los datos antes de la unificación de identidades. Descarte: La opción A (Segment) es el resultado del análisis, no el proceso de mapeo. La opción C (Unify) se refiere específicamente a la resolución de identidad (crear perfiles unificados), que ocurre después de la armonización. La opción D (Transform) es una técnica técnica específica (ej: normalizar formatos), no el proceso holístico de mapeo al modelo estándar. Senior Tip: Siempre realiza armonización antes de configurar Identity Resolution; un mapeo inconsistente (ej: mapear 'user_email' a Individual.Email en una fuente pero a ContactPointEmail.EmailAddress en otra) romperá las reglas de matching; usa el Data Model Builder para visualizar y validar todos los mapeos antes de desplegar el ruleset de resolución.",
+    "frequency": 8
+  },
+  {
+    "id": 136,
+    "question": "A company wants to test its marketing campaigns with different target populations.What should the consultant adjust in the Segment Canvas interface to get different populations?",
+    "options": [
+      "A. Direct attributes, related attributes, and population filters",
+      "B. Segmentation filters, direct attributions, and data sources",
+      "C. Direct attributes and related attributes",
+      "D. Population filters and direct attributes"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los tres elementos trabajan en conjunto para definir poblaciones objetivo: atributos directos (características del individuo como edad/género), atributos relacionados (comportamiento transaccional como compras recientes) y filtros de población (restricciones de volumen o segmentación base) permiten iterar rápidamente sobre diferentes audiencias sin reconstruir segmentos desde cero. Descarte: La opción B es incorrecta; 'data sources' no se ajustan en el canvas de segmentación (son configuración previa de ingesta). La opción C omite los population filters, críticos para pruebas A/B con tamaños controlados. La opción D omite atributos relacionados, limitando el enriquecimiento conductual necesario para segmentación avanzada. Senior Tip: Para pruebas de campaña, usa population filters con 'Sample Size' para extraer subconjuntos representativos del 10%/20%/30% de tu audiencia base; combina con atributos relacionados como 'Days Since Last Purchase' para crear variantes de tratamiento sin duplicar la lógica completa del segmento; documenta cada variante en la descripción del segmento para análisis posterior de resultados.",
+    "frequency": 8
+  },
+  {
+    "id": 137,
+    "question": "A consultant notices that the unified individual profile is not storing the latest email address.Which action should the consultant take to troubleshoot this issue?",
+    "options": [
+      "A. Remove any old email addresses from Salesforce CRM.",
+      "B. Check if the mapping of DLO objects is correct to Contact Point Email.",
+      "C. Confirm that the reconciliation rules are correctly used.",
+      "D. Verify and update the email address in the source systems if needed."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las reglas de reconciliación determinan qué valor de email se selecciona para el perfil unificado cuando existen múltiples emails provenientes de diferentes fuentes; si están mal configuradas (ej: usando 'Most Frequent' en lugar de 'Last Updated'), el perfil puede retener un email antiguo en lugar del más reciente. Descarte: La opción A es una solución paliativa que no resuelve la causa raíz en Data Cloud. La opción B es importante para la ingesta inicial pero no afecta la selección del valor final en el perfil unificado. La opción D corrige la fuente pero no garantiza que Data Cloud seleccione ese valor actualizado si las reglas de reconciliación priorizan otra fuente. Senior Tip: Revisa las reglas de reconciliación para el atributo Email en el ruleset de Identity Resolution; usa 'Last Updated' para priorizar el email más reciente o 'Source Sequence' para priorizar fuentes autoritativas (ej: CRM > Web); valida el comportamiento en Profile Explorer revisando el 'Identity Graph' y los timestamps de cada email fuente.",
+    "frequency": 8
+  },
+  {
+    "id": 138,
+    "question": "A consultant needs to publish segment data to the Audience DMO that can be retrieved using the Query APIs.When creating the activation target, which type of target should the consultant select?",
+    "options": [
+      "A. Data Cloud",
+      "B. External Activation Target",
+      "C. Marketing Cloud Personalization",
+      "D. Marketing Cloud"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el tipo de destino 'Data Cloud' permite la activación interna (internal activation) que publica los miembros del segmento directamente a un nuevo DMO de tipo Audience dentro de Data Cloud, haciéndolo accesible inmediatamente para consultas mediante Query API sin salir de la plataforma. Descarte: La opción B (External Activation Target) es una categoría genérica, no un tipo específico de destino. La opción C (Marketing Cloud Personalization) envía datos a esa plataforma específica, no crea un DMO consultable en Data Cloud. La opción D (Marketing Cloud) activa a esa nube para campañas, no para almacenamiento interno consultable. Senior Tip: Usa activaciones a Data Cloud para casos donde necesites analizar segmentos mediante SQL personalizado o alimentar otros procesos de Data Cloud; el DMO resultante se nombra igual que el segmento y aparece en Data Explorer bajo 'Audience' como tipo de objeto.",
+    "frequency": 8
+  },
+  {
+    "id": 139,
+    "question": "What is the primary purpose of Data Cloud?",
+    "options": [
+      "A. Providing a golden record of a customer",
+      "B. Managing sales cycles and opportunities",
+      "C. Analyzing marketing data results",
+      "D. Integrating and unifying customer data"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el propósito fundamental de Data Cloud es conectar, ingerir, armonizar y unificar datos de múltiples fuentes heterogéneas para crear una vista coherente del cliente; el 'golden record' (opción A) es un resultado derivado de este proceso, no el propósito primario. Descarte: La opción B describe funcionalidad de Sales Cloud. La opción C es una capacidad derivada (análisis), no el propósito central. La opción A es un concepto de MDM tradicional; Data Cloud crea 'perfiles unificados' con reconciliación configurable, no un único 'golden record' autoritativo. Senior Tip: En entrevistas, diferencia claramente: Data Cloud = plataforma de unificación y activación en tiempo real; MDM = gestión de golden records autoritativos; ambas son complementarias pero resuelven problemas distintos en la arquitectura de datos.",
+    "frequency": 8
+  },
+  {
+    "id": 140,
+    "question": "A consultant is ingesting a list of employees from their human resources database that they want to segment on.Which data stream category should the consultant choose when ingesting this data?",
+    "options": [
+      "A. Profile Data",
+      "B. Contact Data",
+      "C. Other Data",
+      "D. Engagement Data"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los datos de empleados (nombre, ID, departamento, rol) describen atributos de una entidad individual única y se clasifican como Profile Data en Data Cloud, mapeándose al objeto Individual o Party para habilitar segmentación basada en atributos demográficos/organizacionales. Descarte: La opción B (Contact Data) se refiere específicamente a puntos de contacto (email, teléfono), no a atributos del individuo. La opción C (Other Data) es para datos que no describen individuos (ej: productos, transacciones sin relación clara). La opción D (Engagement Data) modela interacciones/eventos, no atributos estáticos de empleados. Senior Tip: Para datos B2B como empleados, usa siempre Profile Data; mapea el campo 'Employee ID' a Party Identification con nombre 'EmployeeID' para habilitar matching futuro si necesitas unificar con otras fuentes de RRHH; evita usar 'Other Data' que impediría la segmentación directa sobre esos atributos.",
+    "frequency": 8
+  },
+  {
+    "id": 141,
+    "question": "The leadership team at Cumulus Financial has determined that customers who deposited more than $250,000 in the last five years and are not using advisory services will be the central focus for all new campaigns in the next year.Which features support this use case?",
+    "options": [
+      "A. Calculated insight and data action",
+      "B. Calculated insight and segment",
+      "C. Streaming insight and segment",
+      "D. Streaming insight and data action"
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque: 1) Calculated Insight computa agregaciones históricas complejas (depósitos >$250K en 5 años) mediante queries programadas sobre datos batch, y 2) Segment aplica filtros adicionales ('no usa servicios advisory') sobre el resultado de la insight para crear la audiencia targetable para campañas. Descarte: La opción A incluye Data Action (para activación en tiempo real), innecesario para este caso batch. La opción C y D usan Streaming Insight, diseñada para eventos en tiempo real (ej: clicks recientes), no para análisis histórico de 5 años. Senior Tip: Para métricas de valor acumulado (LTV, depósitos totales), siempre usa Calculated Insights con ventana temporal explícita (ej: WHERE OrderDate >= DATEADD(year, -5, CURRENT_DATE)); valida el cálculo en Data Explorer antes de usarlo en segmentos críticos de revenue.",
+    "frequency": 8
+  },
+  {
+    "id": 142,
+    "question": "Which two dependencies need to be removed prior to disconnecting a data source?Choose 2 answers",
+    "options": [
+      "A. Activation target",
+      "B. Segment",
+      "C. Activation",
+      "D. Data stream"
+    ],
+    "answer": ["B", "D"],
+    "explanation": "La respuesta correcta es B y D porque para desconectar un data source: D) primero deben eliminarse todos sus data streams asociados (dependencia directa), y B) antes de eliminar un data stream, deben eliminarse los segmentos que lo utilizan (dependencia indirecta), ya que un data stream no puede eliminarse si alimenta segmentos activos. Descarte: La opción A (activation target) es un destino de activación, no depende directamente del data source. La opción C (activation) depende de segmentos, no directamente del data source; al eliminar segmentos, las activaciones se invalidan automáticamente. Senior Tip: Sigue este orden seguro para desconectar fuentes: 1) Pausa/detén activaciones, 2) Elimina segmentos dependientes, 3) Elimina data streams, 4) Desconecta el data source; usa Data Cloud Monitor para identificar todas las dependencias antes de iniciar el proceso.",
+    "frequency": 8
+  },
+  {
+    "id": 143,
+    "question": "How does Data Cloud ensure data privacy and security?",
+    "options": [
+      "A. By encrypting data at rest and in transit",
+      "B. By enforcing and controlling consent references",
+      "C. By securely storing data in an offsite server",
+      "D. BY limiting data access to authorized admins"
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque Data Cloud garantiza seguridad mediante: A) cifrado nativo de Salesforce (TLS en tránsito, Shield Platform Encryption en reposo) protegiendo datos de accesos no autorizados, y B) framework de Consent Management con objetos como ContactPointConsent y DataUsePurpose para capturar, almacenar y hacer cumplir preferencias de privacidad, esencial para GDPR/CCPA. Descarte: La opción C es engañosa; los datos se almacenan en la infraestructura cloud de Salesforce (Hyperforce), no en servidores 'offsite' genéricos. La opción D es parcialmente cierta pero incompleta; el control de acceso es solo una capa, no el mecanismo integral de privacidad. Senior Tip: Combina ambas capas: configura políticas de consentimiento obligatorias en segmentación (filtro por PrivacyConsentStatus = 'Opted-In') y habilita Shield Platform Encryption para campos PII sensibles (SSN, direcciones); audita trimestralmente el uso de datos mediante el campo 'DataUsePurpose' en ContactPointConsent.",
+    "frequency": 8
+  },
+  {
+    "id": 144,
+    "question": "Which tool allows users to visualize and analyze unified customer data in Data Cloud?",
+    "options": [
+      "A. Salesforce CLI",
+      "B. Heroku",
+      "C. Tableau",
+      "D. Einstein Analytics"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque Tableau es la plataforma nativa de visualización de Salesforce con conector dedicado para Data Cloud que permite conectar directamente a DMOs y CIOs (Calculated Insights Objects), creando dashboards interactivos sobre perfiles unificados sin extracción manual de datos. Descarte: La opción A (Salesforce CLI) es para operaciones de línea de comandos, no visualización. La opción B (Heroku) es una plataforma PaaS para desarrollo de apps, no análisis de datos. La opción D (Einstein Analytics, ahora Tableau CRM) está siendo reemplazada por Tableau como solución principal de BI en el ecosistema Salesforce. Senior Tip: Usa el conector nativo de Tableau para Data Cloud (no ODBC genérico); configura extractos incrementales en Tableau para datasets grandes (>10M filas); aprovecha las Calculated Insights pre-agregadas en Data Cloud para acelerar queries complejas en Tableau sin sobrecargar el motor de análisis.",
+    "frequency": 8
+  },
+  {
+    "id": 145,
+    "question": "Cumulus Financial needs to create a composite key on an incoming data source that combines the fields Customer Region and Customer Identifier.Which formula function should a consultant use to create a composite key when a primary key is not available in a data stream?",
+    "options": [
+      "A. CONCAT",
+      "B. COMBIN",
+      "C. COALE",
+      "D. CAST"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque CONCAT es la función estándar para concatenar múltiples campos de texto en una sola cadena, creando una clave compuesta única (ej: CONCAT(Customer_Region, '|', Customer_Identifier)) que puede designarse como Primary Key del DMO cuando no existe un identificador único nativo en la fuente. Descarte: La opción B (COMBIN) no existe en el lenguaje de fórmulas de Data Cloud. La opción C (COALE) parece referirse a COALESCE (para manejar nulos), no para concatenación. La opción D (CAST) convierte tipos de datos, no combina campos. Senior Tip: Al crear claves compuestas, usa delimitadores únicos no presentes en los datos (ej: '|') para evitar colisiones; normaliza campos antes de concatenar (ej: UPPER(Customer_Region)) para consistencia; documenta la lógica en la descripción del DMO y valida unicidad en Data Explorer con COUNT DISTINCT antes de usarla en Identity Resolution.",
+    "frequency": 8
+  },
+  {
+    "id": 146,
+    "question": "A customer has two Data Cloud orgs. A new configuration has been completed and tested for an Amazon S3 data stream and its mappings in one of the Data Cloud orgs.What is recommended to package and promote this configuration to the customer's second org?",
+    "options": [
+      "A. Use the Metadata API.",
+      "B. Use the Salesforce CRM connector.",
+      "C. Create a data kit.",
+      "D. Package as an AppExchange application."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los Data Kits son la funcionalidad nativa de Data Cloud diseñada específicamente para empaquetar y migrar configuraciones (data streams, DLOs, DMOs, mapeos) entre orgs, garantizando consistencia sin desarrollo personalizado ni riesgo de errores manuales en la recreación. Descarte: La opción A (Metadata API) no soporta todos los metadatos de Data Cloud (ej: reglas de identity resolution). La opción B (CRM Connector) es para ingesta de datos, no migración de configuración. La opción D (AppExchange) es para distribución pública de apps, no para migración interna entre orgs del mismo cliente. Senior Tip: Antes de crear un Data Kit, elimina datos sensibles de configuración (ej: credenciales S3 en External Credentials); incluye solo componentes necesarios (evita 'select all'); prueba la instalación en un sandbox primero; documenta dependencias externas (ej: 'requiere bucket S3 pre-creado con nombre X') en la descripción del kit.",
+    "frequency": 8
+  },
+  {
+    "id": 147,
+    "question": "Northern Trail Outfitters (NTO) is getting ready to start ingesting its CRM data into Data Cloud.While setting up the connector, which type of refresh should NTO expect when the data stream is deployed for the first time?",
+    "options": [
+      "A. Incremental",
+      "B. Manual refresh",
+      "C. Partial refresh",
+      "D. Full refresh"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque la primera ejecución de cualquier data stream en Data Cloud siempre realiza un Full Refresh (backfill histórico) que ingiere todos los registros existentes del objeto fuente para establecer una línea base completa en el Data Lake Object; solo tras completar este refresco inicial, las ejecuciones subsiguientes operan en modo incremental capturando solo registros nuevos/modificados. Descarte: La opción A (Incremental) aplica solo tras el primer full refresh. La opción B (Manual refresh) es un disparador de ejecución, no un tipo de refresco. La opción C (Partial refresh) no es un modo de refresco soportado en Data Cloud. Senior Tip: Planifica el full refresh inicial durante ventanas de mantenimiento; para objetos grandes (>10M registros), coordina con Salesforce Support para evitar timeouts; monitorea el progreso en Data Stream History y verifica el conteo de registros en el DLO resultante para confirmar completitud antes de configurar segmentos críticos.",
+    "frequency": 8
+  },
+  {
+    "id": 148,
+    "question": "Northern Trail Outfitters (NTO) asks its Data Cloud consultant for a list of contacts who fit within a certain segment for a mailing campaign.How should the consultant provide this list to NTO?",
+    "options": [
+      "A. Create the segment and then click Download to obtain the segment membership details to provide to NTO.",
+      "B. Create a new file storage activation target, create the segment, and then activate the segment to the new activation target.",
+      "C. Create the segment, select Email as the activation target, and activate the segment directly to NTO.",
+      "D. Create the segment and then activate the segment to NTO's Salesforce CRM."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque activar el segmento a un destino de almacenamiento de archivos (S3, SFTP) genera un archivo CSV estructurado con los miembros del segmento y atributos seleccionados, proporcionando una lista exportable segura y escalable para campañas de mailing sin depender de plataformas específicas de marketing. Descarte: La opción A (Download) está limitada a 10,000 registros y es solo para preview, no para producción. La opción C es incorrecta; no existe un destino 'Email' genérico y activar directamente a NTO no es un mecanismo de entrega válido. La opción D (activar a CRM) enriquece registros existentes pero no genera una lista exportable para mailing externo. Senior Tip: Configura el activation target con formato CSV y compresión GZIP para grandes volúmenes; incluye atributos relacionados como dirección postal en la activación; usa filename specification con timestamp para versionado automático (ej: 'mailing_list_{date}.csv.gz'); programa la activación diaria si la lista requiere actualización frecuente.",
+    "frequency": 8
+  },
+  {
+    "id": 149,
+    "question": "Which functionality does Data Cloud offer to improve customer support interactions when a customer is working with an agent?",
+    "options": [
+      "A. Predictive troubleshooting",
+      "B. Enhanced reporting tools",
+      "C. Real-time data integration",
+      "D. Automated customer service replies"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque Data Cloud integra datos en tiempo cercano a real desde múltiples fuentes (web, móvil, CRM, commerce) en un perfil unificado accesible directamente en Service Console, proporcionando al agente contexto inmediato (compras recientes, navegación web, historial de casos) durante la interacción para resolver problemas más rápido con información completa. Descarte: La opción A (troubleshooting predictivo) es funcionalidad de Einstein, no de Data Cloud. La opción B (reporting) es para análisis posterior, no para interacciones en tiempo real. La opción D (respuestas automatizadas) corresponde a chatbots/Einstein Bots, no a la integración de datos de Data Cloud. Senior Tip: Implementa Data Cloud for Service con componentes LWC en Service Console que muestren el Unified Individual Profile; configura Streaming Transforms para CRM para latencia <5 min en actualizaciones críticas; entrena a agentes para usar el campo 'RecentEngagements' del perfil unificado como punto de partida para conversaciones personalizadas.",
+    "frequency": 8
+  },
+  {
+    "id": 150,
+    "question": "A company is seeking advice from a consultant on how to address the challenge of having multiple leads and contacts in Salesforce that share the same email address. The consultant wants to provide a detailed and comprehensive explanation on how Data Cloud can be leveraged to effectively solve this issue.What should the consultant highlight to address this company's business challenge?",
+    "options": [
+      "A. Data Bundles",
+      "B. Calculated Insights",
+      "C. Identity Resolution",
+      "D. Identity Resolution"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque Identity Resolution es la funcionalidad específica que empareja y unifica perfiles (leads/contacts) que comparten el mismo identificador (email), creando un perfil unificado que consolida todas las interacciones sin duplicados, resolviendo directamente el problema de múltiples registros por misma persona. Descarte: La opción A (Data Bundles) son paquetes preconfigurados de ingesta, no resuelven duplicados. La opción B (Calculated Insights) generan métricas derivadas pero no unifican identidades. La opción D es duplicada de C en el material fuente. Senior Tip: Configura una regla de matching basada en 'Normalized Email' con alta confianza para leads/contacts; usa el atributo 'IsConverted' de Lead como criterio de reconciliación para priorizar el Contact resultante de la conversión como fuente autoritativa del email; monitorea el campo 'ConsolidationCount' para identificar perfiles con alto grado de unificación.",
+    "frequency": 8
+  },
+  {
+    "id": 151,
+    "question": "A Data Cloud consultant tries to save a new 1-to-1 relationship between the Account DMO and Contact Point Address DMO but gets an error.What should the consultant do to fix this error?",
+    "options": [
+      "A. Map additional fields to the Contact Point Address DMO.",
+      "B. Make sure that the total account records are high enough for Identity resolution.",
+      "C. Change the cardinality to many-to-one to accommodate multiple contacts per account.",
+      "D. Map Account to Contact Point Email and Contact Point Phone also."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque en el modelo de datos estándar de Data Cloud, una cuenta (Account) puede tener múltiples direcciones (Contact Point Address) - facturación, envío, sede - por lo que la relación lógica correcta es many-to-one (N:1) desde Contact Point Address hacia Account, no one-to-one; el error ocurre porque el sistema valida la integridad del modelo y rechaza relaciones 1:1 que violan esta cardinalidad realista. Descarte: La opción A no resuelve el problema de cardinalidad estructural. La opción B es irrelevante; el volumen de registros no afecta la definición de relaciones en el modelo. La opción D es innecesaria; mapear otros puntos de contacto no corrige la relación incorrecta Account-Address. Senior Tip: Antes de crear relaciones personalizadas, revisa el Customer 360 Data Model Reference para confirmar cardinalidades estándar; para relaciones many-to-one, siempre define la relación desde el lado 'many' (ej: Contact Point Address) hacia el lado 'one' (Account); usa Data Model Builder para visualizar el grafo de relaciones antes de guardar cambios.",
+    "frequency": 8
+  }
+]
