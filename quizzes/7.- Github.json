@@ -73,8 +73,8 @@
       "C. Data Cloud does not support formula field updates for data streams of type Upsert.",
       "D. Data Cloud will update the formula for all records at the next incremental Upsert refresh."
     ],
-    "answer": ["A"],
-    "explanation": "La respuesta correcta es A porque al modificar un campo de fórmula en Data Cloud, la plataforma desencadena automáticamente un refresco completo (full refresh) de todos los registros del data stream asociado para recalcular el valor en todo el historial de datos, garantizando consistencia. Descarte: La opción B es incorrecta; Data Cloud no opera en modo 'go-forward only' para fórmulas. La opción C es falsa; los campos de fórmula son totalmente compatibles con modo upsert. La opción D es incorrecta; un refresco incremental no recalcula fórmulas históricas, solo procesa nuevos/actualizados registros. Senior Tip: Planifica actualizaciones de fórmulas complejas durante ventanas de mantenimiento; un full refresh puede tardar horas en datasets grandes. Monitorea el estado en Data Cloud Monitor y considera pausar activaciones críticas durante el proceso para evitar inconsistencias temporales.",
+    "answer": ["B"],
+    "explanation": "Cuando modificas una fórmula existente, Data Cloud no tiene la capacidad de "mirar atrás" y recalcular todos los millones de registros que ya están en el Data Lake Object (DLO). El nuevo cálculo solo se aplicará a los datos que entren a partir de ese momento.",
     "frequency": 8
   },
   {
@@ -1287,4 +1287,5 @@
     "explanation": "La respuesta correcta es D porque el tipo de destino 'Data Cloud' permite la activación interna (internal activation) que publica los miembros del segmento directamente a un nuevo DMO de tipo Audience dentro de Data Cloud, haciéndolo accesible inmediatamente para consultas mediante Query API sin salir de la plataforma. Descarte: La opción A (External Activation Target) es una categoría genérica, no un tipo específico de destino. La opción B (Marketing Cloud) activa a esa nube para campañas de email/journey, no crea un DMO consultable. La opción C (Marketing Cloud Personalization) envía datos a esa plataforma específica para personalización web, no para almacenamiento interno consultable. Senior Tip: Usa activaciones a Data Cloud para casos donde necesites analizar segmentos mediante SQL personalizado o alimentar otros procesos de Data Cloud; el DMO resultante se nombra igual que el segmento y aparece en Data Explorer bajo 'Audience' como tipo de objeto; recuerda que estos DMOs consumen almacenamiento y deben gestionarse con políticas de retención.",
     "frequency": 8
   }
+
 ]
