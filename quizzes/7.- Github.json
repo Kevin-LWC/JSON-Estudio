@@ -333,8 +333,8 @@
       "C. Segment Setup.",
       "D. Data Stream Setup."
     ],
-    "answer": ["C"],
-    "explanation": "La respuesta correcta es C porque la sugerencia de valores para atributos en segmentación se habilita exclusivamente en la configuración del objeto de modelo de datos (DMO) bajo la sección 'Segment Setup', donde se activa por campo individual para permitir que aparezcan valores sugeridos al crear filtros de segmentación. Descarte: La opción A (Data Mapping) gestiona el mapeo durante la ingesta, no las sugerencias en segmentación. La opción B (Data Transformation) aplica lógica de transformación a streams, sin relación con sugerencias de valores. La opción D (Data Stream Setup) configura la fuente de datos, no las propiedades del DMO para segmentación. Senior Tip: Habilita sugerencias solo para atributos con cardinalidad baja (<500 valores únicos) y evita campos con >255 caracteres; recuerda que los valores sugeridos pueden tardar hasta 24 horas en aparecer tras la habilitación; para atributos críticos como 'Country' o 'ProductCategory', prioriza su activación para acelerar construcción de segmentos por equipos de negocio.",
+    "answer": ["D"],
+    "explanation": "Data Stream Setup (Correcta): Cuando estás configurando un Data Stream (después de elegir los campos y antes de terminar), hay un paso donde puedes ver la lista de campos. Al lado de cada campo, puedes marcar un checkbox o habilitar la opción de Value Suggestion",
     "frequency": 8
   },
   {
@@ -1289,3 +1289,4 @@
   }
 
 ]
+
