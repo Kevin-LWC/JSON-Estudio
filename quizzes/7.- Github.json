@@ -1,0 +1,1290 @@
+[
+  {
+    "id": 152,
+    "question": "What does the Source Sequence reconciliation rule do in Identity Resolution?",
+    "options": [
+      "A. Includes data from sources where the data is most frequently occurring.",
+      "B. Identifies which individual records should be merged into a unified profile by setting a priority for specific data sources.",
+      "C. Identifies which data sources should be used in the process of reconcillation by prioritizing the most recently updated data source.",
+      "D. Sets the priority of specific data sources when building attributes in a unified profile, such as a first or last name."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque la regla de reconciliación Source Sequence establece la prioridad de fuentes de datos específicas al construir atributos en un perfil unificado, definiendo cuál fuente es la principal y cuáles son secundarias como respaldo para cada atributo (ej: nombre del CRM como primario, nombre de web como secundario). Descarte: La opción A describe la regla 'Most Occurring'. La opción B confunde reconciliación con resolución de identidad (matching rules). La opción C describe lógica de actualización reciente, no la secuencia de fuentes definida por el administrador. Senior Tip: Configura Source Sequence en orden descendente de confianza: fuentes más autoritativas (CRM) primero, fuentes menos confiables (web anónima) al final; esto garantiza que atributos críticos como nombre provengan siempre de la fuente más confiable.",
+    "frequency": 8
+  },
+  {
+    "id": 153,
+    "question": "Cumulus Financial uses Data Cloud to segment banking customers and activate them for direct mail via a Cloud File Storage activation. The company also wants to analyze individuals who have been in the segment within the last 2 years. Which Data Cloud component allows for this?",
+    "options": [
+      "A. Segment exclusion.",
+      "B. Nested segments.",
+      "C. Segment membership Data Model Object.",
+      "D. Calculated Insights."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el objeto Segment Membership almacena el historial completo de membresía de segmentos, incluyendo timestamps exactos de cuándo un individuo entró o salió de un segmento, permitiendo análisis retrospectivos como 'individuos en el segmento en los últimos 2 años' mediante filtros en Data Explorer o informes. Descarte: La opción A (exclusión de segmento) es una técnica de filtrado en tiempo real, no un componente de historial. La opción B (segmentos anidados) reutiliza lógica de segmentación pero no almacena historial temporal. La opción D (insights calculadas) genera atributos derivados, no historial de pertenencia a segmentos. Senior Tip: Usa los campos 'MembershipStartDate' y 'MembershipEndDate' del objeto Segment Membership para calcular métricas como 'duración promedio en segmento premium' o para cumplir con requisitos regulatorios que exigen auditoría de membresía histórica.",
+    "frequency": 8
+  },
+  {
+    "id": 154,
+    "question": "How can a consultant modify attribute names to match a naming convention in Cloud File Storage targets?",
+    "options": [
+      "A. Use a formula field to update the field name in an activation.",
+      "B. Update attribute names in the data stream configuration.",
+      "C. Set preferred attribute names when configuring activation.",
+      "D. Update field names in the Data Model Object."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los 'Preferred Attribute Names' son alias configurables durante la creación de la activación que sobreescriben los nombres de campo por defecto del DMO, permitiendo adaptarlos a convenciones de nomenclatura del destino (ej: snake_case para sistemas legacy) sin afectar el modelo de datos central. Descarte: La opción A es incorrecta; los campos de fórmula modifican valores, no nombres de campo. La opción B no afecta nombres en activaciones; solo configura mapeo durante ingesta. La opción D es riesgosa; cambiar nombres en el DMO afecta todas las activaciones y segmentos que usan ese objeto, rompiendo consistencia. Senior Tip: Documenta tu convención de nomenclatura (ej: 'prefijo_tabla_nombre_campo') y reutiliza los mismos Preferred Attribute Names en todas las activaciones al mismo destino; exporta la configuración como Data Kit para replicar fácilmente entre entornos (sandbox → producción).",
+    "frequency": 8
+  },
+  {
+    "id": 155,
+    "question": "A customer has a Master Customer table from their CRM to ingest into Data Cloud. The table contains a name and primary email address, along with other Personally Identifiable Information (PII). How should the fields be mapped to support Identity Resolution?",
+    "options": [
+      "A. Create a new custom object with fields that directly match the incoming table.",
+      "B. Map all fields to the Customer object.",
+      "C. Map name to the Individual object and email address to the Contact Point Email object.",
+      "D. Map all fields to the Individual object, adding a custom field for the email address."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el modelo de datos estándar de Data Cloud requiere mapear información PII como nombre al objeto Individual y el email al objeto Contact Point Email (relacionado con Individual), lo cual habilita las reglas de resolución de identidad basadas en estos atributos críticos. Descarte: La opción A (objeto personalizado) no participa en la resolución de identidad nativa. La opción B (objeto Customer) es para transacciones, no para perfiles unificados. La opción D viola el modelo estándar al forzar email en Individual, impidiendo el matching por email. Senior Tip: Siempre usa los objetos estándar del Common Data Model (Individual, Contact Point Email/Phone) para atributos de identidad; evita campos personalizados en estos objetos para garantizar compatibilidad con las reglas de matching preconfiguradas.",
+    "frequency": 8
+  },
+  {
+    "id": 156,
+    "question": "A customer wants to use the transactional data from their data warehouse in Data Cloud. They are only able to export the data via an SFTP site. How should the file be brought into Data Cloud?",
+    "options": [
+      "A. Ingest the file with the SFTP Connector.",
+      "B. Ingest the file through the Cloud Storage Connector.",
+      "C. Manually import the file using the Data Import Wizard.",
+      "D. Use Salesforce's Data Loader application to perform a bulk upload from a desktop."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el conector SFTP es el único método nativo de Data Cloud para ingerir archivos directamente desde un servidor SFTP, creando un data stream que transforma el archivo en un objeto del lago de datos. Descarte: La opción B (Cloud Storage Connector) solo funciona con servicios cloud como S3/Azure/Google Cloud, no con SFTP. La opción C (Data Import Wizard) está diseñado para objetos estándar de Salesforce CRM, no para Data Cloud. La opción D (Data Loader) opera sobre registros de Salesforce, no sobre Data Cloud ni fuentes SFTP. Senior Tip: Configura el data stream SFTP con modo 'Upsert' si el archivo contiene actualizaciones incrementales; usa External Credentials para gestionar las claves SSH/SFTP de forma segura y habilita la opción 'Delete after ingestion' para limpieza automática de archivos procesados.",
+    "frequency": 8
+  },
+  {
+    "id": 157,
+    "question": "Cumulus Financial is currently using Data Cloud and ingesting transactional data from its backend system via an S3 Connector in Upsert mode. During the initial setup six months ago, the company created a formula field in Data Cloud to create a custom classification. It now needs to update this formula to account for more classifications. What should the consultant keep in mind with regard to formula field updates when using the S3 Connector?",
+    "options": [
+      "A. Data Cloud will initiate a Full Refresh of data from S3 and will update the formula on all records.",
+      "B. Data Cloud will only update the formula on a go-forward basis for new records.",
+      "C. Data Cloud does not support formula field updates for data streams of type Upsert.",
+      "D. Data Cloud will update the formula for all records at the next incremental Upsert refresh."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque al modificar un campo de fórmula en Data Cloud, la plataforma desencadena automáticamente un refresco completo (full refresh) de todos los registros del data stream asociado para recalcular el valor en todo el historial de datos, garantizando consistencia. Descarte: La opción B es incorrecta; Data Cloud no opera en modo 'go-forward only' para fórmulas. La opción C es falsa; los campos de fórmula son totalmente compatibles con modo upsert. La opción D es incorrecta; un refresco incremental no recalcula fórmulas históricas, solo procesa nuevos/actualizados registros. Senior Tip: Planifica actualizaciones de fórmulas complejas durante ventanas de mantenimiento; un full refresh puede tardar horas en datasets grandes. Monitorea el estado en Data Cloud Monitor y considera pausar activaciones críticas durante el proceso para evitar inconsistencias temporales.",
+    "frequency": 8
+  },
+  {
+    "id": 158,
+    "question": "Northern Trail Outfitters wants to implement Data Cloud and has several use cases in mind. Which two use cases are considered a good fit for Data Cloud?",
+    "options": [
+      "A. To ingest and unify data from various sources to reconcile customer identity.",
+      "B. To create and orchestrate cross-channel marketing messages.",
+      "C. To use harmonized data to more accurately understand the customer and business impact.",
+      "D. To eliminate the need for separate business intelligence and IT data management tools."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque Data Cloud está diseñado específicamente para: A) Ingerir y unificar datos heterogéneos resolviendo identidades cross-canal mediante reglas configurables, creando perfiles unificados; y C) Transformar datos mediante armonización en un modelo común (CDP) para generar insights analíticos y comprensión profunda del comportamiento del cliente y su impacto en el negocio. Descarte: La opción B describe funcionalidad de Marketing Cloud/Journey Builder (orquestación de mensajes), no de Data Cloud (que solo proporciona audiencias segmentadas). La opción D es incorrecta; Data Cloud complementa herramientas BI/ETL existentes (Tableau, MuleSoft) pero no las reemplaza. Senior Tip: Posiciona Data Cloud como la capa de 'unificación y activación' en la arquitectura moderna de datos: fuentes → MuleSoft (ingesta) → Data Cloud (unificación/segmentación) → Tableau (BI) → clouds operativas (activación).",
+    "frequency": 8
+  },
+  {
+    "id": 159,
+    "question": "What should an organization use to stream inventory levels from an inventory management system into Data Cloud in a fast and scalable, near-real-time way?",
+    "options": [
+      "A. Cloud Storage Connector.",
+      "B. Commerce Cloud Connector.",
+      "C. Ingestion API.",
+      "D. Marketing Cloud Personalization Connector."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque la Ingestion API permite streaming de datos en tiempo cercano a real desde cualquier sistema externo mediante llamadas RESTful, soportando hasta 100,000 registros por segundo con validación, cifrado y mecanismos de reintento. Descarte: La opción A (Cloud Storage) es para archivos batch, no streaming. La opción B (Commerce Cloud) solo funciona con esa plataforma específica. La opción D (Marketing Cloud Personalization) es para datos de engagement, no inventario. Senior Tip: Para inventario crítico, implementa la Ingestion API en modo streaming con batches pequeños (<1000 registros) y usa el campo 'timestamp' para detectar duplicados; monitorea el estado de ingestión mediante Data Cloud Monitor para garantizar SLAs.",
+    "frequency": 8
+  },
+  {
+    "id": 160,
+    "question": "A customer is trying to activate data from Data Cloud to an Amazon S3 Cloud File Storage Bucket. Which authentication type should the consultant recommend to connect to the S3 bucket from Data Cloud?",
+    "options": [
+      "A. Use a S3 Private Key Certificate.",
+      "B. Use a S3 Encrypted Username and Password.",
+      "C. Use a JWT Token generated on S3.",
+      "D. Use a S3 Access Key and Secret Key."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el conector de Amazon S3 en Data Cloud requiere explícitamente la clave de acceso (Access Key) y clave secreta (Secret Key) generadas en AWS IAM para autenticación segura. Descarte: La opción A (Certificado de clave privada S3) no es compatible con el conector de S3 en Data Cloud. La opción B (Usuario y contraseña cifrados) no es un método de autenticación válido para S3. La opción C (Token JWT) no es soportado por el conector nativo de S3 en Data Cloud. Senior Tip: Nunca almacenes claves de acceso en texto plano; usa AWS Secrets Manager o Salesforce External Credential para gestionar credenciales de forma segura y cumple con las políticas de rotación de claves de tu organización.",
+    "frequency": 8
+  },
+  {
+    "id": 161,
+    "question": "Northern Trail Outfitters (NTO) wants to connect their B2C Commerce data with Data Cloud and bring two years of transactional history into Data Cloud. What should NTO use to achieve this?",
+    "options": [
+      "A. B2C Commerce Starter Bundles.",
+      "B. Direct Sales Order entity ingestion.",
+      "C. Direct Sales Product entity ingestion.",
+      "D. B2C Commerce Starter Bundles plus a custom extract."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque los Starter Bundles por defecto solo ingieren 90 días de historial; para obtener 2 años de transacciones históricas, se requiere un extracto personalizado de B2C Commerce que contenga los datos históricos, combinado con los Starter Bundles para el streaming futuro. Descarte: La opción A solo trae 90 días. Las opciones B y C son incorrectas porque Data Cloud no soporta 'ingestión directa' de entidades de Sales Cloud para datos de B2C Commerce; el conector específico es el B2C Commerce Connector con bundles predefinidos. Senior Tip: Para historial extenso (>90 días), coordina con el equipo de B2C Commerce para generar un extracto CSV/JSON completo, súbelo vía S3 o Ingestion API, y configura el data stream para usar ese archivo como fuente inicial antes de activar el streaming continuo.",
+    "frequency": 8
+  },
+  {
+    "id": 162,
+    "question": "Cumulus Financial uses Service Cloud as its CRM and stores Mobile Phone, Home Phone, and Work Phone as three separate fields for its customers on the Contact record. The company plans to use Data Cloud and ingest the Contact object via the CRM Connector. What is the most efficient approach that a consultant should take when ingesting this data to ensure all the different phone numbers are properly mapped and available for use in activation?",
+    "options": [
+      "A. Ingest the Contact object and map the Work Phone, Mobile Phone, and Home Phone to the Contact Point Phone data map object from the Contact data stream.",
+      "B. Ingest the Contact object and use streaming transforms to normalize the phone numbers from the Contact data stream into a separate Phone data lake object (DLO) that contains three rows, and then map this new DLO to the Contact Point Phone data map object.",
+      "C. Ingest the Contact object and then create a Calculated Insight to normalize the phone numbers, and then map to the Contact Point Phone data map object.",
+      "D. Ingest the Contact object and create formula fields in the Contact data stream on the phone numbers, and then map to the Contact Point Phone data map object."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque las transformaciones en streaming normalizan los números durante la ingesta (eliminando espacios, guiones, añadiendo código de país) y crean un DLO separado con tres filas (una por tipo de teléfono: móvil/casa/trabajo), que luego se mapea al objeto estándar Contact Point Phone, garantizando disponibilidad para activación sin procesamiento adicional ni latencia. Descarte: La opción A no normaliza formatos, causando fallos en activación SMS/voz por inconsistencias. La opción C (insight calculada) añade latencia y consume recursos innecesarios. La opción D (campos de fórmula) no es soportado por el conector CRM y puede generar conflictos con campos existentes. Senior Tip: En transformaciones de streaming, usa expresiones regulares para normalizar formatos telefónicos globales (ej: eliminar todo excepto dígitos); mapea el campo 'PhoneType' (móvil/casa/trabajo) para permitir segmentación por canal preferido en activaciones futuras.",
+    "frequency": 8
+  },
+  {
+    "id": 163,
+    "question": "To import campaign members into a campaign in Salesforce CRM, a user wants to export the segment to Amazon S3. The resulting file needs to include the Salesforce CRM Campaign ID in the name. What are two ways to achieve this outcome?",
+    "options": [
+      "A. Include campaign identifier in the activation name.",
+      "B. Hard code the campaign identifier as a new attribute in the campaign activation.",
+      "C. Include campaign identifier in the filename specification.",
+      "D. Include campaign identifier in the segment name."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque el nombre de la activación se usa como prefijo del archivo exportado y la especificación de nombre de archivo (filename specification) permite incluir variables o texto fijo como sufijo; combinando ambos se incorpora el Campaign ID en el nombre final del archivo (ej: 'Campaign_123_SegmentX_20240101.csv'). Descarte: La opción B es imposible; las activaciones no permiten crear atributos nuevos 'hardcoded'. La opción D es insuficiente; el nombre del segmento no aparece automáticamente en el nombre del archivo a menos que se incluya explícitamente en la filename specification. Senior Tip: Usa la variable '{date}' en la filename specification para incluir timestamp automáticamente; para Campaign ID dinámico, crea un atributo en el segmento con el ID y referencia ese campo en la filename specification usando sintaxis '{attributeName}'.",
+    "frequency": 8
+  },
+  {
+    "id": 164,
+    "question": "A customer is concerned that the consolidation rate displayed in the Identity Resolution is quite low compared to their initial estimations. Which configuration change should a consultant consider in order to increase the consolidation rate?",
+    "options": [
+      "A. Change reconciliation rules to Most Occurring.",
+      "B. Increase the number of matching rules.",
+      "C. Include additional attributes in the existing matching rules.",
+      "D. Reduce the number of matching rules."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque incrementar el número de reglas de coincidencia (match rules) aumenta las oportunidades de emparejar perfiles fuente de diferentes sistemas, elevando directamente la tasa de consolidación (calculada como 1 - perfiles unificados/perfiles fuente). Por ejemplo, añadir una regla basada en 'teléfono + apellido' complementa la regla existente de 'email', capturando coincidencias adicionales. Descarte: La opción A (reconciliación Most Occurring) resuelve conflictos entre perfiles ya emparejados, no crea nuevos emparejamientos. La opción C (añadir atributos a reglas existentes) puede reducir coincidencias al hacer las reglas más restrictivas. La opción D (reducir reglas) disminuye directamente las oportunidades de matching, reduciendo la consolidación. Senior Tip: Añade reglas de matching en orden descendente de confianza: 1) Party Identification exacta, 2) Email normalizado, 3) Teléfono + nombre fuzzy; monitorea el Identity Resolution Dashboard tras cada cambio para medir el impacto real en la tasa de consolidación y evitar over-matching.",
+    "frequency": 8
+  },
+  {
+    "id": 165,
+    "question": "A customer has a requirement to receive a notification whenever an activation fails for a particular segment. Which feature should the consultant use to solution for this use case?",
+    "options": [
+      "A. Flow.",
+      "B. Report.",
+      "C. Activation alert.",
+      "D. Dashboard."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las Activation Alerts son notificaciones nativas de Data Cloud que se disparan automáticamente ante fallos (o éxitos) en activaciones, configurables por segmento con destinatarios específicos y frecuencia de alerta. Descarte: La opción A (Flow) requeriría polling manual mediante APIs, no es nativo. La opción B (Reporte) muestra estado histórico pero no notifica en tiempo real. La opción D (Dashboard) visualiza métricas pero no envía alertas proactivas. Senior Tip: Configura Activation Alerts para segmentos críticos de revenue; combínalas con un Flow que consuma el Data Cloud API para crear casos automáticamente en Service Cloud cuando falle una activación de alto valor.",
+    "frequency": 8
+  },
+  {
+    "id": 166,
+    "question": "Which data model subject area defines the revenue or quantity for an opportunity by product family?",
+    "options": [
+      "A. Engagement.",
+      "B. Product.",
+      "C. Party.",
+      "D. Sales Order."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el área temática Sales Order incluye objetos como Sales Order Line Item y Sales Order Revenue que permiten desglosar ingresos y cantidades por familia de producto dentro de una oportunidad u orden de venta. Descarte: La opción A (Engagement) gestiona interacciones (email, SMS), no transacciones. La opción B (Product) define catálogo de productos pero no transacciones agregadas. La opción C (Party) representa entidades (individuos, cuentas), no métricas de revenue. Senior Tip: Para análisis por familia de producto, usa el campo 'ProductFamily' en Sales Order Line Item combinado con agregaciones en Data Explorer; evita confundir 'Opportunity' (Sales Cloud) con 'Sales Order' (modelo estándar de Data Cloud para transacciones).",
+    "frequency": 8
+  },
+  {
+    "id": 167,
+    "question": "When performing segmentation or activation, which time zone is used to publish and refresh data?",
+    "options": [
+      "A. Time zone specified on the activity at the time of creation.",
+      "B. Time zone of the user creating the activity.",
+      "C. Time zone of the Data Cloud Admin user.",
+      "D. Time zone set by the Salesforce Data Cloud org."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque todas las programaciones de refresco de segmentos y publicación de activaciones en Data Cloud utilizan exclusivamente la zona horaria configurada a nivel de org durante el aprovisionamiento, independientemente de las preferencias de usuario individuales o del momento de creación de la actividad. Descarte: Las opciones A, B y C son incorrectas porque Data Cloud no respeta zonas horarias a nivel de usuario, actividad o rol administrativo; el estándar org-wide garantiza consistencia operativa cross-equipo y evita conflictos horarios en activaciones globales. Senior Tip: Verifica la zona horaria del org en Setup > Company Information antes de configurar activaciones críticas; para equipos globales, documenta explícitamente la zona horaria del org (ej: 'America/New_York') en los nombres de segmentos/activaciones.",
+    "frequency": 8
+  },
+  {
+    "id": 168,
+    "question": "Northern Trail Outfitters (NTO), an outdoor lifestyle clothing brand, recently started a new line of business. The new business specializes in gourmet camping food. For business reasons as well as security reasons, it's important to NTO to keep all Data Cloud data separated by brand. Which capability best supports NTO's desire to separate its data by brand?",
+    "options": [
+      "A. Data streams for each brand.",
+      "B. Data Model Objects for each brand.",
+      "C. Data spaces for each brand.",
+      "D. Data sources for each brand."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los Data Spaces son contenedores lógicos que aíslan completamente los datos por criterios de negocio (como marca), proporcionando separación de seguridad, gobernanza y modelos de datos independientes para cada espacio, cumpliendo requisitos regulatorios y de seguridad cross-marca. Descarte: La opción A (flujos de datos) ingiere datos pero no los aísla lógicamente. La opción B (objetos de modelo) define estructura pero no separación de acceso. La opción D (fuentes de datos) identifica origen pero no particiona el almacenamiento ni el acceso. Senior Tip: Implementa un Data Space por marca o unidad de negocio crítica; asigna permisos de usuario específicos por Data Space para cumplir con requisitos de compliance como GDPR por línea de negocio; usa Data Spaces también para entornos de desarrollo/prueba/producción.",
+    "frequency": 8
+  },
+  {
+    "id": 169,
+    "question": "A Data Cloud customer wants to adjust their Identity Resolution rules to increase their accuracy of matches. Rather than matching on email address, they want to review a rule that joins their CRM Contacts with their Marketing Contacts, where both use the CRM ID as their primary key. Which two steps should the consultant take to address this new use case?",
+    "options": [
+      "A. Map the primary key from the two systems to Party Identification, using CRM ID as the identification name for both.",
+      "B. Map the primary key from the two systems to Party Identification, using CRM ID as the identification name for individuals coming from the CRM, and Marketing ID as the identification name for individuals coming from the marketing platform.",
+      "C. Create a custom matching rule for an exact match on the Individual ID attribute.",
+      "D. Create a matching rule based on Party Identification that matches on CRM ID as the party identification name."
+    ],
+    "answer": ["A", "D"],
+    "explanation": "La respuesta correcta es A y D porque: A) Mapear la clave primaria a Party Identification con el mismo nombre (CRM ID) para ambos sistemas garantiza que el matching reconozca el mismo identificador cross-fuente, y D) Crear una regla de coincidencia basada en esa identificación Party permite emparejar perfiles usando el CRM ID como criterio exacto, maximizando precisión sin depender de emails que pueden cambiar o faltar. Descarte: La opción B usa nombres diferentes (CRM ID vs Marketing ID), impidiendo el emparejamiento exacto. La opción C (regla en Individual ID) es subóptima porque Individual ID es un atributo derivado por Data Cloud, menos confiable que Party Identification para claves primarias explícitas. Senior Tip: Siempre usa Party Identification para claves primarias compartidas entre sistemas; evita mezclar nombres de identificación y valida que el mapeo se haga en la fase de modelado del DMO antes de configurar reglas de resolución; documenta el 'IdentificationName' usado para cada fuente en un spreadsheet de gobernanza.",
+    "frequency": 8
+  },
+  {
+    "id": 170,
+    "question": "Cumulus Financial created a segment called High Investment Balance Customers. This is a foundational segment that includes several segmentation criteria the marketing team should consistently use. Which feature should the consultant suggest the marketing team use to ensure this consistency when creating future, more refined segments?",
+    "options": [
+      "A. Create new segments using nested segments.",
+      "B. Create a High Investment Balance Calculated Insight.",
+      "C. Package High Investment Balance Customers in a data kit.",
+      "D. Create new segments by cloning High Investment Balance Customers."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los segmentos anidados permiten reutilizar un segmento base (como High Investment Balance Customers) dentro de nuevos segmentos, manteniendo consistencia en los criterios fundamentales mientras se agregan filtros adicionales sin duplicar lógica ni crear silos de segmentos. Descarte: La opción B (insight calculada) no es un segmento y no puede usarse para activación directa. La opción C (data kit) es para migración entre orgs, no para construcción de segmentos dentro del mismo entorno. La opción D (clonar) crea duplicados que se des sincronizan al modificar el original, generando confusión y redundancia. Senior Tip: Usa segmentos anidados para criterios regulatorios o compliance que nunca deben modificarse; así garantizas que todos los segmentos derivados hereden siempre las reglas obligatorias sin riesgo de omisión humana por parte de equipos de marketing.",
+    "frequency": 8
+  },
+  {
+    "id": 171,
+    "question": "What does it mean to build a trust-based, first-party data asset?",
+    "options": [
+      "A. To provide transparency and security for data gathered from individuals who provide consent for its use and receive value in exchange.",
+      "B. To provide trusted, first-party data in the Data Cloud Marketplace that follows all compliance regulations.",
+      "C. To ensure opt-in consents are collected for all email marketing as required by law.",
+      "D. To obtain competitive data from reliable sources through interviews, surveys, and polls."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque un activo de datos first-party basado en confianza se construye mediante transparencia (explicar cómo se usa el dato), seguridad (proteger el dato) y valor recíproco (el cliente recibe beneficios a cambio de compartir su información), creando una relación mutuamente beneficiosa que fomenta la lealtad y el engagement continuo. Descarte: La opción B confunde first-party data (propio del cliente) con third-party data del Marketplace. La opción C es solo un componente regulatorio limitado (email), no la filosofía completa de confianza. La opción D describe investigación de mercado, no construcción de activos first-party. Senior Tip: Implementa un 'value exchange framework': por cada dato sensible solicitado (ej: ingresos), ofrece un beneficio tangible (descuento personalizado, contenido exclusivo); documenta este intercambio en tu política de privacidad para reforzar la confianza y cumplir con estándares como GDPR.",
+    "frequency": 8
+  },
+  {
+    "id": 172,
+    "question": "Which two dependencies prevent a data stream from being deleted?",
+    "options": [
+      "A. The underlying data lake object is mapped to a Data Model Object.",
+      "B. The underlying data lake object is used in a data transform.",
+      "C. The underlying data lake object is used in activation.",
+      "D. The underlying data lake object is used in segmentation."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque un data stream no puede eliminarse si su DLO subyacente: A) está mapeado a un DMO (el mapeo crearía inconsistencias en el modelo de datos si se elimina el DLO), y B) se usa como entrada/salida en una transformación de datos (rompería el flujo de procesamiento). Descarte: La opción C es incorrecta; las activaciones dependen de segmentos, no directamente del DLO subyacente. La opción D es incorrecta; la segmentación usa DMOs, no DLOs directamente, por lo que no bloquea la eliminación del flujo. Senior Tip: Antes de eliminar un flujo de datos, usa Data Cloud Monitor para identificar todas las dependencias; elimina primero las transformaciones y desmapea los DMOs para evitar errores de integridad; documenta el proceso en un runbook para operaciones futuras.",
+    "frequency": 8
+  },
+  {
+    "id": 173,
+    "question": "What is Data Cloud's primary value to customers?",
+    "options": [
+      "A. To provide a unified view of a customer and their related data.",
+      "B. To connect all systems with a golden record.",
+      "C. To create a single source of truth for all anonymous data.",
+      "D. To create personalized campaigns by listening, understanding, and acting on customer behavior."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el valor fundamental de Data Cloud es crear perfiles unificados que consolidan datos de múltiples fuentes (CRM, marketing, commerce, etc.) en una vista 360 del cliente, habilitando experiencias personalizadas y decisiones basadas en datos completos cross-canal. Descarte: La opción B es incorrecta; Data Cloud no crea un 'golden record' único al estilo MDM tradicional sino perfiles unificados con reconciliación configurable por atributo. La opción C es limitada; Data Cloud maneja tanto datos identificados como anónimos, pero su foco principal es la identidad resuelta para engagement. La opción D describe un resultado derivado (campañas personalizadas), no el valor primario de la plataforma. Senior Tip: En entrevistas técnicas, diferencia claramente: 'unified profile' (Data Cloud - múltiples fuentes reconciliadas) vs 'golden record' (MDM - única versión autoritativa); Data Cloud complementa MDM pero no lo reemplaza.",
+    "frequency": 8
+  },
+  {
+    "id": 174,
+    "question": "Which consideration related to the way Data Cloud ingests CRM data is true?",
+    "options": [
+      "A. CRM data cannot be manually refreshed and must wait for the next scheduled synchronization.",
+      "B. The CRM Connector's synchronization times can be customized to up to 15-minute intervals.",
+      "C. Formula fields are refreshed at regular sync intervals and are updated at the next Full Refresh.",
+      "D. The CRM Connector allows standard fields to stream into Data Cloud in real time."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el conector de CRM transmite cambios en campos estándar a Data Cloud en tiempo real mediante eventos de plataforma (Streaming Transforms), sin depender de sincronizaciones programadas, garantizando que Data Cloud siempre tenga los datos CRM más actuales para segmentación y activación. Descarte: La opción A es falsa; los datos de CRM se pueden refrescar manualmente desde la página de detalles del flujo de datos. La opción B es incorrecta; los intervalos personalizables mínimos son de 60 minutos, no 15. La opción C es falsa; los campos de fórmula solo se actualizan durante refrescos completos (cada 24h o manual), no en sincronizaciones incrementales. Senior Tip: Habilita Streaming Transforms solo para objetos críticos (Contact, Account); monitorea el lag en Data Cloud Monitor y configura alertas si el retraso supera 5 minutos para garantizar SLAs operativos; para campos específicos de alto valor (ej: 'Customer Status'), usa External Actions para notificar inmediatamente cambios a sistemas externos.",
+    "frequency": 8
+  },
+  {
+    "id": 175,
+    "question": "During a privacy law discussion with a customer, the customer indicates they need to honor requests for the Right to be Forgotten. The consultant determines that Consent API will solve this business need. Which two considerations should the consultant inform the customer about?",
+    "options": [
+      "A. Data deletion requests are reprocessed at 30, 60, and 90 days.",
+      "B. Data deletion requests are processed within 1 hour.",
+      "C. Data deletion requests are submitted for Individual profiles.",
+      "D. Data deletion requests submitted to Data Cloud are passed to all connected Salesforce clouds."
+    ],
+    "answer": ["C", "D"],
+    "explanation": "La respuesta correcta es C y D porque: C) Las solicitudes de eliminación mediante Consent API deben dirigirse específicamente a perfiles Individual (no a perfiles fuente o Unified Individual), ya que este es el nivel de entidad reconocido por el mecanismo de cumplimiento; D) Las solicitudes se propagan automáticamente a todas las clouds de Salesforce conectadas (Sales/Service/Marketing Cloud) garantizando eliminación comprehensiva cross-plataforma para cumplir GDPR/CCPA. Descarte: La opción A describe el comportamiento del mecanismo 'Data Deletion Request' nativo de Data Cloud (no del Consent API); el Consent API no reprocesa automáticamente. La opción B es falsa; el proceso es asíncrono y puede tardar hasta 24 horas, no 1 hora. Senior Tip: Para GDPR, combina Consent API con el campo personalizado 'DeletionRequestDate' en el objeto Individual; configura un Flow que monitoree este campo y genere alertas si el estado 'Data Deletion Status' no cambia a 'Completed' tras 7 días; documenta siempre el ID de solicitud para auditoría regulatoria.",
+    "frequency": 8
+  },
+  {
+    "id": 176,
+    "question": "Which permission setting should a consultant check if the custom Salesforce CRM object is not available in New Data Stream configuration?",
+    "options": [
+      "A. Confirm the Create object permission is enabled in the Data Cloud org.",
+      "B. Confirm the View All object permission is enabled in the source Salesforce CRM org.",
+      "C. Confirm the Ingest Object permission is enabled in the Salesforce CRM org.",
+      "D. Confirm that the Modify Object permission is enabled in the Data Cloud org."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque el permiso 'Ver Todo' (View All) en el objeto personalizado de la org fuente de Salesforce CRM es obligatorio para que el objeto aparezca en la configuración de flujos de datos; sin él, los registros no son visibles debido a reglas de compartición, bloqueando la ingesta incluso si el usuario de conexión tiene otros permisos. Descarte: La opción A (Permiso Crear objeto en Data Cloud) no afecta la visibilidad del objeto fuente. La opción C (Permiso Ingestar Objeto) no existe como permiso estándar en Salesforce. La opción D (Permiso Modificar Objeto en Data Cloud) es irrelevante para la disponibilidad inicial del objeto en la configuración del flujo. Senior Tip: Asigna un conjunto de permisos en la org fuente que incluya 'Ver Todo' para el objeto personalizado al perfil del usuario de conexión; verifica también que el objeto esté desplegado en la versión de API usada por Data Cloud y que no esté marcado como 'Deprecated'.",
+    "frequency": 8
+  },
+  {
+    "id": 177,
+    "question": "Where is Value Suggestion for attributes in segmentation enabled when creating the DMO?",
+    "options": [
+      "A. Data Mapping.",
+      "B. Data Transformation.",
+      "C. Segment Setup.",
+      "D. Data Stream Setup."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque la sugerencia de valores para atributos en segmentación se habilita exclusivamente en la configuración del objeto de modelo de datos (DMO) bajo la sección 'Segment Setup', donde se activa por campo individual para permitir que aparezcan valores sugeridos al crear filtros de segmentación. Descarte: La opción A (Data Mapping) gestiona el mapeo durante la ingesta, no las sugerencias en segmentación. La opción B (Data Transformation) aplica lógica de transformación a streams, sin relación con sugerencias de valores. La opción D (Data Stream Setup) configura la fuente de datos, no las propiedades del DMO para segmentación. Senior Tip: Habilita sugerencias solo para atributos con cardinalidad baja (<500 valores únicos) y evita campos con >255 caracteres; recuerda que los valores sugeridos pueden tardar hasta 24 horas en aparecer tras la habilitación; para atributos críticos como 'Country' o 'ProductCategory', prioriza su activación para acelerar construcción de segmentos por equipos de negocio.",
+    "frequency": 8
+  },
+  {
+    "id": 178,
+    "question": "Which two steps should a consultant take if a successfully configured Amazon S3 data stream fails to refresh with a NO FILE FOUND error message?",
+    "options": [
+      "A. Check if the file exists in the specified bucket location.",
+      "B. Check if correct permissions are configured for the Data Cloud user.",
+      "C. Check if the Amazon S3 data source is enabled in Data Cloud setup.",
+      "D. Check if correct permissions are configured for the S3 user."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque el error 'NO FILE FOUND' indica que Data Cloud no puede localizar/acceder al archivo: A) verifica que el archivo exista físicamente en la ruta/bucket especificada en la configuración del data stream, y B) confirma que el usuario de Data Cloud tenga el permiso 'Data Cloud Data Stream Read' y credenciales S3 válidas. Descarte: La opción C es incorrecta; los data sources S3 no requieren 'habilitación' adicional tras creación. La opción D es engañosa; los permisos se configuran en IAM para las claves de acceso usadas por Data Cloud, no para un 'usuario S3' específico. Senior Tip: Para troubleshooting rápido: 1) Verifica manualmente la ruta S3 en AWS Console, 2) Confirma que el nombre de archivo coincida exactamente (case-sensitive), 3) Valida que las claves de acceso S3 no hayan expirado en External Credentials; para archivos dinámicos, usa wildcards en la configuración del data stream (ej: 'sales_*.csv').",
+    "frequency": 8
+  },
+  {
+    "id": 179,
+    "question": "What is the result of a segmentation criteria filtering on City | Is Equal To | 'San José'?",
+    "options": [
+      "A. Cities containing San José, San Jose, san jose, or san jose.",
+      "B. Cities only containing San Jose or san jose.",
+      "C. Cities only containing San Jose or San Jose.",
+      "D. Cities only containing San José or san josé."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque los filtros de segmentación en Data Cloud son case-sensitive y accent-sensitive, coincidiendo únicamente con valores que matchean exactamente en mayúsculas/minúsculas y tildes; 'San José' y 'san josé' (misma tilde, diferente case) coinciden, pero variantes sin tilde ('San Jose') no. Descarte: La opción A es incorrecta; incluye variantes sin tilde que no coinciden. Las opciones B y C son incorrectas porque omiten la tilde requerida en 'José'. Senior Tip: Para coincidir con múltiples variantes ortográficas, usa el operador OR con múltiples valores ('San José' OR 'San Jose' OR 'san jose' OR 'san josé') o normaliza el atributo mediante transformación en streaming durante la ingesta para eliminar tildes/acento antes de la segmentación.",
+    "frequency": 8
+  },
+  {
+    "id": 180,
+    "question": "Northern Trail Outfitters wants to use some of its Marketing Cloud data in Data Cloud. Which engagement channel data will require custom integration?",
+    "options": [
+      "A. SMS.",
+      "B. Email.",
+      "C. CloudPage.",
+      "D. Mobile push."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque CloudPage no es un canal de engagement estándar soportado nativamente por Data Cloud; requiere integración personalizada mediante APIs o eventos para ingestar datos de interacción (vistas de página, formularios completados). Descarte: Las opciones A (SMS), B (Email) y D (Mobile push) son canales estándar integrados directamente mediante el conector de Marketing Cloud sin necesidad de desarrollo adicional. Senior Tip: Para CloudPage, implementa una solución usando Marketing Cloud REST API para enviar eventos de interacción a Data Cloud como objetos personalizados; documenta el mapeo de atributos (ej: CloudPageID, timestamp, form fields) para facilitar el troubleshooting y cumplir con requisitos de privacidad.",
+    "frequency": 8
+  },
+  {
+    "id": 181,
+    "question": "What should a user do to pause a segment activation with the intent of using that segment again?",
+    "options": [
+      "A. Deactivate the segment.",
+      "B. Delete the segment.",
+      "C. Skip the activation.",
+      "D. Stop the publish schedule."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque desactivar un segmento detiene todas las publicaciones a destinos de activación manteniendo intacta la definición del segmento, permitiendo su reactivación futura sin reconstruirlo. Descarte: La opción B (Eliminar) es permanente e irreversible. La opción C (Saltar activación) solo omite un ciclo específico, no pausa indefinidamente. La opción D (Detener programación) detiene publicaciones pero no desactiva el segmento propiamente dicho, dejando ambigüedad operativa. Senior Tip: Usa 'Deactivate' para pausas temporales por campañas estacionales o compliance; documenta la razón en la descripción del segmento para facilitar la reactivación futura con contexto claro; nunca elimines segmentos críticos sin primero crear una copia de respaldo en un Data Kit.",
+    "frequency": 8
+  },
+  {
+    "id": 182,
+    "question": "Which configuration supports separate Amazon S3 buckets for data ingestion and activation?",
+    "options": [
+      "A. Dedicated S3 data sources in Data Cloud setup.",
+      "B. Multiple S3 connectors in Data Cloud setup.",
+      "C. Dedicated S3 data sources in Activation setup.",
+      "D. Separate user credentials for data stream and Activation target."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los data sources en Data Cloud Setup definen conexiones específicas a buckets S3; creando data sources dedicados (uno para ingesta 's3-ingest-prod', otro para activación 's3-activate-prod') se logra separación lógica, de seguridad y operativa entre buckets de origen y destino, cada uno con sus propias credenciales y permisos IAM. Descarte: La opción B es incorrecta; solo existe un conector S3 nativo en Data Cloud, no múltiples instancias. La opción C no existe; la configuración de activación usa 'activation targets', no data sources. La opción D es insuficiente; aunque credenciales separadas ayudan a la seguridad, sin data sources dedicados no se puede especificar buckets diferentes. Senior Tip: Implementa data sources S3 con nombres descriptivos que incluyan propósito y entorno (ej: 'nto-s3-ingest-prod-us-east-1'); asigna roles IAM mínimos por bucket (ej: 's3:GetObject' solo para ingesta, 's3:PutObject' para activación); usa External Credentials con rotación automática.",
+    "frequency": 8
+  },
+  {
+    "id": 183,
+    "question": "Luxury Retailers created a segment targeting high value customers that it activates through Marketing Cloud for email communication. The company notices that the activated count is smaller than the segment count. What is a reason for this?",
+    "options": [
+      "A. Marketing Cloud activations apply a frequency cap and limit the number of records that can be sent in an activation.",
+      "B. Data Cloud enforces the presence of Contact Point for Marketing Cloud activations. If the individual does not have a related Contact Point, it will not be activated.",
+      "C. Marketing Cloud activations automatically suppress individuals who are unengaged and have not opened or clicked on an email in the last six months.",
+      "D. Marketing Cloud activations only activate those individuals that already exist in Marketing Cloud. They do not allow activation of new records."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque Data Cloud requiere obligatoriamente un Contact Point Email relacionado con cada Individual para activaciones a Marketing Cloud; sin este objeto que almacena la dirección de email válida y consentimiento, el individuo se excluye silenciosamente de la activación. Descarte: La opción A es incorrecta; Data Cloud no aplica frequency caps nativos. La opción C es falsa; la supresión por engagement es configuración de Marketing Cloud, no de Data Cloud. La opción D es incorrecta; Data Cloud sí crea nuevos suscriptores en Marketing Cloud mediante activaciones. Senior Tip: Antes de activar, valida en Data Explorer que el ratio Individual:Contact Point Email sea cercano a 1:1; crea un segmento de 'Individuos sin Contact Point' para identificar gaps de datos y corrige el mapeo del data stream para incluir el objeto Contact Point Email desde fuentes CRM; usa el campo 'PrivacyConsentStatus' para filtrar solo emails con consentimiento válido.",
+    "frequency": 8
+  },
+  {
+    "id": 184,
+    "question": "When creating a segment on an individual, what is the result of using two separate containers linked by an AND as shown below? GoodsProduct | Count | At Least | 1 Color | Is Equal To | red AND GoodsProduct | Count | At Least | 1 PrimaryProductCategory | Is Equal To | shoes?",
+    "options": [
+      "A. Individuals who purchased at least one of any red product and also purchased at least one pair of shoes.",
+      "B. Individuals who purchased at least one red shoes as a single line item in a purchase.",
+      "C. Individuals who made a purchase of at least one red shoes and nothing else.",
+      "D. Individuals who purchased at least one of any red product or purchased at least one pair of shoes."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque dos contenedores separados unidos por AND requieren que el individuo cumpla ambas condiciones independientemente: al menos un producto rojo (cualquier producto con color=rojo) Y al menos un par de zapatos (cualquier producto con categoría=zapatos), sin requerir que sea el mismo ítem ni transacción. Descarte: La opción B implica un solo ítem con ambas características (requeriría un solo contenedor con múltiples condiciones). La opción C añade restricción no especificada ('nada más'). La opción D describe lógica OR, no AND. Senior Tip: Para segmentar 'zapatos rojos' como ítem único, usa un solo contenedor con múltiples condiciones en el mismo objeto relacionado (GoodsProduct.Color = 'red' AND GoodsProduct.PrimaryProductCategory = 'shoes'); contenedores separados siempre evalúan transacciones/ítems distintos.",
+    "frequency": 8
+  },
+  {
+    "id": 185,
+    "question": "Cloud Kicks received a Request to be Forgotten by a customer. In which two ways should a consultant use Data Cloud to honor this request?",
+    "options": [
+      "A. Delete the data from the incoming data stream and perform a Full Refresh.",
+      "B. Add the Individual ID to a headerless file and use the delete from file functionality.",
+      "C. Use Data Explorer to locate and manually remove the Individual.",
+      "D. Use the Consent API to suppress processing and delete the Individual and related records from source data streams."
+    ],
+    "answer": ["B", "D"],
+    "explanation": "La respuesta correcta es B y D porque: B) permite eliminación masiva mediante archivo CSV headerless con IDs de individuos (proceso asíncrono hasta 24h), y D) usa la Consent API para solicitar eliminación completa incluyendo registros relacionados, con reprocesamiento a 30/60/90 días para garantizar borrado total según GDPR. Descarte: La opción A no elimina datos existentes en Data Cloud, solo previene nuevos ingresos. La opción C elimina solo el individuo en Data Cloud pero no sus registros relacionados ni en fuentes originales, incumpliendo GDPR. Senior Tip: Para cumplir GDPR, combina ambos métodos: usa Consent API para la solicitud formal y monitorea el estado mediante el campo 'Data Deletion Status'; documenta siempre el timestamp de la solicitud y el ID de individuo para auditorías regulatorias; configura un Flow que genere alertas si el estado no cambia a 'Completed' tras 90 días.",
+    "frequency": 8
+  },
+  {
+    "id": 186,
+    "question": "A retailer wants to unify profiles using Loyalty ID which is different than the unique ID of their customers. Which object should the consultant use in Identity Resolution to perform exact match rules on the Loyalty ID?",
+    "options": [
+      "A. Party Identification object.",
+      "B. Loyalty Identification object.",
+      "C. Individual object.",
+      "D. Contact Identification object."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Party Identification es el objeto estándar diseñado para almacenar múltiples identificadores por individuo (email, teléfono, loyalty ID, etc.), permitiendo crear reglas de coincidencia exacta basadas en el tipo y valor de identificación (ej: Loyalty ID = 'ABC123'). Descarte: La opción B no existe en el modelo de datos de Data Cloud. La opción C (Individual) almacena atributos demográficos pero no identificadores múltiples. La opción D (Contact Identification) pertenece al modelo de Service Cloud, no al Common Data Model de Data Cloud. Senior Tip: Al mapear loyalty IDs, usa el campo 'IdentificationName' con valor consistente (ej: 'LoyaltyProgramA') en todas las fuentes para garantizar que la regla de matching funcione correctamente cross-sistema; evita usar valores genéricos como 'ID' que puedan colisionar con otros tipos de identificadores.",
+    "frequency": 8
+  },
+  {
+    "id": 187,
+    "question": "A consultant has an activation that is set to publish every 12 hours, but has discovered that updates to the data prior to activation are delayed by up to 24 hours. Which two areas should a consultant review to troubleshoot this issue?",
+    "options": [
+      "A. Review data transformations to ensure they're run after Calculated Insights.",
+      "B. Review Calculated Insights to make sure they're run after the segments are refreshed.",
+      "C. Review segments to ensure they're refreshed after the data is ingested.",
+      "D. Review Calculated Insights to make sure they're run before segments are refreshed."
+    ],
+    "answer": ["C", "D"],
+    "explanation": "La respuesta correcta es C y D porque: C) Los segmentos deben refrescarse tras la ingesta (y tras insights calculadas) para reflejar los datos más recientes antes de la activación, y D) Las insights calculadas deben ejecutarse después de la ingesta pero ANTES del refresco de segmentos para que los segmentos usen datos derivados actualizados; este flujo garantiza que las activaciones usen información actualizada sin retrasos acumulativos. Descarte: La opción A es irrelevante; las transformaciones de datos son opcionales y operan durante la ingesta. La opción B es incorrecta porque las insights calculadas son independientes de los segmentos y deben ejecutarse antes, no después, para alimentar correctamente la segmentación. Senior Tip: Configura un flujo secuencial estricto: ingesta → transformaciones (opcional) → identity resolution → insights calculadas → refresco de segmentos → activación; usa Data Cloud Monitor para identificar cuellos de botella en cada etapa y ajusta los intervalos de programación considerando el tiempo total de procesamiento.",
+    "frequency": 8
+  },
+  {
+    "id": 188,
+    "question": "Cumulus Financial wants to segregate Salesforce CRM Account data based on Country for its Data Cloud users. What should the consultant do to accomplish this?",
+    "options": [
+      "A. Use Salesforce sharing rules on the Account object to filter and segregate records based on Country.",
+      "B. Use formula fields based on the Account Country field to filter incoming records.",
+      "C. Use streaming transforms to filter out Account data based on Country and map to separate Data Model Objects accordingly.",
+      "D. Use the data spaces feature and apply filtering on the Account data lake object based on Country."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque los Data Spaces permiten particionar lógicamente los datos con filtros aplicados al DLO (Data Lake Object), segregando automáticamente los registros de Account por Country sin modificar el modelo de datos ni requerir transformaciones complejas; cada Data Space puede tener permisos de usuario específicos para controlar acceso por país. Descarte: La opción A (sharing rules) funciona en Salesforce CRM pero no se replica automáticamente a Data Cloud. La opción B (formula fields) no filtra datos durante ingesta. La opción C (streaming transforms) es innecesariamente compleja y crea duplicación de objetos; además, los transforms no son ideales para filtrado basado en atributos estáticos como Country. Senior Tip: Crea un Data Space por país/región crítica; en la configuración del Data Space, aplica el filtro 'Country = [valor]' al DLO Account; asigna permisos de usuario específicos por Data Space para cumplir con requisitos regulatorios locales (ej: GDPR para datos UE).",
+    "frequency": 8
+  },
+  {
+    "id": 189,
+    "question": "A customer notices that their consolidation rate has recently increased. They contact the consultant to ask why. What are two likely explanations for the increase?",
+    "options": [
+      "A. New data sources have been added to Data Cloud that largely overlap with the existing profiles.",
+      "B. Identity Resolution rules have been added to the ruleset to increase the number of matched profiles.",
+      "C. Duplicates have been removed from source system data streams.",
+      "D. Identity Resolution rules have been removed to reduce the number of matched profiles."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque la tasa de consolidación (1 - perfiles unificados/perfiles fuente) aumenta cuando: A) nuevas fuentes con alto overlap generan más coincidencias cross-sistema (ej: nuevo CRM con mismos clientes), y B) reglas adicionales de matching identifican más perfiles como pertenecientes al mismo individuo (ej: añadir matching por teléfono + email en lugar de solo email). Descarte: La opción C (eliminar duplicados en fuentes) reduciría perfiles fuente, disminuyendo artificialmente la tasa de consolidación. La opción D (remover reglas) reduciría coincidencias, disminuyendo directamente la tasa. Senior Tip: Monitorea la tasa de consolidación semanalmente en el dashboard de Identity Resolution; un aumento >15% repentino puede indicar problemas de calidad (ej: IDs reutilizados en fuentes); correlaciona con el campo 'MatchConfidenceScore' para identificar si el aumento proviene de coincidencias de alta o baja confianza.",
+    "frequency": 8
+  },
+  {
+    "id": 190,
+    "question": "Data Cloud consultant recently discovered that their Identity Resolution process is matching individuals that share email addresses or phone numbers, but are not actually the same individual. What should the consultant do to address this issue?",
+    "options": [
+      "A. Modify the existing ruleset to use fewer matching rules, run the ruleset and review the updated results, then adjust as needed until the individuals are matching correctly.",
+      "B. Create and run a new ruleset with stricter matching criteria, compare the two rulesets to review and verify the results, and then migrate to the new ruleset once approved.",
+      "C. Create and run a new ruleset with fewer matching rules, compare the two rulesets to review and verify the results, and then migrate to the new ruleset once approved.",
+      "D. Modify the existing ruleset with stricter matching criteria, run the ruleset and review the updated results, then adjust as needed until the individuals are matching correctly."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque crear un nuevo ruleset (en lugar de modificar el existente) permite probar criterios más estrictos (ej: requerir email + teléfono en lugar de solo email, o añadir Party Identification obligatoria) sin afectar los perfiles unificados actuales; comparar ambos rulesets en Profile Explorer identifica falsos positivos/negativos, y solo tras validación se migra al nuevo ruleset, garantizando continuidad operativa. Descarte: La opción A y C reducirían reglas, aumentando under-matching (perfiles no unificados que deberían serlo). La opción D es riesgosa; modificar el ruleset activo regenera todos los perfiles unificados inmediatamente, causando inconsistencias temporales en segmentos/activaciones. Senior Tip: Implementa un ciclo de testing: 1) Crea ruleset 'v2_strict' con criterios adicionales, 2) Ejecuta en modo preview o en Data Space de prueba, 3) Usa Profile Explorer para analizar 50 perfiles críticos en ambos rulesets, 4) Mide métricas: tasa de consolidación, match confidence, y casos de over-matching reportados por negocio antes de migrar.",
+    "frequency": 8
+  },
+  {
+    "id": 191,
+    "question": "Data Cloud receives a nightly file of all ecommerce transactions from the previous day. Several segments and activations depend upon Calculated Insights from the updated data in order to maintain accuracy in the customer's scheduled campaign messages. What should the consultant do to ensure the ecommerce data is ready for use for each of the scheduled activations?",
+    "options": [
+      "A. Ensure the activations are set to Incremental Activation and automatically publish every hour.",
+      "B. Use Flow to trigger a change data event on the ecommerce data to refresh Calculated Insights and segments before the activations are scheduled to run.",
+      "C. Set a refresh schedule for the Calculated Insights to occur every hour.",
+      "D. Ensure the segments are set to Rapid Publish and set to refresh every hour."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque Flow con Change Data Events permite orquestar una cadena de procesamiento precisa y oportuna: al detectar la ingesta exitosa del archivo nocturno, dispara refrescos en cascada (data stream → identity resolution → calculated insights → segmentos) completando todo antes de la programación de activaciones, garantizando datos frescos sin desperdicio de recursos ni riesgo de activar con datos obsoletos. Descarte: La opción A (activación incremental) no resuelve el problema de datos obsoletos en el segmento base. La opción C (refresco horario) es ineficiente y puede no sincronizarse con la ventana crítica de activación. La opción D (Rapid Publish) sacrifica validación de calidad por velocidad, riesgoso para campañas de revenue crítico. Senior Tip: Diseña el Flow con 'Scheduled Trigger' a las 3 AM (tras ingesta nocturna típica) que ejecute: 1) Wait 15 min para completar ingesta S3, 2) Refresh Identity Resolution Ruleset, 3) Refresh Calculated Insights específicas para ecommerce, 4) Refresh Segmentos críticos; añade notificaciones vía Slack/email si cualquier paso falla.",
+    "frequency": 8
+  },
+  {
+    "id": 192,
+    "question": "A client wants to bring in loyalty data from a custom object in Salesforce CRM that contains a point balance for accrued hotel points and airline points within the same record. The client wants to split these point systems into two separate records for better tracking and processing. What should a consultant recommend in this scenario?",
+    "options": [
+      "A. Use batch transforms to create a second data lake object.",
+      "B. Create a junction object in Salesforce CRM and modify the ingestion strategy.",
+      "C. Clone the data source object.",
+      "D. Create a data kit from the data lake object and deploy it to the same Data Cloud org."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque las Batch Transforms permiten crear nuevos objetos del lago de datos aplicando lógica de transformación (ej: filtrar solo 'hotel points' en un DLO y 'airline points' en otro) a partir del DLO original, sin modificar la fuente CRM ni requerir desarrollo complejo. Descarte: La opción B requiere cambios en la org CRM (no siempre viable) y retrasa la implementación. La opción C (clonar objeto fuente) no existe como funcionalidad en Data Cloud. La opción D (data kit) es para migración entre entornos, no para transformación de datos dentro del mismo org. Senior Tip: En la Batch Transform, usa expresiones CASE para derivar un campo 'PointType' (Hotel/Airline) y filtra en dos DLOs separados; mapea ambos al mismo DMO 'Loyalty Account' con atributo 'PointType' para mantener modelo unificado pero datos separados; configura el refresco de la transformación para que coincida con la frecuencia de ingesta del objeto CRM original.",
+    "frequency": 8
+  },
+  {
+    "id": 193,
+    "question": "Which operator should a consultant use to create a segment for a birthday campaign that is evaluated daily?",
+    "options": [
+      "A. Is Today.",
+      "B. Is Birthday.",
+      "C. Is Between.",
+      "D. Is Anniversary Of."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el operador 'Is Anniversary Of' compara un campo de fecha (ej: Birthdate) con la fecha actual ignorando el año, identificando automáticamente individuos cuyo cumpleaños es hoy sin importar el año de nacimiento; es el único operador diseñado específicamente para campañas recurrentes anuales evaluadas diariamente. Descarte: La opción A (Is Today) compara fecha completa incluyendo año, solo coincidiría con personas nacidas hoy en el año actual. La opción B (Is Birthday) no existe como operador nativo en Data Cloud. La opción C (Is Between) requiere rangos fijos y no es dinámico para evaluación diaria automática. Senior Tip: Para campañas de cumpleaños, usa 'Birthdate Is Anniversary Of Today' en el canvas de segmentación; combina con un filtro de edad mínima (ej: >18) para cumplir con regulaciones; programa el segmento para refrescar diariamente a las 6 AM para tener lista la audiencia antes del envío matutino de emails.",
+    "frequency": 8
+  },
+  {
+    "id": 194,
+    "question": "A new user of Data Cloud only needs to be able to review individual rows of ingested data and validate that it has been modeled successfully to its linked Data Model Object. The user will also need to make changes if required. What is the minimum permission set needed to accommodate this use case?",
+    "options": [
+      "A. Data Cloud for Marketing Specialist.",
+      "B. Data Cloud Admin.",
+      "C. Data Cloud for Marketing Data Aware Specialist.",
+      "D. Data Cloud User."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el permiso 'Data Cloud User' proporciona acceso básico para: 1) Ver datos en Data Explorer a nivel de fila, 2) Validar mapeos entre DLOs y DMOs en Data Stream Setup, y 3) Realizar cambios menores en configuraciones de data streams y mapeos, sin conceder permisos administrativos innecesarios como gestión de Identity Resolution o creación de activaciones. Descarte: La opción A (Marketing Specialist) incluye capacidades de segmentación/activación innecesarias para este caso. La opción B (Admin) otorga acceso completo excesivo para un rol de validación básica. La opción C (Data Aware Specialist) es un permiso legacy/deprecated no recomendado en implementaciones modernas. Senior Tip: Siempre aplica el principio de mínimo privilegio; para roles de validación de datos, asigna 'Data Cloud User' + permisos específicos de objeto en la org fuente (ej: 'View All' en objetos CRM); evita asignar permisos de administración a menos que el usuario necesite gestionar rulesets o activaciones críticas.",
+    "frequency": 8
+  },
+  {
+    "id": 195,
+    "question": "A consultant is discussing the benefits of Data Cloud with a customer that has multiple disjointed data sources. Which two functional areas should the consultant highlight in relation to managing customer data?",
+    "options": [
+      "A. Unified Profiles.",
+      "B. Data Harmonization.",
+      "C. Master Data Management.",
+      "D. Data Marketplace."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque: A) Unified Profiles resuelve identidades cross-canal para crear vistas 360 del cliente a partir de fuentes disjuntas, y B) Data Harmonization transforma y normaliza datos heterogéneos en un modelo común (CDP), permitiendo integración sin reemplazar sistemas existentes. Juntos resuelven el problema central de fuentes de datos disjuntas. Descarte: La opción C (MDM) no es funcionalidad nativa de Data Cloud; se integra con soluciones MDM externas pero no las reemplaza. La opción D (Data Marketplace) es para datos de terceros, no para gestionar datos propios del cliente. Senior Tip: En ventas, enfatiza que Data Cloud complementa (no reemplaza) MDM: MDM gestiona golden records de dominios críticos (producto, cuenta), mientras Data Cloud unifica perfiles de cliente para engagement omnicanal; usa el término 'progressive profiling' para describir cómo Data Cloud enriquece perfiles gradualmente sin requerir migraciones masivas.",
+    "frequency": 8
+  },
+  {
+    "id": 196,
+    "question": "Northern Trail Outfitters is using the Marketing Cloud Starter Data Bundles to bring Marketing Cloud data into Data Cloud. What are two of the available datasets in Marketing Cloud Starter Data Bundles?",
+    "options": [
+      "A. MobilePush.",
+      "B. Personalization.",
+      "C. MobileConnect.",
+      "D. Loyalty Management."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque los Marketing Cloud Starter Data Bundles incluyen datasets preconfigurados para canales de engagement estándar: MobilePush (notificaciones push a dispositivos móviles) y MobileConnect (SMS/mensajería de texto), ambos con mapeos automáticos al modelo Customer 360. Descarte: La opción B (Personalization) no está incluida en los bundles starter estándar; requiere configuración personalizada. La opción D (Loyalty Management) es un producto separado no incluido en los bundles básicos de Marketing Cloud. Senior Tip: Los Starter Bundles incluyen también Email y Web; para MobilePush y MobileConnect, verifica que las data extensions correspondientes existan en Marketing Cloud antes de activar el bundle; los bundles solo traen 90 días de historial por defecto, requiriendo extractos personalizados para datos históricos más profundos.",
+    "frequency": 8
+  },
+  {
+    "id": 197,
+    "question": "Northern Trail Outfitters unifies individuals in its Data Cloud instance. Which three features can the consultant use to validate the data on a unified profile?",
+    "options": [
+      "A. Query API.",
+      "B. Data Explorer.",
+      "C. Identity Resolution.",
+      "D. Data Actions.",
+      "E. Profile Explorer."
+    ],
+    "answer": ["B", "C", "E"],
+    "explanation": "La respuesta correcta es B, C y E porque: B) Data Explorer permite navegar y filtrar perfiles unificados visualizando atributos y segmentos en formato tabular, C) Identity Resolution permite revisar el ruleset y ver qué perfiles fuente se unificaron en cada perfil, y E) Profile Explorer permite analizar en profundidad un perfil específico, mostrando su identity graph, registros fuente y puntos de contacto relacionados. Descarte: La opción A (Query API) es para extracción programática, no validación visual interactiva. La opción D (Data Actions) ejecuta acciones sobre datos (ej: enviar a destino), no sirve para validación de contenido. Senior Tip: Usa Profile Explorer como primera herramienta de troubleshooting: revisa la sección 'Identity Graph' para identificar over-matching (demasiados perfiles unificados) o under-matching (múltiples perfiles para una misma persona); exporta el graph como JSON para análisis avanzado con herramientas externas; correlaciona con el campo 'ConsolidationCount' para métricas de calidad.",
+    "frequency": 8
+  },
+  {
+    "id": 198,
+    "question": "A consultant is integrating an Amazon S3 activated campaign with the customer's destination system. In order for the destination system to find the metadata about the segment, which file on the S3 will contain this information for processing?",
+    "options": [
+      "A. The .json file.",
+      "B. The .txt file.",
+      "C. The .zip file.",
+      "D. The .csv file."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el archivo JSON generado junto con el CSV en activaciones S3 contiene metadatos estructurados del segmento: nombre, ID, tamaño, atributos, filtros y programación; el sistema destino lo usa para interpretar correctamente el contenido del archivo de datos y mapear campos automáticamente. Descarte: La opción B (.txt) no es formato estándar para metadatos de activación en Data Cloud. La opción C (.zip) no es el formato nativo de exportación. La opción D (.csv) contiene solo los datos de los individuos (filas y columnas), sin metadatos descriptivos. Senior Tip: Configura el sistema destino para parsear primero el archivo JSON (buscando patrón '*_metadata.json') antes de procesar el CSV; valida que la versión de esquema en el JSON coincida con la esperada por tu aplicación; usa el campo 'segmentId' del JSON como clave primaria para auditoría y correlación con logs de activación.",
+    "frequency": 8
+  },
+  {
+    "id": 199,
+    "question": "Which information is provided in a .csv file when activating to Amazon S3?",
+    "options": [
+      "A. The activated data payload.",
+      "B. An audit log showing the user who activated the segment and when it was activated.",
+      "C. The manifest of origin sources within Data Cloud.",
+      "D. The metadata regarding the segment definition."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el archivo CSV contiene exclusivamente el payload de datos activados: una fila por individuo/miembro del segmento con las columnas correspondientes a los atributos seleccionados durante la configuración de la activación (atributos directos y relacionados). Descarte: La opción B (audit log) no se incluye en el CSV; los logs de auditoría están en Setup > Data Cloud Monitor. La opción C (manifest de fuentes) no es parte del payload de activación. La opción D (metadata del segmento) se almacena en el archivo JSON separado, no en el CSV. Senior Tip: Para activaciones a S3, siempre procesa primero el archivo JSON para obtener metadatos (schema, conteo esperado) y luego el CSV para los datos; valida que el número de filas en el CSV coincida con el 'segmentSize' del JSON para detectar truncamientos; usa compresión GZIP para archivos >100MB para optimizar transferencias.",
+    "frequency": 8
+  },
+  {
+    "id": 200,
+    "question": "Which two common use cases can be addressed with Data Cloud?",
+    "options": [
+      "A. Safeguard critical business data by serving as a centralized system for backup and disaster recovery.",
+      "B. Harmonize data from multiple sources with a standardized and extendable data model.",
+      "C. Understand and act upon customer data to drive more relevant experiences.",
+      "D. Govern enterprise data lifecycle through a centralized set of policies and processes."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque Data Cloud está diseñado específicamente para: B) Armonizar datos heterogéneos mediante un modelo común (CDP) extensible que normaliza atributos y resuelve identidades, y C) Unificar datos de múltiples fuentes para generar una vista 360 del cliente que habilita experiencias personalizadas mediante segmentación y activación cross-canal. Descarte: La opción A es incorrecta; Data Cloud no es un sistema de respaldo sino una plataforma de activación en tiempo real. La opción D es incorrecta; la gobernanza de ciclo de vida se gestiona con herramientas como Salesforce Data Governance, no con Data Cloud. Senior Tip: Enfócate en casos de uso de Customer Data Platform (CDP) como segmentación predictiva o activación cross-canal; evita intentar usar Data Cloud para gobernanza técnica o respaldos, donde otras herramientas (MuleSoft, Salesforce Backup) son más adecuadas; posiciona Data Cloud como la capa de 'unificación y activación' en la arquitectura moderna de datos.",
+    "frequency": 8
+  },
+  {
+    "id": 201,
+    "question": "Northern Trail Outfitters (NTO) creates a Calculated Insight to compute recency, frequency, monetary (RFM) scores on its unified individuals. NTO then creates a segment based on these scores that it activates to a Marketing Cloud activation target. Which two actions are required when configuring the activation?",
+    "options": [
+      "A. Select contact points.",
+      "B. Add additional attributes.",
+      "C. Choose a segment.",
+      "D. Add the Calculated Insight in the activation."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque para configurar una activación a un destino de Marketing Cloud, es obligatorio: C) elegir el segmento que define qué individuos unificados se activarán, y A) seleccionar puntos de contacto (Contact Point Email/Phone) para mapear los atributos del segmento a los campos de la extensión de datos en Marketing Cloud, garantizando que los mensajes lleguen al canal correcto. Descarte: La opción B (Agregar atributos adicionales) es opcional para personalización, no requerido para la activación básica. La opción D (Agregar la insight calculada) no se requiere porque la insight forma parte intrínseca del segmento y no se configura por separado durante la activación. Senior Tip: Siempre valida que los puntos de contacto seleccionados coincidan exactamente con los nombres de campo en la extensión de datos de Marketing Cloud; para RFM, incluye los scores como atributos relacionados en la activación para personalización avanzada en Journey Builder.",
+    "frequency": 8
+  },
+  {
+    "id": 202,
+    "question": "Which data model subject area should be used for any Organization, Individual, or Member in the Customer 360 data model?",
+    "options": [
+      "A. Party.",
+      "B. Global Account.",
+      "C. Membership.",
+      "D. Engagement."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el área temática Party es el fundamento del modelo Customer 360, diseñada específicamente para representar entidades participantes en relaciones de negocio: Organization (entidades legales), Individual (personas físicas) y Member (relación entre individuo y organización). Descarte: La opción B (Global Account) gestiona jerarquías organizacionales (relaciones padre-hijo), no el concepto general de 'party'. La opción C (Membership) representa asociaciones con grupos (programas de lealtad), no la entidad base. La opción D (Engagement) modela interacciones/acciones (clicks, compras), no entidades. Senior Tip: Siempre comienza el modelado de datos con el área Party; mapea primero las entidades Organization/Individual antes de modelar relaciones transaccionales (Sales Order) o engagement; esto garantiza que la resolución de identidad funcione correctamente ya que depende de los objetos del área Party.",
+    "frequency": 8
+  },
+  {
+    "id": 203,
+    "question": "The Salesforce CRM Connector is configured and the Case object data stream is set up. Subsequently, a new custom field named Business Priority is created on the Case object in Salesforce CRM. However, the new field is not available when trying to add it to the data stream. Which statement addresses the cause of this issue?",
+    "options": [
+      "A. The Salesforce Data Loader application should be used to perform a bulk upload from a desktop.",
+      "B. After 24 hours when the data stream refreshes, it will automatically include any new fields that were added to the Salesforce CRM.",
+      "C. The Salesforce Integration User is missing Read permissions on the newly created field.",
+      "D. Custom fields on the Case object are not supported for ingesting into Data Cloud."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el conector CRM usa un usuario de integración específico para acceder a los datos; si este usuario no tiene permiso de Lectura (Read) en el campo personalizado recién creado, el campo no aparecerá en la configuración del data stream, independientemente de los permisos de otros usuarios. Descarte: La opción A es irrelevante; Data Loader no resuelve la visibilidad del campo en Data Cloud. La opción B es incorrecta; aunque existe un refresco automático cada 24h, el campo solo aparecerá si el usuario de integración tiene permisos adecuados. La opción D es falsa; Data Cloud soporta campos personalizados en todos los objetos estándar y personalizados. Senior Tip: Tras crear campos personalizados en CRM, siempre asigna permisos de Lectura al perfil/permission set del Integration User; usa permisos a nivel de objeto 'View All' para evitar problemas futuros con campos nuevos, especialmente en entornos con desarrollo ágil frecuente; verifica los permisos en Setup > Users > Permission Sets > [Integration User PS] > Object Settings > Case > Field Permissions.",
+    "frequency": 8
+  },
+  {
+    "id": 204,
+    "question": "The marketing manager at Cloud Kicks plans to bring in corporate phone numbers for its accounts into Data Cloud. They plan to use a custom field with data set to Phone to store these phone numbers. Which statement is true when ingesting phone numbers?",
+    "options": [
+      "A. Text value can be accepted for ingestion into a phone data type field.",
+      "B. Data Cloud validates the format of the phone number at the time of Ingestion.",
+      "C. The phone number field can only accept 10-digit values.",
+      "D. The phone number field should be used as a primary key."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Data Cloud acepta valores de texto en campos de tipo teléfono durante la ingesta, permitiendo flexibilidad en formatos (con/ sin código de país, espacios, guiones); la validación y normalización de formato se realiza posteriormente mediante transformaciones o durante la activación, no en el momento de ingesta. Descarte: La opción B es falsa; Data Cloud no valida formatos telefónicos automáticamente durante la ingesta. La opción C es incorrecta; no hay restricción de 10 dígitos, se aceptan formatos internacionales. La opción D es riesgosa; los números de teléfono no son buenos candidatos para clave primaria debido a cambios frecuentes y posible reutilización. Senior Tip: Usa streaming transforms para normalizar números telefónicos durante la ingesta (eliminar caracteres no numéricos, añadir prefijo +1 para EE.UU.); almacena el formato original en un campo 'RawPhone' y el normalizado en 'NormalizedPhone' para auditoría y matching efectivo.",
+    "frequency": 8
+  },
+  {
+    "id": 205,
+    "question": "What is a typical use case for Salesforce Data Cloud?",
+    "options": [
+      "A. Data synchronization across the Salesforce ecosystem.",
+      "B. Storing CRM data on promises.",
+      "C. Data Harmonization across multiple platforms.",
+      "D. Sending personalized emails at scale."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque la armonización de datos (Data Harmonization) es un caso de uso fundamental de Data Cloud: transformar y mapear datos heterogéneos de múltiples fuentes (CRM, marketing, commerce, externos) a un modelo común (Customer 360 Data Model) para crear consistencia semántica y estructural sin reemplazar sistemas existentes. Descarte: La opción A describe funcionalidad de MuleSoft/Heroku Connect, no el valor primario de Data Cloud. La opción B es incorrecta; Data Cloud es cloud-native, no on-premise. La opción D es funcionalidad de Marketing Cloud, no de Data Cloud (que solo proporciona audiencias segmentadas). Senior Tip: Posiciona Data Cloud como la capa de 'armonización y unificación' en la arquitectura: fuentes → MuleSoft (conexión) → Data Cloud (armonización/unificación) → clouds operativas (activación); evita presentarlo como herramienta de sincronización punto a punto.",
+    "frequency": 8
+  },
+  {
+    "id": 206,
+    "question": "A consultant needs to create a data graph based on several DLOs. Which step should the consultant take to make this work?",
+    "options": [
+      "A. Use a data action to update the data graph with the DLO data.",
+      "B. Map the DLOs to DMOs and use these in the data graph.",
+      "C. Map the DLOs directly to a data graph.",
+      "D. Batch Transform the DLOs to multiple DMOs and activate these with the data graph."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque los grafos de datos (data graphs) en Data Cloud operan exclusivamente sobre objetos del modelo de datos (DMOs), no sobre objetos del lago de datos (DLOs) directamente; primero se deben mapear los DLOs a DMOs durante la fase de modelado, y luego usar esos DMOs para construir relaciones en el grafo de datos. Descarte: La opción A es incorrecta; las data actions activan datos a destinos externos, no construyen grafos. La opción C es imposible; no existe mapeo directo DLO→grafo. La opción D es redundante; las Batch Transforms crean nuevos DLOs, pero aún requieren mapeo a DMOs antes de usar en grafos. Senior Tip: Diseña primero el modelo de datos con DMOs bien definidos (Individual, Account, Sales Order), luego mapea DLOs a esos DMOs, y finalmente usa Data Model Builder para visualizar y validar las relaciones del grafo antes de implementar Identity Resolution o segmentación compleja.",
+    "frequency": 8
+  },
+  {
+    "id": 207,
+    "question": "Northern Trail Outfitters wants to create a segment with customers that have purchased in the last 24 hours. The segment data must be as up to date as possible. What should the consultant Implement when creating the segment?",
+    "options": [
+      "A. Use Streaming Insights for near real-time segmentation results.",
+      "B. Use Einstein segmentation optimization to collect data from the last 24 hours.",
+      "C. Use rapid segments with a publish interval of 1 hour.",
+      "D. Use standard segment with a publish interval of 30 minutes."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los Rapid Segments reducen el tiempo de publicación saltando validaciones no críticas (duplicados, valores inválidos), permitiendo refrescos cada hora para mantener datos actualizados sin la complejidad de streaming; es el equilibrio óptimo entre frescura de datos y simplicidad operativa para segmentos basados en transacciones batch. Descarte: La opción A (Streaming Insights) es para eventos en tiempo real (clicks, page views), no para transacciones batch de ecommerce que llegan vía archivos nocturnos. La opción B no existe como funcionalidad nativa ('Einstein segmentation optimization'). La opción D es incorrecta; el intervalo mínimo para segmentos estándar es 1 hora, no 30 minutos. Senior Tip: Usa Rapid Segments solo para campañas de alto valor donde la latencia importa más que la validación exhaustiva; combínalos con un Flow que monitoree el estado de publicación y notifique si falla; para segmentos críticos de revenue, mantén segmentos estándar con validaciones completas como respaldo.",
+    "frequency": 8
+  },
+  {
+    "id": 208,
+    "question": "An analyst from Cloud Kicks needs to get quick insights to determine the average sales per day during the past week. What should a consultant recommend?",
+    "options": [
+      "A. Salesforce flows.",
+      "B. Lightning web component utilizing Query API.",
+      "C. Salesforce reports.",
+      "D. Segment activation to Azure."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los informes de Salesforce (Reports) proporcionan la forma más rápida y sencilla de obtener insights analíticos básicos como promedios, sumas y tendencias temporales sin desarrollo personalizado; se pueden crear en minutos usando el Report Builder con filtros de fecha y agregaciones automáticas. Descarte: La opción A (Flows) automatiza procesos pero no genera análisis visual rápido. La opción B requiere desarrollo de LWC y conocimiento de Query API, innecesariamente complejo para un análisis simple. La opción D es excesiva; activar a Azure para un cálculo simple de promedio es over-engineering. Senior Tip: Para análisis ad-hoc rápidos, usa siempre Reports primero; si necesitas personalización avanzada o integración en UI, entonces considera Tableau o Query API; documenta los informes críticos en una carpeta compartida 'Data Cloud Analytics' para acceso fácil por analistas de negocio.",
+    "frequency": 8
+  },
+  {
+    "id": 209,
+    "question": "During an implementation project, a consultant completed ingestion of all data streams for their customer. Prior to segmenting and acting on that data, which additional configuration is required?",
+    "options": [
+      "A. Data Activation.",
+      "B. Calculated Insights.",
+      "C. Data Mapping.",
+      "D. Identity Resolution."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque la resolución de identidad es el paso obligatorio que empareja y reconcilia perfiles fuente de diferentes sistemas para crear individuos unificados; sin ella, los segmentos operarían sobre datos fragmentados sin consolidación cross-canal, produciendo audiencias incompletas e inconsistentes. Descarte: La opción A (activación) ocurre después de la segmentación. La opción B (insights calculadas) es opcional para enriquecimiento. La opción C (mapeo de datos) forma parte del proceso de ingesta/modelado, no un paso adicional post-ingesta. Senior Tip: El flujo de implementación correcto es: ingesta → mapeo → resolución de identidad → segmentación → activación; nunca intentes segmentar antes de desplegar un ruleset de identity resolution, ya que los resultados serán inconsistentes; valida primero con Profile Explorer que existan perfiles unificados antes de construir segmentos críticos.",
+    "frequency": 8
+  },
+  {
+    "id": 210,
+    "question": "Northern Trail Qutfitters wants to be able to calculate each customer's lifetime value (LTV) but also create breakdowns of the revenue sourced by website, mobile app, and retail channels. What should a consultant use to address this use case in Data Cloud?",
+    "options": [
+      "A. Flow Orchestration.",
+      "B. Nested segments.",
+      "C. Metrics on metrics.",
+      "D. Streaming data transform."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque Metrics on Metrics permite crear métricas derivadas aplicando operaciones matemáticas sobre métricas existentes, ideal para calcular LTV agregado y desglosarlo por dimensión de canal (web/app/retail) en una sola definición analítica sin duplicar lógica. Descarte: La opción A (Flow Orchestration) orquesta procesos, no cálculos analíticos. La opción B (segmentos anidados) filtra audiencias pero no genera métricas agregadas multidimensionales. La opción D (transformaciones streaming) normaliza datos durante ingesta, no calcula métricas complejas. Senior Tip: Define primero la métrica base 'Revenue' y luego crea Metrics on Metrics con 'Channel' como dimensión; usa Data Explorer para validar los desgloses antes de activar en campañas; para LTV predictivo, combina con Einstein Discovery para modelos de churn/propensión.",
+    "frequency": 8
+  },
+  {
+    "id": 211,
+    "question": "A consultant wants to ensure that every segment managed by multiple brand teams adheres to the same set of exclusion criteria, that are updated on a monthly basis. What is the most efficient option to allow for this capability?",
+    "options": [
+      "A. Create, publish, and deploy a data kit.",
+      "B. Create a reusable container block with common criteria.",
+      "C. Create a nested segment.",
+      "D. Create a segment and copy it for each brand."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque los container blocks son componentes reutilizables de segmentación que centralizan criterios comunes (como exclusiones regulatorias); al actualizar el block una vez, todos los segmentos que lo usan heredan automáticamente los cambios, garantizando consistencia cross-equipo sin duplicación de lógica. Descarte: La opción A (data kit) sirve para migrar entre orgs, no para actualizaciones dinámicas dentro del mismo entorno. La opción C (segmento anidado) combina segmentos completos pero no gestiona exclusión centralizada de atributos específicos. La opción D (copiar segmentos) crea silos que requieren actualización manual individual, propenso a errores humanos. Senior Tip: Nombra los container blocks con prefijo 'EXCL_' seguido del propósito (ej: 'EXCL_Unsubscribed', 'EXCL_Minors') y asigna permisos de edición solo al equipo central de datos/compliance; documenta la frecuencia de actualización mensual en la descripción del block para recordatorios automáticos.",
+    "frequency": 8
+  },
+  {
+    "id": 212,
+    "question": "A customer needs to integrate in real time with Salesforce CRM. Which feature accomplishes this requirement?",
+    "options": [
+      "A. Streaming transforms.",
+      "B. Data model triggers.",
+      "C. Sales and Service bundle.",
+      "D. Data Actions and Lightning web components."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque las Streaming Transforms sincronizan micro-batches de actualizaciones entre Salesforce CRM y Data Cloud en tiempo cercano a real (near-real-time, latencia <5 min) mediante eventos de plataforma, sin depender de sincronizaciones programadas, garantizando que Data Cloud siempre tenga los datos CRM más actuales para segmentación y activación. Descarte: La opción B (triggers de modelo de datos) ejecuta lógica dentro de Data Cloud cuando cambian DMOs, pero no integra con fuentes externas. La opción C (bundle Sales/Service) ingiere datos en intervalos programados (mínimo 60 min), no en tiempo real. La opción D (data actions/LWC) construye UIs personalizadas y workflows, no gestiona integración continua de datos. Senior Tip: Habilita Streaming Transforms solo para objetos críticos (Contact, Account, Opportunity); monitorea el lag en Data Cloud Monitor y configura alertas si el retraso supera 10 minutos; para campos específicos de alto valor (ej: 'Customer Status'), usa External Actions para notificar inmediatamente cambios a sistemas externos sin esperar el ciclo de segmentación.",
+    "frequency": 8
+  },
+  {
+    "id": 213,
+    "question": "A user wants to be able to create a multi-dimensional metric to identify Unified Individual lifetime value (LTV). Which sequence of Data Model Object (DMO) joins is necessary within the Calculated Insight to enable this calculation?",
+    "options": [
+      "A. Unified Individual > Unified Link Individual > Sales Order.",
+      "B. Unified Individual > Individual > Sales Order.",
+      "C. Sales Order > Individual > Unified Individual.",
+      "D. Sales Order > Unified Individual."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el flujo Unified Individual → Unified Link Individual → Sales Order es la secuencia correcta para calcular LTV unificado: Unified Individual representa el perfil consolidado, Unified Link Individual conecta el perfil unificado con sus perfiles fuente (Individual), y Sales Order aporta los datos transaccionales para el cálculo agregado cross-fuente. Descarte: La opción B es incorrecta porque Individual representa perfiles fuente no unificados, rompiendo la consolidación. La opción C invierte el orden lógico (debe partir del perfil unificado). La opción D omite Unified Link Individual, rompiendo la relación entre perfil unificado y transacciones fuente, causando undercounting. Senior Tip: Siempre valida las relaciones en Data Model Builder antes de crear insights calculadas; usa 'Unified Link' como puente obligatorio entre entidades unificadas y datos transaccionales; para LTV, agrupa por UnifiedIndividualId y suma SalesOrder.Amount en la definición SQL de la insight; filtra por OrderStatus = 'Completed' para evitar incluir órdenes canceladas.",
+    "frequency": 8
+  },
+  {
+    "id": 214,
+    "question": "Cumulus Financial created a segment called Multiple Investments that contains individuals who have invested in two or more mutual funds. The company plans to send an email to this segment regarding a new mutual fund offering, and wants to personalize the email content with information about each customer's current mutual fund investments. How should the Data Cloud consultant configure this activation?",
+    "options": [
+      "A. Include Fund Type equal to Mutual Fund as a related attribute. Configure an activation based on the new segment with no additional attributes.",
+      "B. Choose the Multiple Investments segment, choose the Email contact point, add related attribute Fund Name, and add related attribute filter for Fund Type equal to Mutual Fund.",
+      "C. Choose the Multiple Investments segment, choose the Email contact point, and add related attribute Fund Type.",
+      "D. Include Fund Name and Fund Type by default for post processing in the target system."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque para personalización efectiva se requiere incluir el atributo relacionado 'Fund Name' (nombre específico del fondo) con un filtro en el atributo relacionado para 'Fund Type = Mutual Fund', garantizando que solo se envíen nombres de fondos mutuos relevantes al individuo, sin exponer otros tipos de inversiones. Descarte: La opción A omite Fund Name, imposibilitando personalización concreta con el nombre del producto. La opción C incluye solo Fund Type (categoría), no el nombre del fondo específico necesario para la personalización. La opción D delega procesamiento al sistema destino, violando principios de privacidad (minimización de datos) y perdiendo control sobre qué información sensible se transmite. Senior Tip: En Marketing Cloud, mapea Fund Name al campo 'Personalization String' y usa AMPscript para formatear múltiples valores (ej: 'Sus fondos: %%FundName1%%, %%FundName2%%'); prueba siempre con preview antes de activación masiva para validar que la lógica de atributos relacionados funcione correctamente con múltiples registros por individuo.",
+    "frequency": 8
+  },
+  {
+    "id": 215,
+    "question": "A segment fails to refresh with the error Segment references too many data lake objects (DLOs). Which two troubleshooting tips should help remedy this issue?",
+    "options": [
+      "A. Split the segment into smaller segments.",
+      "B. Use Calculated Insights in order to reduce the complexity of the segmentation query.",
+      "C. Refine segmentation criteria to limit up to five custom Data Model Objects (DMOs).",
+      "D. Space out the segment schedules to reduce DLO load."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque el error ocurre al exceder el límite de 50 DLOs referenciados en una consulta de segmento; A) dividir en segmentos más pequeños reduce DLOs por consulta manteniendo la lógica original mediante segmentos anidados, y B) usar insights calculadas pre-agrega lógica compleja (ej: múltiples filtros de comportamiento) en un solo atributo derivado, simplificando drásticamente la query de segmentación. Descarte: La opción C es incorrecta; el límite es de 50 DLOs totales (no 5 DMOs personalizados) y aplica a DMOs estándar y personalizados. La opción D es irrelevante; el error es de complejidad de query, no de carga concurrente en DLOs. Senior Tip: Antes de crear segmentos complejos, diseña un 'segmentation blueprint' contando DLOs por filtro; si superas 40 DLOs, reemplaza múltiples filtros con una calculated insight que devuelva un flag binario (ej: 'IsHighValueCustomer') para simplificar la segmentación; documenta el conteo de DLOs en la descripción del segmento para troubleshooting futuro.",
+    "frequency": 8
+  },
+  {
+    "id": 216,
+    "question": "An organization wants to enable users with the ability to identify and select text attributes from a picklist of options. Which Data Cloud feature should help with this use case?",
+    "options": [
+      "A. Value Suggestion.",
+      "B. Data Harmonization.",
+      "C. Transformation formulas.",
+      "D. Global picklists."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Value Suggestion muestra valores únicos existentes en un atributo de texto al crear filtros de segmentación, permitiendo a los usuarios seleccionar de una lista pre-poblada en lugar de teclear manualmente, mejorando precisión y experiencia. Descarte: La opción B (armonización) normaliza datos durante ingesta, no ayuda en UI de segmentación. La opción C (fórmulas de transformación) modifica valores, no presenta listas de selección. La opción D (picklists globales) es funcionalidad de Salesforce CRM, no de Data Cloud. Senior Tip: Habilita Value Suggestion solo para atributos con cardinalidad <500 valores únicos; recuerda que tarda hasta 24h en poblar tras habilitar; para atributos críticos como 'Country' o 'ProductCategory', prioriza su activación para acelerar construcción de segmentos por equipos de negocio; evita habilitarlo en campos con alta cardinalidad (>10,000 valores) que puedan degradar performance.",
+    "frequency": 8
+  },
+  {
+    "id": 217,
+    "question": "A consultant is working in a customer's Data Cloud org and is asked to delete the existing Identity Resolution ruleset. Which two impacts should the consultant communicate as a result of this action?",
+    "options": [
+      "A. Unified customer data associated with this ruleset will be removed.",
+      "B. Dependencies on Data Model Objects will be removed.",
+      "C. All individual data will be removed.",
+      "D. All source profile data will be removed."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque al eliminar un ruleset de resolución de identidad: A) se eliminan permanentemente todos los perfiles unificados creados por ese ruleset (los datos consolidados cross-fuente), y B) se eliminan las dependencias en los objetos del modelo de datos, permitiendo modificar/eliminar esos DMOs sin restricciones. Descarte: La opción C es falsa; los datos individuales fuente (source profiles) permanecen intactos en el lago de datos. La opción D es incorrecta; los perfiles fuente de los data streams no se eliminan, solo los perfiles unificados derivados. Senior Tip: Nunca elimines un ruleset en producción sin primero crear uno nuevo y desplegarlo; usa siempre el enfoque 'deploy new ruleset → validate → deactivate old ruleset' para evitar pérdida temporal de perfiles unificados durante la transición; documenta el timestamp de eliminación para auditoría regulatoria.",
+    "frequency": 8
+  },
+  {
+    "id": 218,
+    "question": "Northern Trail Outfitters uploads new customer data to an Amazon S3 Bucket on a daily basis to be ingested in Data Cloud. In what order should each process be run to ensure that freshly imported data is ready and available to use for any segment?",
+    "options": [
+      "A. Calculated Insight > Refresh Data Stream > Identity Resolution.",
+      "B. Refresh Data Stream > Calculated Insight > Identity Resolution.",
+      "C. Identity Resolution > Refresh Data Stream > Calculated Insight.",
+      "D. Refresh Data Stream > Identity Resolution > Calculated Insight."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el flujo correcto es: 1) Refrescar el data stream para actualizar objetos del lago de datos con datos frescos de S3, 2) Ejecutar resolución de identidad para consolidar perfiles fuente en individuos unificados, y 3) Calcular insights derivadas que dependen de perfiles unificados y datos transaccionales actualizados. Descarte: La opción A invierte el orden lógico (no puedes calcular insights sin datos frescos). La opción B ejecuta insights antes de resolución, produciendo cálculos sobre datos no consolidados. La opción C intenta resolver identidades antes de tener datos actualizados. Senior Tip: Configura un Flow que orqueste esta secuencia automáticamente tras cada carga a S3; usa 'Wait' elements entre pasos para garantizar completitud y monitorea cada etapa en Data Cloud Monitor para detectar fallos en la cadena de procesamiento.",
+    "frequency": 8
+  },
+  {
+    "id": 219,
+    "question": "Which two requirements must be met for a Calculated Insight to appear in the segmentation canvas?",
+    "options": [
+      "A. The Calculated Insight must contain a dimension including the Individual or Unified Individual ID.",
+      "B. The primary key of the segmented table must be a dimension in the Calculated Insight.",
+      "C. The metrics of the Calculated Insights must only contain numeric values.",
+      "D. The primary key of the segmented table must be a metric in the Calculated Insight."
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque para que una insight calculada aparezca en el canvas de segmentación: A) debe incluir como dimensión el ID de Individual o Unified Individual para vincular el cálculo al perfil correcto, y B) la clave primaria de la tabla segmentada debe ser dimensión en la insight para evitar duplicados y garantizar asociación 1:1 con registros fuente. Descarte: La opción C es incorrecta; las métricas pueden ser no numéricas (ej: categorías). La opción D es falsa; la clave primaria debe ser dimensión, no métrica. Senior Tip: Al diseñar insights para segmentación, siempre incluye 'UnifiedIndividualId' como primera dimensión y la clave primaria de tu tabla transaccional (ej: 'SalesOrderId') como segunda dimensión; esto garantiza compatibilidad con el canvas y evita errores de cardinalidad en joins complejos.",
+    "frequency": 8
+  },
+  {
+    "id": 220,
+    "question": "A customer requests that their personal data be deleted. Which action should the consultant take to accommodate this request in Data Cloud?",
+    "options": [
+      "A. Use Streaming API call to delete the customer's information.",
+      "B. Use Profile Explorer to delete the customer data from Data Cloud.",
+      "C. Use Consent API to request deletion of the customer's information.",
+      "D. Use the Data Rights Subject Request tool to request deletion of the customer's information."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque la herramienta Data Rights Subject Request es el mecanismo nativo y compliant de Data Cloud para gestionar solicitudes GDPR/CCPA de eliminación ('right to be forgotten'), iniciando un flujo automatizado que borra el individuo y registros relacionados con reprocesamiento a 30/60/90 días. Descarte: La opción A (streaming API) no existe para eliminación. La opción B (Profile Explorer) es para visualización, no eliminación. La opción C (Consent API) gestiona consentimientos pero no solicitudes formales de eliminación; Data Rights es el flujo específico para 'right to be forgotten'. Senior Tip: Documenta siempre el ID de la solicitud Data Rights generada; configura un campo personalizado 'DeletionRequestDate' en el objeto Individual para auditoría regulatoria y usa Reports para monitorear el estado 'Completed' tras el ciclo de 90 días.",
+    "frequency": 8
+  },
+  {
+    "id": 221,
+    "question": "What does the Ignore Empty Value option do in Identity Resolution?",
+    "options": [
+      "A. Ignores empty fields when running any custom match rules.",
+      "B. Ignores empty fields when running reconciliation rules.",
+      "C. Ignores Individual object records with empty fields when running Identity Resolution rules.",
+      "D. Ignores empty fields when running the standard match rules."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque la opción 'Ignore Empty Value' aplica exclusivamente a reglas de reconciliación (no a matching), determinando si los valores vacíos en un atributo deben saltarse al seleccionar el valor final para el perfil unificado; si está activo, la regla omite fuentes con campo vacío y continúa con la siguiente en el orden de prioridad. Descarte: Las opciones A y D son incorrectas; esta opción no afecta reglas de coincidencia (match rules) que determinan qué perfiles unir. La opción C es falsa; la opción opera a nivel de atributo, no de registro completo. Senior Tip: Activa 'Ignore Empty Value' para atributos críticos como email o teléfono; así evitas que un valor vacío de una fuente de baja prioridad (ej: web anónima) sobreescriba un valor válido de una fuente autoritativa (ej: CRM) durante la reconciliación.",
+    "frequency": 8
+  },
+  {
+    "id": 222,
+    "question": "Northern Trail Outfitters (NTO) is configuring an Identity Resolution ruleset based on Fuzzy Name and Normalized Email. What should NTO do to ensure the best email address is activated?",
+    "options": [
+      "A. Include Contact Point Email object Is Active field as a match rule.",
+      "B. Use the source priority order in activations to make sure a contact point from the desired source is delivered to the activation target.",
+      "C. Ensure Marketing Cloud is prioritized as the first data source in the Source Priority reconciliation rule.",
+      "D. Set the default reconciliation rule to Last Updated."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque el 'source priority order' configurado específicamente en la activación (no en el ruleset de resolución) permite priorizar puntos de contacto de fuentes deseadas al momento de enviar datos al destino, garantizando que se active el email preferido del cliente aunque múltiples fuentes tengan el mismo email normalizado. Descarte: La opción A es incorrecta; Is Active es útil para filtrar pero no determina prioridad de activación. La opción C confunde reconciliación (atributos del perfil unificado) con activación (selección de punto de contacto); Source Priority en reconciliación afecta el perfil unificado, no qué email se activa. La opción D (Last Updated) puede activar emails obsoletos si la fuente más reciente no es la preferida del cliente. Senior Tip: Configura siempre source priority en activaciones críticas (email/SMS); prioriza fuentes donde el cliente ha interactuado recientemente (ej: Marketing Cloud > Service Cloud > Web) y documenta la lógica en la descripción de la activación para auditoría de compliance.",
+    "frequency": 8
+  },
+  {
+    "id": 223,
+    "question": "A customer wants to create segments of users based on their Customer Lifetime Value. However, the source data that will be brought into Data Cloud does not include that key performance indicator (KPI). Which sequence of steps should the consultant follow to achieve this requirement?",
+    "options": [
+      "A. Ingest Data > Map Data to Data Model > Create Calculated Insight > Use in Segmentation.",
+      "B. Create Calculated Insight > Map Data to Data Model > Ingest Data > Use in Segmentation.",
+      "C. Create Calculated Insight > Ingest Data > Map Data to Data Model > Use in Segmentation.",
+      "D. Ingest Data > Create Calculated Insight > Map Data to Data Model > Use in Segmentation."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el flujo obligatorio es: 1) Ingerir datos para tener objetos en el lago, 2) Mapear al modelo de datos para estructurar entidades (Individual, Sales Order), 3) Crear insight calculada que compute CLV usando relaciones entre DMOs, y 4) Usar esa insight como atributo en segmentación. Descarte: Las opciones B y C son imposibles; no puedes crear insights sin datos mapeados en el modelo. La opción D es incorrecta; las insights requieren DMOs mapeados para definir relaciones y atributos de cálculo. Senior Tip: Para CLV, diseña primero el modelo de datos con Sales Order relacionado a Individual vía Unified Link; en la insight, usa SUM(SalesOrder.Amount) agrupado por UnifiedIndividualId; valida el cálculo en Data Explorer antes de usarlo en segmentos críticos de revenue.",
+    "frequency": 8
+  },
+  {
+    "id": 224,
+    "question": "During discovery, which feature should a consultant highlight for a customer who has multiple data sources and needs to match and reconcile data about individuals into a single unified profile?",
+    "options": [
+      "A. Data Cleansing.",
+      "B. Harmonization.",
+      "C. Data Consolidation.",
+      "D. Identity Resolution."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque Identity Resolution es la funcionalidad específica de Data Cloud que empareja (matching) y reconcilia perfiles fuente de múltiples sistemas en perfiles unificados individuales, usando reglas configurables basadas en atributos como email, teléfono o Party Identification. Descarte: La opción A (Data Cleansing) corrige errores en datos pero no une perfiles cross-fuente. La opción B (Harmonization) estandariza formatos pero no resuelve identidades. La opción C (Data Consolidation) es un término genérico; en Data Cloud, la consolidación se logra específicamente mediante Identity Resolution. Senior Tip: En discovery, diferencia claramente: Harmonization = 'hablar el mismo idioma de datos', Identity Resolution = 'saber que es la misma persona'; ambas son necesarias pero resuelven problemas distintos en el viaje hacia el perfil unificado.",
+    "frequency": 8
+  },
+  {
+    "id": 225,
+    "question": "Northern Trail Outfitters (NTO) wants to send a promotional campaign for customers that have purchased within the past 6 months. The consultant created a segment to meet this requirement. Now, NTO brings an additional requirement to suppress customers who have made purchases within the last week. What should the consultant use to remove the recent customers?",
+    "options": [
+      "A. Batch Transforms.",
+      "B. Segmentation exclude rules.",
+      "C. Related attributes.",
+      "D. Streaming Insight."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque las reglas de exclusión en segmentación permiten definir criterios que eliminan dinámicamente individuos del segmento base (compradores últimos 6 meses) si cumplen condiciones de exclusión (compras última semana), sin duplicar lógica ni crear segmentos separados, manteniendo un solo segmento mantenible. Descarte: La opción A (batch transforms) modifica datos en el lago de datos, no filtra segmentos en tiempo de evaluación. La opción C (atributos relacionados) enriquece datos para personalización en activación, no excluye registros durante la segmentación. La opción D (streaming insight) calcula atributos durante ingesta en tiempo real, no gestiona lógica de exclusión para segmentos batch. Senior Tip: Crea un segmento 'Recent Purchasers - Last 7 Days' y exclúyelo del segmento principal usando 'Exclude Individuals in Segment'; así, al modificar el criterio de exclusión (ej: cambiar a 14 días), todos los segmentos derivados se actualizan automáticamente sin reconstruir lógica.",
+    "frequency": 8
+  },
+  {
+    "id": 226,
+    "question": "Which data stream category should be assigned to use the data for time-based operations is segmentation and Calculated Insights?",
+    "options": [
+      "A. Individual.",
+      "B. Transaction.",
+      "C. Sales Order.",
+      "D. Engagement."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque la categoría Transaction está diseñada específicamente para datos con timestamp que requieren operaciones basadas en tiempo: filtrado por rangos de fecha, agregación por períodos (día/semana/mes), cálculo de métricas time-to-event (ej: días desde última compra) y análisis de tendencias temporales en segmentación e insights calculadas. Descarte: La opción A (Individual) representa entidades estáticas sin dimensión temporal inherente. La opción C (Sales Order) es un objeto específico del modelo de datos, no una categoría de data stream. La opción D (Engagement) modela interacciones pero no está optimizada para operaciones analíticas temporales complejas como las transacciones. Senior Tip: Siempre asigna categoría Transaction a flujos de datos con timestamp significativo (compras, sesiones web, llamadas); en el mapeo, asegúrate de mapear el campo de fecha/hora a 'EventDate' del DMO Transaction para habilitar funciones time-based en segmentación como 'en los últimos X días'.",
+    "frequency": 8
+  },
+  {
+    "id": 227,
+    "question": "Which method should a consultant use when performing aggregations in windows of 15 minutes on data collected via the Interaction SDK or Mobile SDK?",
+    "options": [
+      "A. Batch Transform.",
+      "B. Calculated Insight.",
+      "C. Streaming Insight.",
+      "D. Formula fields."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las Streaming Insights están diseñadas específicamente para procesar datos en streaming (SDKs de Interaction/Mobile) y realizar agregaciones en ventanas temporales deslizantes (ej: 15 minutos) con latencia mínima (<1 minuto), ideal para detección de patrones en tiempo real como comportamiento anómalo o triggers de engagement inmediato. Descarte: La opción A (Batch Transform) opera en modo programado (mínimo 1h), no en tiempo real. La opción B (Calculated Insight) es para análisis batch histórico, no para ventanas de tiempo cortas en streaming. La opción D (formula fields) transforma valores individuales pero no realiza agregaciones sobre múltiples eventos en una ventana temporal. Senior Tip: Configura la Streaming Insight con ventana de 15 minutos y función COUNT/SUM según necesidad; usa 'distinct count' por user ID para evitar sesgos por múltiples eventos del mismo usuario; enlaza una Data Action para notificar inmediatamente cuando el umbral se cruce (ej: >10 clicks en 15 min = comportamiento sospechoso).",
+    "frequency": 8
+  },
+  {
+    "id": 228,
+    "question": "A customer has a custom Customer Email c object related to the standard Contact object in Salesforce CRM. This custom object stores the email address a Contact that they want to use for activation. To which data entity is mapped?",
+    "options": [
+      "A. Contact.",
+      "B. Contact Point Email.",
+      "C. Custom customer Email__c object.",
+      "D. Individual."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque Contact Point Email es el objeto estándar del modelo Customer 360 diseñado específicamente para almacenar puntos de contacto de email asociados a un individuo, independientemente de si provienen de objetos estándar (Contact.Email) o personalizados (Customer_Email__c); mapear a este objeto habilita la activación a canales de email y la resolución de identidad basada en email. Descarte: La opción A (Contact) es el objeto fuente, no el destino en el modelo de Data Cloud. La opción C mantiene el objeto personalizado, impidiendo integración con el modelo estándar y funcionalidades nativas como Identity Resolution por email. La opción D (Individual) almacena atributos demográficos pero no puntos de contacto específicos. Senior Tip: Al mapear emails personalizados, usa el campo 'PrivacyConsentStatus' en Contact Point Email para registrar consentimiento; mapea 'IsPrimary' desde el objeto fuente para identificar el email preferido del cliente; normaliza el email (lowercase, trim) durante el mapeo para mejorar matching en Identity Resolution.",
+    "frequency": 8
+  },
+  {
+    "id": 229,
+    "question": "Every day, Northern Trail Outfitters uploads a summary of the last 24 hours of store transactions to a new file in an Amazon S3 bucket, and files older than seven days are automatically deleted. Each file contains a timestamp in a standardized naming convention. Which two options should a consultant configure when ingesting this data stream?",
+    "options": [
+      "A. Ensure that deletion of old files is enabled.",
+      "B. Ensure the refresh mode is set to Upsert.",
+      "C. Ensure the filename contains a wildcard to accommodate the timestamp.",
+      "D. Ensure the refresh mode is set to Full Refresh."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque: B) El modo Upsert preserva registros históricos existentes mientras agrega/actualiza solo los nuevos datos del archivo diario (últimas 24h), evitando pérdida de datos acumulados; C) El wildcard en el nombre de archivo (ej: 'transactions_*.csv') permite que el data stream identifique automáticamente el archivo correcto cada día a pesar del timestamp variable en el nombre. Descarte: La opción A es incorrecta; la eliminación de archivos viejos es gestionada por S3 (lifecycle policy), no por Data Cloud. La opción D (Full Refresh) eliminaría todos los registros existentes y reemplazaría con solo las últimas 24h, destruyendo el historial transaccional acumulado. Senior Tip: Para archivos diarios con timestamps, usa wildcards inteligentes: 'sales_2024*.csv' para un año específico o 'sales_*_daily.csv' para patrones más complejos; monitorea el Data Stream History para detectar fallos cuando el patrón de wildcard no coincida con el nombre real del archivo subido.",
+    "frequency": 8
+  },
+  {
+    "id": 230,
+    "question": "Which solution provides an easy way to ingest Marketing Cloud subscriber profile attributes into Data Cloud on a daily basis?",
+    "options": [
+      "A. Automation Studio and Profile file API.",
+      "B. Marketing Cloud Connect API.",
+      "C. Marketing Cloud Data extension Data Stream.",
+      "D. Email Studio Starter Data Bundle."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque el Marketing Cloud Data Extension Data Stream es una funcionalidad nativa que permite streaming automático de data extensions de Marketing Cloud a Data Cloud sin código, con sincronización programable diaria y mapeo visual de campos a DMOs. Descarte: La opción A requiere desarrollo de scripts, configuración de transferencias de archivos y programación manual en Automation Studio. La opción B (Marketing Cloud Connect API) conecta MC con Sales/Service Cloud, no con Data Cloud. La opción D es un kit de datos de ejemplo, no un mecanismo de ingesta continua. Senior Tip: Para atributos de suscriptor críticos (ej: email, estado de suscripción), usa el data stream de la data extension 'Subscribers' o una DE personalizada con los campos necesarios; configura el refresco en modo 'Upsert' para mantener datos actualizados sin duplicados; valida el mapeo del campo 'Subscriber Key' al Party Identification para habilitar resolución de identidad cross-canal.",
+    "frequency": 8
+  },
+  {
+    "id": 231,
+    "question": "A customer has a requirement to be able to view the last time each segment was published within their Data Cloud org. Which two features should the consultant recommend to best address this requirement?",
+    "options": [
+      "A. Profile Explorer.",
+      "B. Calculated Insights.",
+      "C. Dashboard.",
+      "D. Report."
+    ],
+    "answer": ["C", "D"],
+    "explanation": "La respuesta correcta es C y D porque: C) Los Dashboards en Salesforce permiten visualizar métricas de segmentación en tiempo real incluyendo timestamps de última publicación mediante componentes de informes, y D) Los Reports nativos de Data Cloud (accesibles via Setup > Data Cloud > Reports) muestran campos como 'Last Published Date' para cada segmento, permitiendo filtrado y exportación. Descarte: La opción A (Profile Explorer) analiza perfiles unificados individuales, no metadata de segmentos. La opción B (Calculated Insights) genera métricas derivadas de datos de negocio, no metadata operativa de segmentos. Senior Tip: Crea un Report tipo 'Segment Metadata' que incluya campos: Segment Name, Last Published Date, Status, Owner; añádelo a un Dashboard compartido con equipos de marketing; programa el Dashboard para refrescar cada hora y configura alertas si un segmento crítico no se publica en las últimas 24h.",
+    "frequency": 8
+  },
+  {
+    "id": 232,
+    "question": "A Data Cloud consultant recently added a new data source and mapped some of the data to a new custom Data Model Object (DMO) that they want to use for creating segments. However, they cannot view the newly created DMO when trying to create a new segment. What is the cause of this issue?",
+    "options": [
+      "A. Data has not yet been ingested into the DMO.",
+      "B. The new DMO is not of category Profile.",
+      "C. The new DMO does not have a relationship to the individual DMO.",
+      "D. Segmentation is only supported for the Individual and Unified Individual DMOs."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque un DMO recién creado/mapped no aparece disponible para segmentación hasta que se ha ingerido al menos un registro en él; el sistema requiere datos poblados para validar la estructura y habilitar el DMO en el canvas de segmentación. Descarte: La opción B es incorrecta; existen DMOs de categorías Transaction y Engagement usados frecuentemente en segmentación (ej: Sales Order, Email). La opción C es falsa; aunque las relaciones facilitan segmentación cross-entidad, los DMOs independientes (ej: standalone Product DMO) sí son segmentables. La opción D es completamente falsa; la segmentación soporta todos los DMOs con datos. Senior Tip: Tras crear/mapping un DMO nuevo, ejecuta manualmente un refresco del data stream para forzar ingesta inicial; verifica en Data Explorer que existan registros en el DMO antes de intentar segmentación; si persiste el problema, revisa permisos del usuario en el DMO (requiere 'Read' en el permission set de Data Cloud).",
+    "frequency": 8
+  },
+  {
+    "id": 233,
+    "question": "How does Data Cloud handle an individual's Right to be Forgotten?",
+    "options": [
+      "A. Deletes the record from all data source objects, and any downstream Data Model Objects are updated at the next scheduled ingestion.",
+      "B. Deletes the specified Individual record and its Unified Individual Link record.",
+      "C. Deletes the specified Individual and records from any data source object mapped to the Individual Data Model Object.",
+      "D. Deletes the specified Individual and records from any Data Model Object/data lake object related to the Individual."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el mecanismo 'Data Deletion Request' de Data Cloud elimina el registro Individual especificado Y todos los registros relacionados en cualquier DMO/DLO vinculado a ese individuo (ej: Sales Orders, Engagements, Contact Points), garantizando eliminación comprehensiva cross-entidad para cumplir GDPR/CCPA; el proceso se reprocesa a 30/60/90 días para capturar datos que lleguen posteriormente. Descarte: La opción A es incorrecta; Data Cloud no elimina datos en fuentes originales (CRM, etc.), solo en su propio almacenamiento. La opción B es incompleta; elimina solo el perfil pero no transacciones/interacciones relacionadas. La opción C es incorrecta; no toca objetos fuente, solo datos dentro de Data Cloud. Senior Tip: Para cumplimiento total, combina Data Cloud Data Deletion Request con procesos en fuentes originales (ej: eliminar contacto en Sales Cloud); documenta el ID de solicitud y timestamp; monitorea el campo 'Data Deletion Status' para confirmar completitud tras el ciclo de 90 días.",
+    "frequency": 8
+  },
+  {
+    "id": 234,
+    "question": "A healthcare client wants to make use of Identity Resolution, but does not want to risk unifying profiles that may share certain Personally Identifiable Information (PII). Which matching rule criteria should a consultant recommend for the most accurate matching results?",
+    "options": [
+      "A. Party Identification on Patient ID.",
+      "B. Exact Last Name and Email.",
+      "C. Email Address and Phone.",
+      "D. Fuzzy First Name, Exact Last Name, and Email."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Party Identification con Patient ID (identificador único de paciente del sistema de salud) proporciona matching determinístico de alta precisión sin riesgo de falsos positivos, ya que los IDs de paciente son únicos por diseño en sistemas sanitarios y no se comparten entre individuos distintos, evitando la fusión incorrecta de perfiles que podría ocurrir con atributos PII compartibles (email, teléfono, nombre). Descarte: La opción B (Apellido + Email) puede fusionar familiares con mismo apellido y email compartido. La opción C (Email + Teléfono) puede fusionar parejas que comparten contactos. La opción D (nombre fuzzy) aumenta riesgo de over-matching con coincidencias parciales. Senior Tip: En healthcare, prioriza siempre identificadores únicos del sistema (Patient ID, Medical Record Number) sobre atributos demográficos para Identity Resolution; configura reglas con umbral de confianza alto (>95%) y monitorea el campo 'MatchConfidenceScore' para detectar coincidencias de baja calidad que requieran revisión manual.",
+    "frequency": 8
+  },
+  {
+    "id": 235,
+    "question": "A user is not seeing suggested values from newly-modeled data when building a segment. What is causing this issue?",
+    "options": [
+      "A. Value Suggestion is still processing and takes up to 24 hours to be available.",
+      "B. Value Suggestion requires Data Aware Specialist permissions at a minimum.",
+      "C. Value Suggestion can only work on direct attributes and not related attributes.",
+      "D. Value Suggestion will only return result for the first 50 values of a specific attribute."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque Value Suggestion requiere hasta 24 horas para procesar y poblar los valores únicos de un atributo recién mapeado/habilitado en el modelo de datos; durante este período de indexación los valores no aparecen en el canvas de segmentación aunque el atributo esté correctamente configurado. Descarte: La opción B es falsa; no se requieren permisos especiales más allá del acceso estándar al DMO. La opción C es incorrecta; Value Suggestion funciona tanto en atributos directos como relacionados (siempre que tengan cardinalidad manejable). La opción D es engañosa; aunque hay límites prácticos (~500 valores únicos recomendados), no está restringido a solo 50 valores y el sistema muestra los más frecuentes primero. Senior Tip: Tras habilitar Value Suggestion en un DMO, espera 24 horas antes de construir segmentos críticos que dependan de esa funcionalidad; para acelerar el proceso en entornos de desarrollo, ingiere un pequeño volumen de datos de prueba (100-200 registros) para 'sembrar' los valores iniciales; verifica el estado en Setup > Data Model Objects > [DMO Name] > Value Suggestion Status.",
+    "frequency": 8
+  },
+  {
+    "id": 236,
+    "question": "A consultant is building a segment to announce a new product launch for customers that have previously purchased black pants. How should the consultant place attributes for product color and product type from the Order Product object to meet this criteria?",
+    "options": [
+      "A. Place the attribute for product color in one container and the attribute for product type in another container.",
+      "B. Place an attribute for the black pants Calculated Insight to dynamically apply.",
+      "C. Place the attributes for product color and product type in a single container.",
+      "D. Place the attributes for product color and product type in a single container."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C (y D, idénticas en el texto fuente) porque para identificar clientes que compraron 'pantalones negros' como un ítem específico, ambos atributos (color=negro Y tipo=pantalones) deben estar en el mismo contenedor, garantizando que se evalúen sobre el mismo registro de producto/orden; contenedores separados buscarían color negro en cualquier producto Y tipo pantalones en cualquier otro producto (potencialmente diferentes). Descarte: La opción A produciría falsos positivos (clientes que compraron camisa negra Y pantalones azules). La opción B es innecesariamente compleja; una calculated insight no es requerida para este filtro simple de atributos. Senior Tip: Regla de oro: atributos que describen las mismas características de un ítem deben estar en un solo contenedor; atributos que describen comportamientos separados (ej: compró en web Y compró en tienda) van en contenedores separados unidos por AND. Para productos específicos, considera usar SKU en lugar de atributos múltiples para mayor precisión.",
+    "frequency": 8
+  },
+  {
+    "id": 237,
+    "question": "Cumulus Financial wants to be able to track the daily transaction volume of each of its customers in real time and send out a notification as soon as it detects volume outside a customer's normal range. What should a consultant do to accommodate this request?",
+    "options": [
+      "A. Use a Calculated Insight paired with a flow.",
+      "B. Use streaming data transform with a flow.",
+      "C. Use a Streaming Insight paired with a data action.",
+      "D. Use streaming data transform combined with a data action."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las Streaming Insights procesan eventos transaccionales en tiempo real, calculan métricas sobre ventanas deslizantes (ej: volumen últimas 24h por cliente) y pueden disparar Data Actions automáticamente cuando se cruza un umbral (volumen fuera de rango normal), todo sin latencia batch ni desarrollo complejo de Flows. Descarte: La opción A (Calculated Insight) opera en modo batch programado (mínimo 1h), no en tiempo real. La opción B (streaming transform + flow) requiere desarrollo adicional de Flow para la lógica de detección y notificación. La opción D (streaming transform + data action) no calcula métricas agregadas complejas (volumen por cliente en ventana temporal) que requieren funciones de ventana SQL. Senior Tip: Configura la Streaming Insight con ventana de 24h, métrica SUM(Amount) agrupado por CustomerID, y umbral dinámico (ej: >2x desviación estándar del promedio histórico); enlaza una Data Action que invoque un servicio externo de notificaciones (Slack, SMS) con los detalles del cliente y volumen anómalo; almacena el historial de anomalías en un DMO personalizado para análisis posterior.",
+    "frequency": 8
+  },
+  {
+    "id": 238,
+    "question": "Cumulus Financial uses Calculated Insights to compute the total banking value per branch for its high net worth customers. In the Calculated Insight, banking value is a metric, branch is a dimension, and high net worth is a filter. What can be included as an attribute in activation?",
+    "options": [
+      "A. high net worth (filter).",
+      "B. branch (dimension) and banking value (metric).",
+      "C. banking value (metric).",
+      "D. branch (dimension)."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque tanto las dimensiones (branch) como las métricas (banking value) de una Calculated Insight están disponibles como atributos relacionados en activaciones, permitiendo enviar tanto el valor agregado (monto total por sucursal) como la dimensión de agrupamiento (nombre de sucursal) al destino para personalización o análisis. Descarte: La opción A es incorrecta; los filtros aplicados en la insight no se exponen como atributos en activación. La opción C es incompleta; aunque la métrica sí está disponible, omitir la dimensión haría imposible interpretar el valor (¿de qué sucursal es ese monto?). La opción D es incompleta; la dimensión sola sin la métrica no proporciona el valor de negocio requerido. Senior Tip: Al activar insights calculadas, siempre incluye al menos una dimensión junto con la métrica para contexto; para métricas monetarias, incluye también la moneda como atributo relacionado; en Marketing Cloud, mapea la métrica a un campo numérico y la dimensión a un campo de texto para habilitar personalización dinámica en emails ('Sucursal {{branch}}: su valor total es ${{banking_value}}').",
+    "frequency": 8
+  },
+  {
+    "id": 239,
+    "question": "Cloud Kicks wants to be able to build a segment of customers who have visited its website within the previous 7 days. Which filter operator on the Engagement Date fields fits this use case?",
+    "options": [
+      "A. Is Between.",
+      "B. Greater than Last Number of.",
+      "C. Next Number of Days.",
+      "D. Last Number of Days."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el operador 'Last Number of Days' está diseñado específicamente para filtrar registros ocurridos en un período retrospectivo definido en días (ej: 'últimos 7 días'), evaluándose dinámicamente cada vez que se refresca el segmento para siempre incluir los 7 días más recientes hasta hoy. Descarte: La opción A (Is Between) requiere fechas fijas de inicio/fin, no es dinámico para evaluación diaria automática. La opción B no existe como operador nativo en Data Cloud. La opción C (Next Number of Days) es para períodos futuros, no pasados. Senior Tip: Para segmentos de comportamiento reciente, usa siempre operadores dinámicos ('Last Number of Days', 'Is Anniversary Of') en lugar de rangos fijos; combina con 'Count At Least 1' para asegurar al menos una visita en el período; programa el segmento para refrescar diariamente a las 2 AM para tener datos actualizados al inicio del día laboral.",
+    "frequency": 8
+  },
+  {
+    "id": 240,
+    "question": "Northern Trail Outfitters (NTO) owns and operates six unique brands, each with their own set of customers, transactions, and loyalty information. The marketing director wants to ensure that segments and activations from the NTO Outlet brand do not reference customers or transactions from the other brands. What is the most efficient approach to handle this requirement?",
+    "options": [
+      "A. Create a batch data transform to generate a DLO for the Outlet brand.",
+      "B. Separate the Outlet brand into a data space.",
+      "C. Separate the brands into six different data spaces.",
+      "D. Use Business Unit Aware activation."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque aislar solo la marca Outlet en su propio Data Space garantiza aislamiento lógico completo: segmentos y activaciones dentro de ese espacio solo pueden acceder a datos de Outlet, sin riesgo de filtración cross-marca, y es más eficiente que crear 6 espacios cuando solo uno requiere aislamiento estricto según el requisito específico. Descarte: La opción A (batch transform) no previene referencias accidentales en segmentación; solo filtra datos post-ingesta. La opción C es over-engineering; crear 6 espacios añade complejidad innecesaria si solo Outlet requiere aislamiento. La opción D (Business Unit Aware) gestiona visibilidad en CRM pero no aísla datos en Data Cloud. Senior Tip: Usa Data Spaces para marcas con requisitos regulatorios estrictos (ej: retail vs. outlet) o con modelos de negocio completamente separados; para marcas con solapamiento permitido, usa atributos de 'Brand' en el modelo de datos con filtros en segmentos; documenta claramente qué marcas requieren aislamiento en el runbook de arquitectura.",
+    "frequency": 8
+  },
+  {
+    "id": 241,
+    "question": "A retail customer wants to bring customer data from different sources and wants to take advantage of Identity Resolution so that it can be used in segmentation. On which entity should this be segmented for activation membership?",
+    "options": [
+      "A. Subscriber.",
+      "B. Unified Individual.",
+      "C. Unified Contact.",
+      "D. Individual."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque Unified Individual es la entidad resultante de la resolución de identidad, que consolida perfiles fuente de múltiples sistemas en una vista unificada del cliente; segmentar sobre esta entidad garantiza que las audiencias reflejen identidades resueltas cross-canal, no perfiles fragmentados por fuente. Descarte: La opción A (Subscriber) representa solo suscriptores de email, no todos los clientes. La opción C (Unified Contact) es un concepto de Service Cloud para contactos unificados por business unit, no la entidad principal de resolución en Data Cloud. La opción D (Individual) representa perfiles fuente no unificados de una sola fuente, sin consolidación cross-sistema. Senior Tip: Siempre segmenta en Unified Individual para campañas cross-canal; usa el campo 'ConsolidationCount' del Unified Individual para identificar perfiles con alto grado de consolidación (múltiples fuentes) y priorizarlos en campañas de alto valor; evita segmentar en Individual a menos que necesites análisis específico por fuente de datos.",
+    "frequency": 8
+  },
+  {
+    "id": 242,
+    "question": "A consultant is reviewing a recent activation using engagement-based related attributes but is not seeing any related attributes in their payload for the majority of their segment members. Which two areas should the consultant review to help troubleshoot this issue?",
+    "options": [
+      "A. The related engagement events occurred within the last 90 days.",
+      "B. The activations are referencing segments that segment on profile data rather than engagement data.",
+      "C. The correct path is selected for the related attributes.",
+      "D. The activated profiles have a Unified Contact Point."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque: A) Data Cloud aplica una ventana de lookback de 90 días para atributos relacionados de engagement; eventos fuera de este rango no se incluyen en el payload de activación, y C) el path seleccionado para los atributos relacionados debe coincidir exactamente con la relación en el modelo de datos (ej: Individual → Email → Engagement); un path incorrecto (ej: Individual → Engagement directo) no devolverá valores. Descarte: La opción B es incorrecta; los segmentos pueden segmentar en datos de perfil mientras la activación incluya atributos relacionados de engagement. La opción D es irrelevante; Unified Contact Point no es requerido para activación de atributos de engagement. Senior Tip: Para troubleshooting rápido: 1) Verifica en Data Explorer que los eventos de engagement tengan timestamps dentro de los últimos 90 días, 2) Confirma el path correcto en Data Model Builder (clic derecho en DMO → 'View Relationships'), 3) Usa Profile Explorer para un individuo de prueba y revisa la sección 'Engagements' para confirmar que los datos existen antes de la activación.",
+    "frequency": 8
+  },
+  {
+    "id": 243,
+    "question": "Northern Trail Outfitters uses B2C Commerce and is exploring implementing Data Cloud to get a unified view of its customers and all their order transactions. What should the consultant keep in mind with regard to historical data when ingesting order data using the B2C Commerce Order Bundle?",
+    "options": [
+      "A. The B2C Commerce Order Bundle does not ingest any historical data and only ingests new orders from that point on.",
+      "B. The B2C Commerce Order Bundle ingests 30 days of historical data.",
+      "C. The B2C Commerce Order Bundle ingests 6 months of historical data.",
+      "D. The B2C Commerce Order Bundle ingests 12 months of historical data."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el conector B2C Commerce para Data Cloud está diseñado exclusivamente para ingesta continua en tiempo cercano a real; una vez configurado, solo ingiere órdenes y datos de cliente creados a partir de ese momento, sin soporte nativo para backfill de datos históricos. Descarte: Las opciones B, C y D son incorrectas; ninguna cantidad de datos históricos se ingiere automáticamente con el bundle estándar. Senior Tip: Para datos históricos, implementa un proceso híbrido: 1) Exporta órdenes históricas de B2C Commerce a CSV/JSON, 2) Súbelas a S3, 3) Crea un data stream S3 para ingesta inicial (full refresh), 4) Activa el B2C Commerce Connector para streaming continuo de nuevos datos; así obtienes historial completo + actualizaciones en tiempo real.",
+    "frequency": 8
+  },
+  {
+    "id": 244,
+    "question": "A company wants to test its marketing campaigns with different target populations. What should the consultant adjust in the Segment Canvas interface to get different populations?",
+    "options": [
+      "A. Population filters and direct attributes.",
+      "B. Segmentation filters, direct attributions, and data sources.",
+      "C. Direct attributes, related attributes, and population filters.",
+      "D. Direct attributes and related attributes."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los tres elementos trabajan en conjunto para definir poblaciones objetivo: atributos directos (características del individuo como edad/género), atributos relacionados (comportamiento transaccional como compras recientes) y filtros de población (restricciones de volumen o segmentación base) permiten iterar rápidamente sobre diferentes audiencias sin reconstruir segmentos desde cero. Descarte: La opción A omite atributos relacionados, limitando el enriquecimiento conductual necesario para segmentación avanzada. La opción B es incorrecta; 'data sources' no se ajustan en el canvas de segmentación (son configuración previa de ingesta). La opción D omite los population filters, críticos para pruebas A/B con tamaños controlados. Senior Tip: Para pruebas de campaña, usa population filters con 'Sample Size' para extraer subconjuntos representativos del 10%/20%/30% de tu audiencia base; combina con atributos relacionados como 'Days Since Last Purchase' para crear variantes de tratamiento sin duplicar la lógica completa del segmento.",
+    "frequency": 8
+  },
+  {
+    "id": 245,
+    "question": "Cumulus Financial wants its service agents to view a display of all cases associated with a Unified Individual on a contract record. Which two features should a consultant consider for this use case? (Choose two.)",
+    "options": [
+      "A. Query API.",
+      "B. Data Action.",
+      "C. Lightning Web Components.",
+      "D. Profile API."
+    ],
+    "answer": ["C", "D"],
+    "explanation": "La respuesta correcta es C y D porque: C) Lightning Web Components permite construir una interfaz visual personalizada en la página de contrato que muestre los casos en formato tabla o lista, y D) Profile API permite recuperar programáticamente los casos relacionados con un Unified Individual mediante su ID unificado o puntos de contacto, proporcionando los datos para el LWC. Descarte: La opción A (Query API) es para análisis exploratorio en Data Cloud, no para integración en tiempo real con páginas de Salesforce CRM. La opción B (Data Action) dispara acciones basadas en insights (ej: enviar email), no muestra datos en UI. Senior Tip: Combina Profile API con LWC para crear un componente reusable 'UnifiedCasesViewer'; almacena el Unified Individual ID en un campo personalizado del Contract durante la ingesta para facilitar la consulta; implementa caché en el LWC para reducir llamadas API repetidas durante la misma sesión del agente y mejorar performance.",
+    "frequency": 8
+  },
+  {
+    "id": 246,
+    "question": "A consultant is planning the ingestion of a data stream that has profile information including a mobile phone number. To ensure that the phone number can be used for future SMS campaigns, they need to confirm the phone number field is in the proper E164 Phone Number format. However, the phone numbers in the file appear to be in varying formats. What is the most efficient way to guarantee that the various phone number formats are standardized?",
+    "options": [
+      "A. Create a formula field to standardize the format.",
+      "B. Create a Calculated Insight after ingestion.",
+      "C. Edit and update the data in the source system prior to sending to Data Cloud.",
+      "D. Assign the PhoneNumber field type when creating the data stream."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque al asignar el tipo de campo 'PhoneNumber' durante la creación del data stream, Data Cloud aplica normalización automática a formato E.164 (ej: +14155552671) durante la ingesta, sin requerir transformaciones personalizadas ni cambios en la fuente; este es el mecanismo nativo y más eficiente para estandarización telefónica. Descarte: La opción A (formula field) requiere lógica manual de normalización y es más compleja. La opción B (Calculated Insight) opera post-ingesta y no afecta el formato almacenado para activación SMS. La opción C es inviable en muchos escenarios donde no se controla el sistema fuente o los datos provienen de múltiples orígenes con formatos inconsistentes. Senior Tip: Siempre usa el tipo de campo PhoneNumber para números destinados a SMS/voz; Data Cloud normaliza automáticamente eliminando espacios, guiones, paréntesis y añadiendo prefijo de país si está disponible en el contexto (ej: código de área); para países múltiples, asegúrate de incluir el prefijo internacional en los datos fuente o usa streaming transforms para añadirlo basado en el campo 'Country'.",
+    "frequency": 8
+  },
+  {
+    "id": 247,
+    "question": "A consultant notices that the Unified Individual profile is not storing the latest email address. Which action should the consultant take to troubleshoot this issue?",
+    "options": [
+      "A. Confirm that the reconciliation rules are correctly used.",
+      "B. Check if the mapping of DLO objects is correct to Contact Point Email.",
+      "C. Remove any old email addresses from Salesforce CRM.",
+      "D. Verify and update the email address in the source systems if needed."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque las reglas de reconciliación determinan qué valor de email se selecciona para el perfil unificado cuando existen múltiples emails provenientes de diferentes fuentes; si están mal configuradas (ej: usando 'Most Frequent' en lugar de 'Last Updated'), el perfil puede retener un email antiguo en lugar del más reciente. Descarte: La opción B es importante para la ingesta inicial pero no afecta la selección del valor final en el perfil unificado. La opción C es una solución paliativa que no resuelve la causa raíz en Data Cloud. La opción D corrige la fuente pero no garantiza que Data Cloud seleccione ese valor actualizado si las reglas de reconciliación priorizan otra fuente. Senior Tip: Revisa las reglas de reconciliación para el atributo Email en el ruleset de Identity Resolution; usa 'Last Updated' para priorizar el email más reciente o 'Source Sequence' para priorizar fuentes autoritativas (ej: CRM > Web); valida el comportamiento en Profile Explorer revisando el 'Identity Graph' y los timestamps de cada email fuente.",
+    "frequency": 8
+  },
+  {
+    "id": 248,
+    "question": "A customer has a Calculated Insight about lifetime value. What does the consultant need to be aware of if the Calculated Insight needs to be modified?",
+    "options": [
+      "A. New dimensions can be added.",
+      "B. New measures can be added.",
+      "C. Existing dimensions can be removed.",
+      "D. Existing measures can be removed."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque en Data Cloud, al modificar una Calculated Insight existente, se pueden agregar nuevas dimensiones (atributos de agrupamiento) sin romper dependencias existentes, mientras que la eliminación de dimensiones o medidas existentes puede invalidar segmentos o activaciones que dependen de esa insight. Descarte: La opción B es parcialmente cierta pero riesgosa; añadir medidas nuevas puede alterar el comportamiento de agregación. Las opciones C y D son incorrectas; eliminar dimensiones o medidas existentes de una insight en uso puede causar fallos en segmentos/activaciones que las referencian, requiriendo recreación completa de la insight en muchos casos. Senior Tip: Antes de modificar una insight crítica, crea una versión 'v2' con los cambios necesarios, prueba en un Data Space de desarrollo, y migra segmentos gradualmente; nunca modifiques directamente insights usadas en activaciones de producción sin un plan de rollback documentado.",
+    "frequency": 8
+  },
+  {
+    "id": 249,
+    "question": "Every day, Northern Trail Outfitters (NTO) uploads a summary of the last 24 hours of store transactions to a new file in an Amazon S3 bucket, and files older than 7 days are automatically deleted. Each file contains a timestamp in a standardized naming convention. What should a consultant consider when ingesting this data stream?",
+    "options": [
+      "A. Ensure the refresh mode is set to Upsert and Refresh only new files is selected.",
+      "B. Ensure the refresh mode is set to Full Refresh and the filename contains a wildcard to accommodate the timestamp.",
+      "C. Ensure the refresh mode is set to Full Refresh and Refresh only new files is selected.",
+      "D. Advise NTO to change their processes: this configuration is not supported."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque: el modo Upsert preserva el historial transaccional acumulado mientras agrega solo los nuevos registros de las últimas 24h, y la opción 'Refresh only new files' (procesar solo archivos nuevos) garantiza que cada archivo diario se procese una sola vez sin re-procesar archivos anteriores, optimizando recursos y evitando duplicados. Descarte: La opción B es incorrecta; Full Refresh eliminaría todo el historial existente y reemplazaría con solo las últimas 24h, destruyendo datos acumulados. La opción C combina dos configuraciones incompatibles (Full Refresh no tiene sentido con 'Refresh only new files'). La opción D es falsa; esta configuración es totalmente soportada y común en implementaciones de retail. Senior Tip: Configura el data stream con wildcard en el nombre (ej: 'transactions_*.csv') + modo Upsert + 'Refresh only new files'; monitorea Data Stream History para confirmar que cada archivo se procesa exactamente una vez; para auditoría, habilita 'Keep files after ingestion' temporalmente durante las primeras semanas de implementación.",
+    "frequency": 8
+  },
+  {
+    "id": 250,
+    "question": "A consultant needs to publish segment data to the Audience DMO that can be retrieved using the Query APIs. When creating the activation target, which type of target should the consultant select?",
+    "options": [
+      "A. External Activation Target.",
+      "B. Marketing Cloud.",
+      "C. Marketing Cloud Personalization.",
+      "D. Data Cloud"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el tipo de destino 'Data Cloud' permite la activación interna (internal activation) que publica los miembros del segmento directamente a un nuevo DMO de tipo Audience dentro de Data Cloud, haciéndolo accesible inmediatamente para consultas mediante Query API sin salir de la plataforma. Descarte: La opción A (External Activation Target) es una categoría genérica, no un tipo específico de destino. La opción B (Marketing Cloud) activa a esa nube para campañas de email/journey, no crea un DMO consultable. La opción C (Marketing Cloud Personalization) envía datos a esa plataforma específica para personalización web, no para almacenamiento interno consultable. Senior Tip: Usa activaciones a Data Cloud para casos donde necesites analizar segmentos mediante SQL personalizado o alimentar otros procesos de Data Cloud; el DMO resultante se nombra igual que el segmento y aparece en Data Explorer bajo 'Audience' como tipo de objeto; recuerda que estos DMOs consumen almacenamiento y deben gestionarse con políticas de retención.",
+    "frequency": 8
+  }
+]
