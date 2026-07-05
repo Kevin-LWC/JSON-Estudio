@@ -1,0 +1,451 @@
+[
+  {
+    "id": 181,
+    "question": "Which two options can be selected to share data with when creating a sharing rule? Choose 2 answers",
+    "options": [
+      "A. Roles",
+      "B. Public Groups",
+      "C. Users",
+      "D. Profiles"
+    ],
+    "answer": ["A", "B"],
+    "explanation": "La respuesta correcta es A y B porque las reglas de compartición en Salesforce solo permiten compartir con Roles (y subordinados) o Grupos Públicos; no se puede compartir directamente con usuarios individuales ni perfiles. Descarte: La opción C es incorrecta; los usuarios individuales no son una opción en la interfaz de reglas de compartición. La opción D es falsa; los perfiles definen permisos base, no son destinos de compartición. Senior Tip: Use Roles para estructuras jerárquicas y Grupos Públicos para equipos transversales; evite crear roles innecesarios solo para reglas de compartición; documente la estrategia de grupos públicos en su runbook de seguridad.",
+    "frequency": 8
+  },
+  {
+    "id": 182,
+    "question": "Sales manager at universal containers (UC) have requested viewing customer invoices in Salesforce. Invoice data is mastered in the ERP system. The architect at UC decided to surface the customer invoices in salesforce using external objects and did the following: -Configured an external object called Invoice. -Created a lookup relationship between account and the invoice. How can the architect grant the sales managers access to the customer invoices data?",
+    "options": [
+      "A. By creating sharing rules to share the invoices records with users in sales mangers roles.",
+      "B. By creating manual sharing to share invoices with relevant sales managers.",
+      "C. By creating controlling the invoices object permission on the sales manager’s profile.",
+      "D. By creating a sharing set to share invoices with users in sales manager role."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los objetos externos (External Objects) no utilizan el modelo de compartición de Salesforce (OWD, reglas, jerarquía); su visibilidad depende exclusivamente de los permisos de objeto en el perfil. Otorgar 'Read' en el objeto Invoice al perfil de Sales Manager es la única forma de permitir el acceso. Descarte: Las opciones A, B y D son incorrectas; las reglas de compartición, compartición manual y sharing sets no aplican a objetos externos, ya que Salesforce no controla la lógica de seguridad en el sistema fuente (ERP). Senior Tip: Al trabajar con objetos externos, enfócate en permisos de objeto y diseño de UI (page layouts, related lists); valida siempre con un usuario de prueba que tenga acceso en el sistema externo para confirmar la integración completa.",
+    "frequency": 8
+  },
+  {
+    "id": 183,
+    "question": "Universal Containers (UC) is a non-profit organization and has over 20,000,000 members (donors). The company decided to assign those accounts to Donations Reps based on their regions. Donations Reps ended up owning over 50,000 donors each. The donation reps started to see significant degradation of the system performance. What could be the reason for this problem?",
+    "options": [
+      "A. The Donations Reps access to the assigned accounts.",
+      "B. Salesforce sharing recalculation kicked off.",
+      "C. There is an Account ownership data skew problem.",
+      "D. The Account (donor) object OWD is Private."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque cuando un solo usuario posee más de 10,000 registros (especialmente >50,000), se produce 'data skew de propiedad', lo que degrada severamente el rendimiento de consultas, actualizaciones y reglas de compartición debido a la sobrecarga en los índices de la base de datos. Descarte: La opción A es vaga y no identifica la causa técnica. La opción B es temporal; el recálculo de compartición ocurre una vez, no causa degradación continua. La opción D (OWD Private) es normal en implementaciones y no causa problemas de rendimiento por sí sola. Senior Tip: Evita asignar más de 10,000 registros a un solo propietario; usa colas o cuentas genéricas ('Donor Queue - Region X') para distribuir la propiedad; si es inevitable, contacta a Salesforce Support para ajustes de infraestructura (skinny tables, particionamiento).",
+    "frequency": 8
+  },
+  {
+    "id": 184,
+    "question": "Universal Container has developed a custom Visualforce page that will accept user input and must prefer returning the results to the users. Which two techniques should be used to ensure the users cannot perform a SOQL injection attack?",
+    "options": [
+      "A. Escape double quotes in the user input.",
+      "B. Use bind variable in the SOQL query.",
+      "C. Use the escapesinglequotes() method to sanitize user input.",
+      "D. Use the with Sharing keyword on the controller."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque: B) Las variables de enlace ('bind variables') separan los datos de la lógica de la consulta, neutralizando inyecciones, y C) El método String.escapeSingleQuotes() sanitiza comillas simples en entradas de usuario, previniendo manipulación de cadenas en consultas dinámicas. Descarte: La opción A es incompleta; escapar solo comillas dobles no protege contra comillas simples, usadas comúnmente en SOQL. La opción D ('with sharing') controla acceso a registros, no previene inyección. Senior Tip: Siempre usa variables de enlace para parámetros fijos; si necesitas consultas dinámicas, combina escapeSingleQuotes() con validación de entrada (listas blancas de valores permitidos); evita concatenar directamente entradas de usuario en consultas.",
+    "frequency": 8
+  },
+  {
+    "id": 185,
+    "question": "Universal Containers uses 75,000 distributors that have close to 1 million total users. Distributors need opportunities assigned to the distributor for delivery. What license recommendation will meet distributor needs?",
+    "options": [
+      "A. Sales Cloud",
+      "B. Customer Community Plus",
+      "C. Partner Community",
+      "D. Customer Community"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque las licencias Partner Community (ahora PRM) son las únicas diseñadas para escenarios de canal donde partners necesitan acceso a Opportunities para gestión de ventas y entrega; soportan millones de usuarios y acceso estándar a Opportunities. Descarte: La opción A (Sales Cloud) es costosa e innecesaria para partners. La opción B (Customer Community Plus) permite acceso personalizado a Opportunities pero no es el uso estándar ni escalable para 1M de usuarios. La opción D (Customer Community) no incluye acceso a Opportunities. Senior Tip: Para redes de distribución grandes, Partner Community es la solución óptima; combínala con Territory Management para asignación eficiente de Opportunities; evita forzar acceso a Opportunities en Customer Community, ya que viola el modelo de licenciamiento y genera costos en auditorías.",
+    "frequency": 8
+  },
+  {
+    "id": 186,
+    "question": "The architect at Universal Containers is trying to ensure that security vulnerabilities are not present within the Salesforce organization. What two tests should the architect verify? Choose 2 answers",
+    "options": [
+      "A. Test Cross-Site Scripting on Apex queries.",
+      "B. Test Cross-Site Scripting on custom pages.",
+      "C. Test for SOQL Injection.",
+      "D. Test for invalid user access attempts."
+    ],
+    "answer": ["B", "C"],
+    "explanation": "La respuesta correcta es B y C porque: B) XSS es un riesgo en páginas personalizadas (Visualforce, LWC) si no se sanitiza la salida, y C) SOQL Injection ocurre en consultas dinámicas sin variables de enlace, ambos son vectores de ataque críticos en aplicaciones Salesforce. Descarte: La opción A es incorrecta; XSS no se relaciona con consultas Apex. La opción D, aunque importante, no es una prueba técnica específica de vulnerabilidad como las otras dos. Senior Tip: Use escapeHtml4() en Visualforce y lightning-formatted-rich-text en LWC para prevenir XSS; siempre use variables de enlace en SOQL; habilite 'Security Health Check' y escanee código con herramientas estáticas en CI/CD.",
+    "frequency": 8
+  },
+  {
+    "id": 187,
+    "question": "A sales rep at Universal Containers (UC) is a member of the Default Opportunity team for an account manager. The account manager created an opportunity and the sales rep is added to that Opportunity team. The sales rep is complaining about no longer having access to an opportunity record that the sales rep was helping with. What is the cause of this problem?",
+    "options": [
+      "A. The Account team was changed and consequently the Opportunity team members were replaced by the Account team members.",
+      "B. The Sales rep was manually removed from the Opportunity team.",
+      "C. The Sales rep was removed from the Opportunity team in another opportunity record of the same account.",
+      "D. The opportunity owner can enable/disable if the “Default Opportunity team” is able to access the record"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque cuando se modifica el Account Team, Salesforce puede sincronizar automáticamente los Opportunity Teams con los miembros actuales del Account Team (si la opción 'Sync Opportunity Teams with Account Teams' está habilitada), reemplazando a los miembros anteriores, incluyendo al sales rep. Descarte: La opción B es posible pero menos común en flujos automatizados. La opción C es irrelevante; el acceso a una oportunidad no depende de otras oportunidades. La opción D es falsa; el propietario no puede desactivar el equipo predeterminado globalmente. Senior Tip: Revisa la configuración 'Sync Opportunity Teams with Account Teams' en Setup > Account Settings; si la sincronización automática no es deseada, desactívala y gestiona Opportunity Teams de forma independiente; documenta este comportamiento en la guía de usuario para evitar confusiones.",
+    "frequency": 8
+  },
+  {
+    "id": 188,
+    "question": "Universal Containers (UC) has a private Organization-Wide Defaults (OWD) model for the Account object and needs to control the access of records and fields according to these requirements: • Sales reps can view/edit only their own records and cannot access the field \"segment\" in account page. • Service reps need to view all accounts but cannot edit any information. • Sales managers can modify any account of reps reporting to them. • Service managers can modify any account. How can a Salesforce architect provide an optimal solution for this scenario?",
+    "options": [
+      "A. Use profiles, sharing rules, and change OWD to public read-only.",
+      "B. Use profiles, manual sharing, and field-level security.",
+      "C. Use profiles, permission sets, and field-level security.",
+      "D. Use profiles, permission sets, role hierarchy, and field-level security."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque combina: perfiles (para permisos base de objeto y FLS en el campo 'segment'), jerarquía de roles (para que managers hereden acceso a sus subordinados), y permission sets (para otorgar 'Modify All' a service managers sin alterar perfiles). Mantener OWD en Private es clave para el control granular. Descarte: La opción A cambiaría OWD a público, rompiendo el requisito de acceso restringido para sales reps. La opción B depende de compartición manual, no escalable para miles de registros. La opción C omite la jerarquía de roles, esencial para el acceso de sales managers a sus equipos. Senior Tip: Diseña perfiles base (Sales Rep, Service Rep) con OWD Private + FLS restrictivo; usa la jerarquía de roles para sales managers; asigna un permission set 'Service Manager Full Access' con 'Modify All Accounts' a service managers; valida con el 'Security Health Check' mensualmente.",
+    "frequency": 8
+  },
+  {
+    "id": 189,
+    "question": "A junior Account manager owns an account and creates a new opportunity to manage complex deal. She needs the help of the product specialist and solution engineer. Given the size of this deal, she knows the account is likely to be reassigned to a senior account manager in the near future. What is the optimal way for the junior account manager to share the opportunity, given the private sharing model?",
+    "options": [
+      "A. Manual Share on the Opportunity.",
+      "B. Opportunity Team.",
+      "C. Manual share on the Account.",
+      "D. Create an Owner-based sharing rule."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque los Opportunity Teams permiten agregar colaboradores específicos (especialista, ingeniero) con roles definidos, y **el acceso persiste tras cambios de propiedad**, a diferencia de la compartición manual que se elimina al transferir la oportunidad. Descarte: La opción A (Manual Share) se perderá cuando el propietario cambie. La opción C comparte toda la cuenta, no solo la oportunidad. La opción D es innecesariamente amplia; afectaría a todas las oportunidades del propietario. Senior Tip: Use Opportunity Teams para colaboración temporal en deals complejos; defina roles preaprobados ('Product Specialist', 'Solution Engineer'); entrena a los managers para usar el botón 'Add Team Member' en lugar de compartir manualmente.",
+    "frequency": 8
+  },
+  {
+    "id": 190,
+    "question": "Universal Containers (UC) has a custom Apex class that enforces a business process and updates opportunity field-level security permissions of read only certain user's profiles are being updated by their class. How should the architect fix this problem?",
+    "options": [
+      "A. Put the code in an class that uses the With Sharing keyword.",
+      "B. Use the IsUpdateable() Apex method to test each field prior to allowing updates.",
+      "C. Use the With SECURYT_ENFORCED keyword in the SOQL statement.",
+      "D. Add With Sharing keyword to the class."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque el método Schema.DescribeFieldResult.isUpdateable() verifica si el usuario actual tiene permiso de edición en un campo específico, permitiendo evitar intentos de actualización en campos de solo lectura y prevenir errores de FLS. Descarte: Las opciones A y D son irrelevantes; 'With Sharing' controla acceso a registros, no permisos de campo. La opción C contiene un error tipográfico ('SECURYT_ENFORCED' no existe); la sintaxis correcta es 'WITH SECURITY_ENFORCED' en SOQL, pero esto lanza excepciones si falta acceso, no previene actualizaciones. Senior Tip: Siempre usa isUpdateable() antes de asignar valores en DML; combínalo con 'with sharing' para una seguridad integral; evita suprimir errores de FLS con try/catch, ya que oculta problemas de diseño de permisos.",
+    "frequency": 8
+  },
+  {
+    "id": 191,
+    "question": "The architect has a requirement to create a criteria-based sharing rule based on the customer Social.. up the rule in Contact Sharing, the field is not shown on the list of available field. What might cause this?",
+    "options": [
+      "A. The field has been configured for encryption.",
+      "B. The architect does not have permission to Compliance fields.",
+      "C. The architect's profile does not have field level Security (FLS) for this field.",
+      "D. fields with validation rules are not available for sharing rules."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque los campos solo aparecen en la lista de criterios para reglas de compartición si el perfil del usuario actual tiene permiso de 'Visible' en ese campo (Field-Level Security); si el arquitecto no tiene FLS, el campo no será visible aunque exista en el objeto. Descarte: La opción A es parcialmente cierta (campos cifrados con Shield no se pueden usar en reglas), pero no es la causa más común. La opción B no existe como concepto técnico en Salesforce. La opción D es falsa; los campos con reglas de validación sí pueden usarse en reglas de compartición. Senior Tip: Antes de crear reglas de compartición complejas, verifica los permisos de campo en tu propio perfil; si eres administrador, asegúrate de que el campo tenga FLS en el perfil 'System Administrator'; para campos críticos, documenta qué perfiles necesitan FLS para operaciones de administración.",
+    "frequency": 8
+  },
+  {
+    "id": 192,
+    "question": "Universal Containers (UC) has a mostly private organization-wide default (OWD), as it is a core principle of UC to respect client data privacy. UC has implemented complex processes for granting access to Opportunity data. A few key members of the Sales Reporting team need to always be able to see, but not change, Opportunity data for all Opportunities. What should an architect recommend as an approach to meet these requirements?",
+    "options": [
+      "A. Create a Permission Set that grants \"View All Data\" Permission.",
+      "B. Make Opportunity OWD read-only.",
+      "C. Give \"View All Data\" Permission to the Sales Reporting Profile.",
+      "D. Create a Permission Set that grants \"View All\" permission for Opportunity."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque un Permission Set con 'View All' en el objeto Opportunity otorga acceso de lectura a todos los registros de oportunidad sin permitir edición, cumpliendo el requisito de forma segura y escalable sin afectar otros objetos ni violar el principio de mínimo privilegio. Descarte: La opción A ('View All Data') otorga acceso a TODOS los objetos, excesivo y riesgoso para privacidad. La opción B es inválida; las OWD no tienen modo 'read-only', y cambiarlas a público rompería la arquitectura de privacidad. La opción C asigna permisos permanentes en el perfil, menos flexible que un Permission Set para equipos pequeños. Senior Tip: Usa Permission Sets para accesos transversales limitados (reportes, auditorías); combínalos con listas de permisos restringidas para evitar edición accidental; audita trimestralmente quién tiene estos Permission Sets asignados para garantizar cumplimiento con políticas de privacidad.",
+    "frequency": 8
+  },
+  {
+    "id": 193,
+    "question": "A custom invoice object has been created with a master-detail relationship to account. The Account receivable (AR) team needs access to Invoices AR users do not own nor have access to Account records. Account OWD is set to Private. The AR team is unable to find Invoices in List views, Reports, nor in Global Search. The Architect has been asked to help troubleshoot. What could be the issue preventing AR team members from seeing invoices?",
+    "options": [
+      "A. A sharing rule is missing to share Invoices to the AR team.",
+      "B. The AR team profile needs to be assigned an Invoice Page layout.",
+      "C. A sharing rule is missing to share Accounts to the AR team.",
+      "D. The Accounts receivable profile does not have read Permission to the Invoice Object."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque en una relación maestro-detalle, el acceso a los registros hijo (Invoice) se hereda del padre (Account); si los usuarios del equipo AR no tienen acceso a las Accounts (OWD Private sin reglas), tampoco verán las Invoices. Sin embargo, el síntoma clave es que **no pueden encontrar las Invoices en búsquedas ni reportes**, lo que indica falta de permiso de objeto ('Read' en el perfil), no solo de acceso a registros. Descarte: La opción A es secundaria; incluso con regla de compartición, sin permiso de objeto no se verían los registros. La opción B afecta solo la visualización de campos, no la visibilidad del registro. La opción C es incorrecta; compartir Accounts daría acceso a Invoices, pero el síntoma apunta primero a permisos de objeto. Senior Tip: Siempre verifica primero los permisos de objeto (CRUD) antes de depurar reglas de compartición; usa el 'Security Health Check' en Setup para identificar objetos con permisos faltantes en perfiles críticos.",
+    "frequency": 8
+  },
+  {
+    "id": 194,
+    "question": "Which three capabilities are available with Enterprise Territory Management? Choose 3 answers",
+    "options": [
+      "A. Create a public group with Territory",
+      "B. Share a report or dashboard folder with a Territory",
+      "C. Metadata API Support",
+      "D. Integration with Collaborative Forecasting",
+      "E. Assignment of Territory on Opportunities"
+    ],
+    "answer": ["C", "D", "E"],
+    "explanation": "La respuesta correcta es C, D y E porque Enterprise Territory Management soporta: C) Metadata API para migraciones y despliegues automatizados, D) Integración nativa con Collaborative Forecasting para alinear predicciones con territorios, y E) Asignación automática de territorios a Opportunities basada en reglas. Descarte: La opción A es incorrecta; no se pueden crear grupos públicos directamente desde territorios. La opción B es falsa; las carpetas de informes no se comparten con territorios, sino con roles o grupos. Senior Tip: Al implementar ETM, aprovecha la integración con Forecasting para alinear ventas y predicciones; usa Metadata API para gestionar cambios en territorios en entornos CI/CD; recuerda que la asignación de territorios a Opportunities es automática basada en prioridad de tipo de territorio.",
+    "frequency": 8
+  },
+  {
+    "id": 195,
+    "question": "Universal Containers (UC) is in legal dispute regarding several orders. UC has found out these records were removed from system. The VP of Sales has asked to ensure this cannot happen in the future. What approach would meet this requirement?",
+    "options": [
+      "A. Remove the delete button from the Order page layout.",
+      "B. Change the record type/page layout assignment for orders to be read-only.",
+      "C. Remove order delete permission from profiles and permission sets.",
+      "D. Implement a sharing rule that changes access for the records to read."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque eliminar el permiso 'Delete' en perfiles y permission sets es la única forma efectiva de prevenir eliminaciones permanentes; los botones en page layouts o asignaciones de tipo de registro pueden evitarse mediante API o herramientas de carga masiva. Descarte: La opción A es superficial; los usuarios aún pueden eliminar vía Data Loader o API. La opción B previene edición pero no eliminación. La opción D no afecta permisos de objeto, solo visibilidad de registros. Senior Tip: Para objetos críticos (Orders, Contracts), elimina 'Delete' de todos los perfiles excepto administradores; combina con 'Recycle Bin' habilitado y políticas de retención; documenta claramente en el runbook que las eliminaciones requieren ticket de soporte con aprobación legal.",
+    "frequency": 8
+  },
+  {
+    "id": 196,
+    "question": "A sales rep (John) at Universal Containers (UC) requested to update information in an account record where he has READ only access. John requested the EDIT access permission from the owner of the record (Paul). Paul manually shared the record with John. Assuming the OWD of the Account object is Public Read-Only, what is the impact in the system?",
+    "options": [
+      "A. New AccountShare record is created. Row Cause is \"Manual\" and Access Level is \"Read/Write”.",
+      "B. Existing AccountShare record is updated. Row Cause is \"Owner\" and User/Group is \"John\".",
+      "C. New AccountShare record is created. Row Cause is \"Owner\" and Access Level is \"Full\".",
+      "D. Existing AccountShare record is updated. Row Cause is \"Manual\" and Access Level is \"Read/Write\"."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque al compartir manualmente un registro, Salesforce crea un nuevo registro en AccountShare con RowCause = 'Manual' y el nivel de acceso especificado (Read/Write en este caso), independientemente de las OWD. Aunque las OWD son 'Public Read Only', la compartición manual puede otorgar escritura adicional. Descarte: Las opciones B y D asumen que existe un registro previo, pero la compartición manual siempre crea uno nuevo. La opción C es incorrecta; RowCause sería 'Owner' solo si el sistema compartiera automáticamente por propiedad, no por acción manual. Senior Tip: Recuerda que la compartición manual siempre tiene precedencia sobre OWD y reglas de compartición; para auditar accesos manuales, consulta el objeto AccountShare filtrando por RowCause = 'Manual'; considera usar flujos para automatizar comparticiones temporales en lugar de acciones manuales recurrentes.",
+    "frequency": 8
+  },
+  {
+    "id": 197,
+    "question": "What​ ​is​ ​required​ ​to​ ​implement​ ​Filter-Based​ ​Opportunity​ ​Territory​ ​Assignment?",
+    "options": [
+      "A. Define an account assignment with a filter criteria rule for Filter-Based Opportunity Territory Assignment.",
+      "B. Define a Territory assignment rule with filter criteria for Filter-Based Opportunity Territory Assignment.",
+      "C. Define​ ​a​ ​custom​ ​Apex​ ​class​ ​for​ ​Filter-Based​ ​Opportunity​ ​Territory​ ​Assignment​ ​in​ ​the​ ​system.",
+      "D. Define an Opportunity assignment rule with filter criteria for Filter-Based Opportunity Territory Assignment."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque Filter-Based Opportunity Territory Assignment requiere definir reglas de asignación específicas para Opportunities basadas en criterios de filtro (ej: monto > $100K, industria = 'Healthcare'), no en cuentas ni territorios directamente. Descarte: La opción A es incorrecta; las reglas de cuenta asignan cuentas a territorios, no opportunities. La opción B es vaga; las reglas de territorio no son el mecanismo específico para asignación basada en filtros de opportunity. La opción C es obsoleta; la funcionalidad moderna es declarativa, no requiere Apex. Senior Tip: Diseña reglas de asignación de opportunity con criterios claros y mutuamente excluyentes para evitar conflictos; prioriza territorios por tipo para resolver asignaciones múltiples; usa el informe 'Territory Assignment Logs' para auditar resultados.",
+    "frequency": 8
+  },
+  {
+    "id": 198,
+    "question": "If you want to create some logic that will share certain records in APEX code, you just have to create special records that will open access to the desired records. The aim is to create records of certain type, for example , all share objects for custom objects are named as",
+    "options": [
+      "A. MyCustomObject__Share"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque en Salesforce, los objetos de compartición para objetos personalizados siguen la convención de nombre 'NombreObjeto__Share'; al insertar registros en este objeto especial desde Apex, se otorga acceso explícito a usuarios o grupos con niveles de acceso específicos (Read, Read/Write). Descarte: No hay otras opciones válidas; esta es la sintaxis estándar de la plataforma. Senior Tip: Al implementar Apex Sharing, siempre especifique un RowCause personalizado (ej: 'Territory_Sharing') para facilitar auditorías; recuerde que los registros __Share se eliminan automáticamente si cambia la propiedad del registro principal, a menos que use RowCause = 'Manual'.",
+    "frequency": 8
+  },
+  {
+    "id": 199,
+    "question": "Universal Containers regularly uploads large amounts of parent and child records into Salesforce to maintain integrations with other systems that update their date in scheduled batches or continuously in real time. Which two situations may pose a risk of producing locking errors? Choose 2 answers.",
+    "options": [
+      "A. Updates​ ​to​ ​child​ ​records​ ​that​ ​have​ ​the​ ​same​ ​parent​ ​records​ ​are​ ​being​ ​processed​ ​simultaneously​ ​in separate​ ​transactions.",
+      "B. Updates to parent and child records are being processed in the same batch.",
+      "C. Updates​ ​to​ ​parent​ ​records​ ​and​ ​their​ ​child​ ​records​ ​being​ ​processed​ ​simultaneously​ ​in​ ​separate​ ​threads.",
+      "D. Updates to parent and child records are being processed synchronously in the same threads."
+    ],
+    "answer": ["A", "C"],
+    "explanation": "La respuesta correcta es A y C porque: A) Actualizar múltiples registros hijo del mismo padre simultáneamente en transacciones separadas causa contención de bloqueo en el registro padre, y C) Procesar actualizaciones de padre e hijos en hilos separados pero concurrentes también genera contención, ya que ambos intentan bloquear el mismo conjunto de registros. Descarte: La opción B es segura; procesar padre e hijos en el mismo lote secuencial evita concurrencia. La opción D es redundante; 'mismo hilo' implica secuencial, no concurrente. Senior Tip: Para evitar errores de bloqueo: 1) Agrupe actualizaciones de hijos del mismo padre en el mismo lote, 2) Use 'Granular Locking' si está habilitado, 3) Ordene los registros por ID de padre antes de procesar, 4) Evite actualizaciones cruzadas de padre/hijo en integraciones paralelas.",
+    "frequency": 8
+  },
+  {
+    "id": 200,
+    "question": "Universal Containers uses Person Accounts to represent retail customers and Business Accounts to represent commercial customers. The retail sales team should not have access to commercial customers but should have access to ALL retail customers. With the organization-wide default on Account set to Private, how should the architect meet these requirements?",
+    "options": [
+      "A. Create an owner-based sharing rule on AccountContactRelation to grant a@coess to all account contact roles records owned by retail sales reps.",
+      "B. Update the Retall Sales profile to grant access to Person Account record type.",
+      "C. @ Create o criteria-based sharing rule giving the Retail Sales role access to Accounts of type PersonAccount."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque una regla de compartición basada en criterios puede compartir automáticamente todas las cuentas de tipo 'PersonAccount' (clientes minoristas) con el rol 'Retail Sales', cumpliendo el requisito de acceso completo a minoristas sin exponer cuentas comerciales (Business Accounts). Descarte: La opción A es irrelevante; AccountContactRelation gestiona relaciones contacto-cuenta, no resuelve el acceso a cuentas personales. La opción B solo concede acceso al tipo de registro, pero con OWD en Private, los usuarios aún no verían los registros sin reglas de compartición. Senior Tip: Al usar Person Accounts, recuerda que comparten el mismo objeto Account; siempre usa el campo 'IsPersonAccount' en reglas de compartición basadas en criterios para diferenciar minoristas de comerciales; combina con listas de permisos para restringir tipos de registro en vistas.",
+    "frequency": 8
+  },
+  {
+    "id": 201,
+    "question": "Universal Containers has Public Read Only sharing settings on the Opportunity object. What Opportunity access options can the user see while adding account team members to the Account?",
+    "options": [
+      "A. Read Only",
+      "B. Private and Read Only",
+      "C. Private",
+      "D. Read Only and Read/Write"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque con OWD 'Public Read Only' en Opportunity, los usuarios solo pueden otorgar acceso de lectura al agregar miembros al Account Team; la opción 'Read/Write' no está disponible ya que las OWD restringen la escritura globalmente. Descarte: Las opciones B y C incluyen 'Private', que no es un nivel de acceso válido en este contexto. La opción D es incorrecta; 'Read/Write' no se muestra cuando las OWD son 'Read Only'. Senior Tip: Recuerda que las opciones de acceso en Account Team están limitadas por las OWD del objeto relacionado (Opportunity); si necesitas escritura, cambia las OWD a 'Public Read/Write' o usa Opportunity Teams en lugar de Account Teams para colaboración en oportunidades.",
+    "frequency": 8
+  },
+  {
+    "id": 202,
+    "question": "Universal Containers has junction object called \"Job Production Facility\", with 2 master-detail relationships to the Job and Production Facility custom objects. Both master records have a private sharing model. What statement is true if a user's profile allows access (Create/Read) to the Job, but no access to the Production Facility Object?",
+    "options": [
+      "A. The user will be granted read access to the Production Facility record",
+      "B. The user will see the junction object and the link to the Production Facility.",
+      "C. The user will see the junction object but not the link to the Production Facility.",
+      "D. The user will not be able to see the junction object records or the field values."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque en una relación maestro-detalle doble, el acceso al objeto intermedio (junction) depende del acceso a al menos uno de los objetos maestros; como el usuario tiene acceso a Job, puede ver los registros del objeto junction, pero sin permisos en Production Facility, los campos relacionados con ese maestro aparecerán en blanco o no serán accesibles. Descarte: La opción A es falsa; no hay herencia automática de acceso entre maestros. La opción B asume acceso completo a ambos lados, lo cual no es cierto. La opción D es incorrecta; el usuario sí ve los registros del objeto junction gracias al acceso a Job. Senior Tip: En objetos junction con dos maestros, diseña perfiles cuidadosamente; considera usar Apex Sharing si necesitas acceso condicional cruzado; recuerda que la eliminación en cascada ocurre desde ambos maestros.",
+    "frequency": 8
+  },
+  {
+    "id": 203,
+    "question": "How should the Architect ensure that OBJECT-LEVEL SECURITY is enforce within a custom Visualforce application that was a standard Apex controller on the Lead object?",
+    "options": [
+      "A. Use the runAs() method to enforce user permissions in the Apex controller.",
+      "B. Use the Schema.DescribeSObjectResultisAccessible() method in the Apex controller.",
+      "C. Use the {!$ObjectType.lead.accessible} expression within the Visualforce page.",
+      "D. Use the \"With Sharing\" keyword when defining the Visualforce page."
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque la expresión global {!$ObjectType.Lead.accessible} en Visualforce verifica automáticamente si el perfil del usuario actual tiene permiso 'Read' en el objeto Lead, respetando la seguridad a nivel de objeto sin código personalizado. Descarte: La opción A (runAs) es para pruebas, no producción. La opción B contiene un error tipográfico (falta paréntesis) y no es la forma estándar. La opción D es inválida; 'With Sharing' se aplica a clases Apex, no a páginas Visualforce. Senior Tip: Usa siempre expresiones globales de seguridad ({!$ObjectType...}) en Visualforce para validar accesos base; combínalas con 'Field Accessibility' para campos sensibles; evita mostrar UI si el objeto no es accesible mediante renderizado condicional.",
+    "frequency": 8
+  },
+  {
+    "id": 204,
+    "question": "Universal Containers has set the Org-Wide Sharing Default for Accounts to Private and has created some sharing rules to extend access based on certain data access policies. An architect has been asked to review access to a certain set of key customer accounts. How might this review be conducted?",
+    "options": [
+      "A. Export the Account Share table and review.",
+      "B. Run a Report on Sharing in the Admin Console.",
+      "C. Log in as each user and Run the All Accounts List View.",
+      "D. Use the Sharing button on each customer Account."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque el botón 'Sharing' en cada registro de Account muestra explícitamente qué usuarios/grupos tienen acceso y por qué motivo (regla de compartición, jerarquía, compartición manual), permitiendo una auditoría precisa y eficiente sin técnicas invasivas. Descarte: La opción A requiere conocimientos técnicos avanzados y no muestra el contexto de negocio. La opción B no existe como informe estándar en Salesforce. La opción C es impráctico e inviable en orgs grandes con cientos de usuarios. Senior Tip: Para auditorías masivas, use el informe 'Account Sharing' en Setup > Security Controls > Sharing; combine con 'Who Sees What' para análisis cruzado; documente hallazgos en un spreadsheet con capturas del botón Sharing para evidencia regulatoria.",
+    "frequency": 8
+  },
+  {
+    "id": 205,
+    "question": "Universal Containers has developed an AppExchange managed package for their distribution partners, which required a private key to be generated for each partner and used by the code. Universal Containers support representatives must be able to access the private key value to debug connection issues, but it must not be possible for the partner to access the value. How can the Architect best support this requirement?",
+    "options": [
+      "A. Store the value in a text field on a protected custom setting in the package.",
+      "B. Store the value in a static variable in a class included in the managed package.",
+      "C. Store the value in the text field on a list custom setting in the managed package.",
+      "D. Store the value in an encrypted field on a custom object in the package."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque los Custom Settings protegidos en paquetes gestionados son visibles solo para el editor del paquete (UC support) y no para los suscriptores (partners), cumpliendo perfectamente el requisito de acceso restringido. Descarte: La opción B es insegura; las variables estáticas son visibles en logs y debugging. La opción C expone los valores a partners si usan herramientas de consulta. La opción D permite a partners ver el campo (aunque cifrado), violando el requisito de invisibilidad total. Senior Tip: Siempre use Custom Settings protegidos para credenciales en paquetes AppExchange; combine con permisos de objeto restringidos en el perfil del paquete; evite almacenar claves en objetos personalizados o metadatos visibles para suscriptores.",
+    "frequency": 8
+  },
+  {
+    "id": 206,
+    "question": "Universal Containers has a set of Account Management users that should only see Accounts once the Account becomes a customer. The Type field on the Account identifies whether the Account is a Prospect, Customer, Partner or Other. Which two methods could an Architect use to enable this sharing requirement, assuming a private sharing model for Accounts? Choose 2 answers.",
+    "options": [
+      "A. Institute a process that calls for the Account Manager to be added to the Account Team once the Account becomes a customer.",
+      "B. Create an Account Sharing Rule that shares all Accounts owned by Sales to be shared with Account Management roles and subordinates.",
+      "C. Create a Public List View, where Accounts of Type Customer are included and share the List view with the Account Management public group.",
+      "D. Create a Criteria-based Sharing rule that shares the Account to the Account Management Group when the Type is Customer."
+    ],
+    "answer": ["A", "D"],
+    "explanation": "La respuesta correcta es A y D porque: D) Una regla de compartición basada en criterios comparte automáticamente cuentas de tipo 'Customer' con el grupo de Account Management, y A) Un proceso manual (ej: flujo de aprobación) añade managers al Account Team cuando el tipo cambia, ambos cumpliendo el requisito de acceso condicional. Descarte: La opción B es demasiado amplia; compartiría Prospects y otros tipos innecesariamente. La opción C es incorrecta; las List Views no controlan el acceso a registros, solo filtran vistas existentes. Senior Tip: Combine reglas automáticas (D) con procesos manuales (A) para flexibilidad; use validaciones para prevenir cambios no autorizados en el campo Type; audite trimestralmente con informes de 'Account Share' para detectar accesos no deseados a Prospects.",
+    "frequency": 8
+  },
+  {
+    "id": 207,
+    "question": "Universal Containers is updating its Organization-Wide Sharing Settings for the Account Object from a \"Public Read/Write\" model to a \"Private\" model, so that they can hide certain national accounts from sales reps and sales managers. These national accounts should only be accessible by sales directors and above. Universal Container's Role Hierarchy matches its organizational hierarchy. Which two options should the Architect consider when designing the solution? Choose 2 answers",
+    "options": [
+      "A. Sales directors will need a sharing rule created so that they can see accounts owned by Sales Users.",
+      "B. National accounts must be owned by a user who is above the sales managers in the Role Hierarchy.",
+      "C. Apex managed sharing will have to be disabled for the account object to protect the national accounts.",
+      "D. If a sales rep is added to the Opportunity Team for a national account, they will gain access to account data."
+    ],
+    "answer": ["B", "D"],
+    "explanation": "La respuesta correcta es B y D porque: B) Al asignar la propiedad de cuentas nacionales a usuarios por encima de sales managers en la jerarquía, se garantiza que solo directores y superiores tengan acceso vía herencia, y D) Debido a la compartición implícita (Opportunity → Account), añadir un rep al Opportunity Team le daría acceso no deseado a la cuenta nacional. Descarte: La opción A es innecesaria; con jerarquía correcta, los directores ya ven las cuentas de sus subordinados. La opción C es falsa; Apex Sharing no necesita desactivarse y puede complementar la seguridad. Senior Tip: Para cuentas sensibles, combine propiedad estratégica + jerarquía + monitoreo de Opportunity Teams; use flujos para alertar si se añaden reps no autorizados a equipos de cuentas nacionales; documente claramente la política de propiedad en el runbook de ventas.",
+    "frequency": 8
+  },
+  {
+    "id": 208,
+    "question": "What feature in Salesforce is needed to restrict access to a custom object that has Public Read/Write access?",
+    "options": [
+      "A. Role Hierarchy",
+      "B. Record Type",
+      "C. Page Layout",
+      "D. Profile"
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque los Perfiles controlan los permisos de objeto (CRUD) a nivel base; incluso si las OWD están en 'Public Read/Write', sin el permiso 'Read' en el perfil, los usuarios no podrán ver ningún registro del objeto. Descarte: La opción A (Role Hierarchy) solo funciona si las OWD no son públicas. La opción B (Record Type) controla asignación de layouts, no acceso al objeto. La opción C (Page Layout) define campos visibles, no visibilidad del registro. Senior Tip: Recuerde la jerarquía de seguridad: Permisos de Objeto (Perfil) > Seguridad de Campo (FLS) > Modelo de Compartición (OWD). Si falta el primer nivel, los demás no importan. Siempre revise permisos de perfil antes de ajustar OWD complejas.",
+    "frequency": 8
+  },
+  {
+    "id": 209,
+    "question": "A banking company uses & VIP Flag in the Contact Object that they want only Private Banking Reps to see. Which approach is recommended to meet this requirement?",
+    "options": [
+      "A. Set the Field Level Security for the VIP Flag field so that it is visible to Private Banking Rep Profile.",
+      "B. Define a page layout for Contact Object and add the VIP Flag field for that layout. Remove the VIP Flag field from other layouts.",
+      "C. Change the type of VIP Flag field to a picklist, define a new record type for the Contact Object and make the picklist field available for Editing."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque la Seguridad a Nivel de Campo (FLS) en el perfil 'Private Banking Rep' es el mecanismo estándar y más seguro para restringir la visibilidad de un campo específico, independientemente del page layout o tipo de campo. Descarte: La opción B es insegura; los usuarios aún pueden ver el campo vía API, informes o búsquedas si tienen FLS. La opción C es irrelevante; cambiar el tipo de campo no resuelve el problema de visibilidad. Senior Tip: Siempre use FLS como primera línea de defensa para campos sensibles; combine con page layouts para mejorar la experiencia de usuario, pero nunca confíe solo en layouts para seguridad; audite trimestralmente con 'Field Accessibility' en Setup para detectar configuraciones incorrectas.",
+    "frequency": 8
+  },
+  {
+    "id": 210,
+    "question": "Universal Containers has requirement to integrate Salesforce with an external system to control record access. What option should the Architect consider when designing a solution?",
+    "options": [
+      "A. Use the Security API to modify the role hierarchy in Salesforce.",
+      "B. Use the SOAP API to maintain the related SObject_share records.",
+      "C. Use the Metadata API to maintain the related SObject records.",
+      "D. Use the SOAP API to create new Criteria-Based Sharing Rules in Salesforce."
+    ],
+    "answer": ["B"],
+    "explanation": "La respuesta correcta es B porque el SOAP API permite crear y gestionar registros en objetos _Share (ej: AccountShare, OpportunityShare), lo que permite a sistemas externos otorgar o revocar acceso a registros específicos mediante integración programática, cumpliendo el requisito de control externo de acceso. Descarte: La opción A es incorrecta; no existe 'Security API' para modificar jerarquía de roles. La opción C (Metadata API) gestiona metadatos (objetos, campos), no datos de compartición. La opción D es falsa; las reglas de compartición no se pueden crear vía API, solo mediante interfaz declarativa. Senior Tip: Al implementar integración de compartición externa, use RowCause personalizado (ej: 'External_System_Sharing') para identificar fácilmente estos accesos; combine con triggers de limpieza para eliminar accesos obsoletos; documente claramente el contrato de API con el equipo externo.",
+    "frequency": 8
+  },
+  {
+    "id": 211,
+    "question": "By Viewer Access you can see the data in a report or dashboard, but you can’t make any changes, except by cloning it into a new report or dashboard.",
+    "options": [
+      "A. True",
+      "B. False"
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el permiso 'Viewer Access' en carpetas de informes y dashboards permite únicamente ver los elementos existentes; cualquier modificación requiere clonar el informe o dashboard en una nueva carpeta donde el usuario tenga permisos de edición. Descarte: La opción B es incorrecta; no se puede editar directamente un informe con solo acceso de visualización. Senior Tip: Para pruebas de usuarios piloto, use carpetas separadas con permisos 'Editor' para el grupo piloto y 'Viewer' para el resto; así evita cambios accidentales en informes productivos mientras permite iteración rápida en el entorno de prueba.",
+    "frequency": 8
+  },
+  {
+    "id": 212,
+    "question": "Universal Containers has successfully implemented a large Service Cloud rollout for their national call center 3 months ago. One of their largest customer accounts, United Automotive, has over 15,000 open cases. Agents are now having trouble opening new cases for United Automotive. When they try to create a case, the following Error messages appear for them UNABLE_TO_LOCK_ROW They notice that this only occurs for the United Automotive account. If they try to save the case again it will usually work, but the problem seems to be happening more and more often. What option should the Architect recommend?",
+    "options": [
+      "A. Review the Account structure to split the United Automotive account into multiple branch accounts.",
+      "B. Review the Customer Service Profile to ensure that they have Read/Write access to the appropriate Case and Account Fields.",
+      "C. Review all Case Sharing Rules and consolidate where appropriate to reduce the total number of sharing rules.",
+      "D. Review all Account sharing rules to ensure that the Customer Service team has Read/Write access to the United Automotive Account."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque el error 'UNABLE_TO_LOCK_ROW' ocurre cuando hay contención de base de datos al intentar actualizar múltiples registros hijo (Cases) del mismo padre (Account); con >15,000 casos abiertos bajo una sola cuenta, cualquier operación en la cuenta causa bloqueos masivos. Dividir la cuenta en subcuentas por región o división reduce drásticamente la contención. Descarte: La opción B es irrelevante; el error no está relacionado con permisos de campo. La opción C no resuelve el problema raíz (concentración de hijos). La opción D asume falta de acceso, pero el error es de rendimiento, no permisos. Senior Tip: Evite cuentas con >10,000 registros hijo; implemente particionamiento lógico temprano (ej: United Automotive - North, South); monitoree Setup > Company Information > Maintenance para detectar patrones de bloqueo recurrentes.",
+    "frequency": 8
+  },
+  {
+    "id": 213,
+    "question": "Universal Containers has created a Reimbursement Custom Object to capture requests for reimbursement of expenses related to office supplies. The Reimbursement requests are sometimes sensitive and the Team Leads should not have access to the Reimbursement records submitted by the Users in the Call Center Agent role. The Director of Support will require access to all Reimbursement records. The role hierarchy is set as follows: Call Center Agent role reports to Team Lead role, which Reports to the Director of Support. Which steps would the Architect take to ensure proper sharing in this Role Hierarchy structure assuming Private Sharing Setting for the Reimbursement Object?",
+    "options": [
+      "A. Leave the Reimbursement Object in \"Deployed\" Status and set the Director of Supports Profile to \"View All\" in the object permissions.",
+      "B. Use an Approval Process to change the owner of the Reimbursement record upon submission to the Director of Support",
+      "C. Disable Grant Access Using Hierarchies for the Object and create a Sharing Rule to enable sharing to the Director of Support",
+      "D. The sharing scenario described will occur without any special configuration choices being made by the Architect"
+    ],
+    "answer": ["C"],
+    "explanation": "La respuesta correcta es C porque al desactivar 'Grant Access Using Hierarchies', se rompe la herencia automática que daría a los Team Leads acceso a los registros de sus agentes; luego, una regla de compartición basada en criterios o propietario puede compartir explícitamente todos los registros con el Director de Soporte, cumpliendo ambos requisitos de seguridad. Descarte: La opción A viola el principio de mínimo privilegio ('View All' expone todos los objetos). La opción B es innecesariamente compleja y rompe la trazabilidad del propietario original. La opción D es falsa; sin configuración adicional, los Team Leads verían los registros por jerarquía. Senior Tip: Para objetos sensibles con jerarquías complejas, siempre desactive 'Grant Access Using Hierarchies'; combine con reglas de compartición explícitas y permission sets para roles de auditoría; audite trimestralmente con informes de 'Reimbursement Share'.",
+    "frequency": 8
+  },
+  {
+    "id": 214,
+    "question": "Universal Containers uses person accounts to represent retail customers and business accounts to represent commercial customers. The Retail Sales team should not have access to commercial customers but have access to ALL retail customers. With organization-wide default on Account set to Private, how might the architect meet these requirements?",
+    "options": [
+      "A. Give View All access for Accounts to the Retail Sales profile.",
+      "B. Update Retail Sales profile to grant access to Person Account record type.",
+      "C. Create an owner-based sharing rule on AccountContactRelation to grant access to at account contact roles records owned by sales reps.",
+      "D. Create a criteria-based sharing rule giving Retail Sales role access to Accounts of type PersonAccount."
+    ],
+    "answer": ["D"],
+    "explanation": "La respuesta correcta es D porque una regla de compartición basada en criterios puede compartir automáticamente todas las cuentas de tipo 'PersonAccount' (clientes minoristas) con el rol 'Retail Sales', cumpliendo el requisito de acceso completo a minoristas sin exponer cuentas comerciales (Business Accounts). Descarte: La opción A viola el requisito al dar acceso a TODAS las cuentas (incluyendo comerciales). La opción B solo concede acceso al tipo de registro, pero con OWD en Private, los usuarios aún no verían los registros sin reglas de compartición. La opción C es irrelevante; AccountContactRelation gestiona relaciones contacto-cuenta, no resuelve el acceso a cuentas personales. Senior Tip: Al usar Person Accounts, recuerda que comparten el mismo objeto Account; siempre usa el campo 'IsPersonAccount' en reglas de compartición basadas en criterios para diferenciar minoristas de comerciales; combina con listas de permisos para restringir tipos de registro en vistas.",
+    "frequency": 8
+  },
+  {
+    "id": 215,
+    "question": "Universal Containers is planning to pilot a new application to a small set of Sales Reps. What is the optimal way to grant only this Sales Reps access to the new functionality, while hiding ..",
+    "options": [
+      "A. Clone the Sales Rep profile, adjust settings, and assign the pilot users the new profile.",
+      "B. Revoke access to legacy function in the Sales Rep profile and create a permission set for the ..",
+      "C. Create a permission set to grant access to the new functionality and hide the old functionality.",
+      "D. Create new user records for the pilot user that they will use for the pilot."
+    ],
+    "answer": ["A"],
+    "explanation": "La respuesta correcta es A porque clonar el perfil base de Sales Rep permite crear una versión especializada con accesos ajustados para la funcionalidad piloto, manteniendo aislamiento total del entorno productivo sin afectar a otros usuarios. Descarte: La opción B es riesgosa; revocar funcionalidad legada en el perfil principal afectaría a todos los reps. La opción C es incompleta; los Permission Sets solo otorgan permisos adicionales, no pueden ocultar funcionalidad existente. La opción D es innecesariamente compleja y duplica identidades de usuario. Senior Tip: Use perfiles clonados para pilotos o proyectos especiales; documente claramente las diferencias en el runbook; tras la validación exitosa, migre gradualmente el perfil base en lugar de mantener bifurcaciones permanentes.",
+    "frequency": 8
+  }
+]
