@@ -520,7 +520,6 @@
     "explanation": "La respuesta correcta es A, B y E porque: A) Las Divisiones particionan datos por región/país, reduciendo el impacto de recalculos de compartición; B) 'Deferred Sharing Recalculation' pospone el recálculo costoso hasta un momento programado, evitando bloqueos durante la reorganización; E) 'Granular Locking' minimiza contención de base de datos al permitir operaciones concurrentes en registros no relacionados. Descarte: La opción C no existe como característica nombrada así en Salesforce. La opción D (Skinny Tables) optimiza consultas, pero no afecta la reasignación masiva de roles. Senior Tip: Para reorganizaciones globales: 1) Activa Deferred Sharing Recalculation antes de los cambios, 2) Usa Divisiones para aislar regiones, 3) Ejecuta reasignaciones en lotes pequeños (<200 registros) con Granular Locking habilitado; monitorea Setup > Company Information > Maintenance para ver el estado del recálculo diferido.",
     "frequency": 8
   },
-  [
   {
     "id": 131,
     "question": "Which two options can be selected to share data with when creating a sharing rule? Choose 2 answers",
